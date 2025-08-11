@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { useWords } from './screens/useWords';
 
 export default function App() {
+  const { words, loading } = useWords();
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.center}>
+        <Text>Yükleniyor...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!words.length) {
+    return (
+      <SafeAreaView style={styles.center}>
+        <Text>Kelime bulunamadı</Text>
+      </SafeAreaView>
+    );
+  }
+
+  const first = words[0];
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.center}>
+      <Text style={styles.main}>{first.main_word}</Text>
+      {first.taboos.map((t, i) => (
+        <Text key={i}>• {t}</Text>
+      ))}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  main: { fontSize: 32, fontWeight: 'bold', marginBottom: 20 }
 });
