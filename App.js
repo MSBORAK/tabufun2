@@ -1,39 +1,26 @@
 import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import { useWords } from './screens/useWords';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import TabuuMenu from './screens/tabuuMenu'; // TabuuMenu bileşenin dosya yoluna göre değiştir
+import Help from './screens/help';      // Help ekranının dosya yolu
+import NewGame from './screens/NewGame'; // Örnek diğer ekranlar
+import Settings from './screens/Settings';
+import Game from './screens/Game'; // Game ekranının dosya yolu
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const { words, loading } = useWords();
-
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.center}>
-        <Text>Yükleniyor...</Text>
-      </SafeAreaView>
-    );
-  }
-
-  if (!words.length) {
-    return (
-      <SafeAreaView style={styles.center}>
-        <Text>Kelime bulunamadı</Text>
-      </SafeAreaView>
-    );
-  }
-
-  const first = words[0];
-
   return (
-    <SafeAreaView style={styles.center}>
-      <Text style={styles.main}>{first.main_word}</Text>
-      {first.taboos.map((t, i) => (
-        <Text key={i}>• {t}</Text>
-      ))}
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="TabuuMenu" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="TabuuMenu" component={TabuuMenu} />
+        <Stack.Screen name="Help" component={Help} />
+        <Stack.Screen name="NewGame" component={NewGame} />
+        <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Game" component={Game} />
+      </Stack.Navigator>
+      
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  main: { fontSize: 32, fontWeight: 'bold', marginBottom: 20 }
-});

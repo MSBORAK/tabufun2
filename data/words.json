@@ -1,0 +1,46 @@
+[
+    { "word": "BANKA", "taboo": ["ÇEK", "MÜŞTERİ", "HESAP", "PARA", "KREDİ KARTI"] },
+     { "word": "DOĞRU", "taboo": ["YANLIŞ", "GERÇEK", "TABU", "PAS", "YANIT"] },
+     { "word": "ELMA", "taboo": ["MEYVE", "KIRMIZI", "AĞAÇ", "YEŞİL", "YEMEK"] },
+
+    { "word": "OYUN", "taboo": ["EĞLENCE", "KAZANMAK", "KAYBETMEK", "REKABET", "TAKIM"] },
+    { "word": "TABU", "taboo": ["KELİME", "YASAK", "OYNAMA", "PAS", "KAZANMA"] },
+    { "word": "KEDİ", "taboo": ["HAYVAN", "PATI", "MİYAV", "EV", "KUŞ"] },
+    { "word": "KÖPEK", "taboo": ["HAYVAN", "PATI", "HAVLAMAK", "EV", "KUŞ"] },
+    { "word": "ARABA", "taboo": ["TAŞIT", "YOL", "HIZ", "MOTOR", "GİTMEK"] },
+    { "word": "YEMEK", "taboo": ["AÇLIK", "MUTFAK", "PİŞİRMEK", "LEZZET", "MASA"] },
+    { "word": "SU", "taboo": ["İÇMEK", "SIVI", "HIDRATASYON", "NEHİR", "OKYANUS"] },
+    { "word": "GÜNEŞ", "taboo": ["GÜN", "ISILIK", "IŞIK", "GÖKYÜZÜ", "YILDIZ"] },
+    { "word": "AY", "taboo": ["GECE", "GÖKYÜZÜ", "FAZLAR", "YILDIZLAR", "DOLUNAY"] },
+    { "word": "YILDIZ", "taboo": ["GECE", "GÖKYÜZÜ", "PARLAKLIK", "GALAKSİ", "ASTRONOMİ"] },
+    { "word": "DENİZ", "taboo": ["SU", "OKYANUS", "KUM", "BALIK", "YÜZMEK"] },
+    { "word": "DAĞ", "taboo": ["YÜKSEK", "TEPE", "NATÜREL", "YÜRÜYÜŞ", "KAR"] },
+    { "word": "AĞAÇ", "taboo": ["YEŞİL", "ODUN", "YAPRAK", "DOĞA", "GÖLGELİK"] },
+    { "word": "BİLGİSAYAR", "taboo": ["TEKNOLOJİ", "EKRAN", "KLAVYE", "İNTERNET", "OYUN"] },
+    { "word": "TELEFON", "taboo": ["ARAMA", "MESAJ", "KONUŞMAK", "İLETİŞİM", "CİHAZ"] },
+    { "word": "KITAP", "taboo": ["OKUMAK", "YAZAR", "KÜTÜPHANE", "BİLGİ", "HİKAYE"] },
+    { "word": "MÜZİK", "taboo": ["SES", "NOTA", "ENSTRÜMAN", "ŞARKI", "RİTM"] },
+    { "word": "BANKA", "taboo": ["ÇEK", "MÜŞTERİ", "HESAP", "PARA", "KREDİ KARTI"] },
+    { "word": "DOĞRU", "taboo": ["YANLIŞ", "GERÇEK", "TABU", "PAS", "YANIT"] },
+    { "word": "ELMA", "taboo": ["MEYVE", "KIRMIZI", "AĞAÇ", "YEŞİL", "YEMEK"] },
+
+    { "word": "OYUN", "taboo": ["EĞLENCE", "KAZANMAK", "KAYBETMEK", "REKABET", "TAKIM"] },
+    { "word": "TABU", "taboo": ["KELİME", "YASAK", "OYNAMA", "PAS", "KAZANMA"] },
+    { "word": "KEDİ", "taboo": ["HAYVAN", "PATI", "MİYAV", "EV", "KUŞ"] },
+    { "word": "KÖPEK", "taboo": ["HAYVAN", "PATI", "HAVLAMAK", "EV", "KUŞ"] },
+    { "word": "ARABA", "taboo": ["TAŞIT", "YOL", "HIZ", "MOTOR", "GİTMEK"] },
+    { "word": "YEMEK", "taboo": ["AÇLIK", "MUTFAK", "PİŞİRMEK", "LEZZET", "MASA"] },
+    { "word": "SU", "taboo": ["İÇMEK", "SIVI", "HIDRATASYON", "NEHİR", "OKYANUS"] },
+    { "word": "GÜNEŞ", "taboo": ["GÜN", "ISILIK", "IŞIK",  ,"GÖKYÜZÜ" ,"YILDIZ"] },
+    { "word": "DENİZ", "taboo": ["SU", "OKYANUS", "KUM", "BALIK", "YÜZMEK"] },
+    { "word": "DAĞ", "taboo": ["YÜKSEK", "TEPE", "NATÜREL", "YÜRÜYÜŞ", "KAR"] },
+    { "word": "AĞAÇ", "taboo": ["YEŞİL", "ODUN", "YAPRAK", "DOĞA", "GÖLGELİK"] },   
+    { "word": "BİLGİSAYAR", "taboo": ["TEKNOLOJİ", "EKRAN", "KLAVYE", "İNTERNET", "OYUN"] },
+    { "word": "TELEFON", "taboo": ["ARAMA", "MESAJ", "KONUŞMAK", "İLETİŞİM", "CİHAZ"] },
+    { "word": "KITAP", "taboo": ["OKUMAK", "YAZAR", "KÜTÜPHANE", "BİLGİ", "HİKAYE"] },
+    { "word": "MÜZİK", "taboo": ["SES", "NOTA", "ENSTRÜMAN", "ŞARKI", "RİTM"] }
+
+]
+
+
+
