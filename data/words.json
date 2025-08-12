@@ -1,45 +1,183 @@
 [
-    { "word": "BANKA", "taboo": ["ÇEK", "MÜŞTERİ", "HESAP", "PARA", "KREDİ KARTI"] },
-     { "word": "DOĞRU", "taboo": ["YANLIŞ", "GERÇEK", "TABU", "PAS", "YANIT"] },
-     { "word": "ELMA", "taboo": ["MEYVE", "KIRMIZI", "AĞAÇ", "YEŞİL", "YEMEK"] },
-
-    { "word": "OYUN", "taboo": ["EĞLENCE", "KAZANMAK", "KAYBETMEK", "REKABET", "TAKIM"] },
-    { "word": "TABU", "taboo": ["KELİME", "YASAK", "OYNAMA", "PAS", "KAZANMA"] },
-    { "word": "KEDİ", "taboo": ["HAYVAN", "PATI", "MİYAV", "EV", "KUŞ"] },
-    { "word": "KÖPEK", "taboo": ["HAYVAN", "PATI", "HAVLAMAK", "EV", "KUŞ"] },
-    { "word": "ARABA", "taboo": ["TAŞIT", "YOL", "HIZ", "MOTOR", "GİTMEK"] },
-    { "word": "YEMEK", "taboo": ["AÇLIK", "MUTFAK", "PİŞİRMEK", "LEZZET", "MASA"] },
-    { "word": "SU", "taboo": ["İÇMEK", "SIVI", "HIDRATASYON", "NEHİR", "OKYANUS"] },
+  // GÜNLÜK HAYAT
+  { "word": "TELEFON", "taboo": ["ARAMA", "MESAJ", "KONUŞMAK", "İLETİŞİM", "CİHAZ"] },
+  { "word": "BİLGİSAYAR", "taboo": ["TEKNOLOJİ", "EKRAN", "KLAVYE", "İNTERNET", "OYUN"] },
+  { "word": "ARABA", "taboo": ["TAŞIT", "YOL", "HIZ", "MOTOR", "GİTMEK"] },
+  { "word": "EV", "taboo": ["KONUT", "ODA", "MESKEN", "YERLEŞİM", "AİLE"] },
+  { "word": "OKUL", "taboo": ["EĞİTİM", "ÖĞRENCİ", "ÖĞRETMEN", "DERS", "SINIF"] },
+  
+  // YEMEK & İÇECEK
+  { "word": "PİZZA", "taboo": ["HAMUR", "PEYNİR", "DOMATES", "İTALYAN", "YEMEK"] },
+  { "word": "KAHVE", "taboo": ["İÇECEK", "SICAK", "KAFEİN", "SABAH", "FİNCAN"] },
+  { "word": "ÇİKOLATA", "taboo": ["TATLI", "KAKAO", "ŞEKER", "ÇİKOLATA", "LEZZET"] },
+  { "word": "DONDURMA", "taboo": ["SOĞUK", "TATLI", "SÜT", "YAZ", "KÜLAH"] },
+  { "word": "HAMBURGER", "taboo": ["ET", "EKMEK", "FASTFOOD", "AMERİKAN", "YEMEK"] },
+  
+  // SPOR & AKTİVİTE
+  { "word": "FUTBOL", "taboo": ["TOP", "SAHA", "GOL", "TAKIM", "OYUN"] },
+  { "word": "BASKETBOL", "taboo": ["SEPET", "TOP", "SAHA", "POT", "OYUN"] },
+  { "word": "YÜZME", "taboo": ["SU", "HAVUZ", "DENİZ", "SPOR", "YÜZMEK"] },
+  { "word": "KOŞU", "taboo": ["HIZ", "YOL", "SPOR", "EGZERSİZ", "YARIŞ"] },
+  { "word": "BİSİKLET", "taboo": ["PEDAL", "TEKER", "YOL", "ULAŞIM", "SPOR"] },
+  
+  // DOĞA & ÇEVRE
     { "word": "GÜNEŞ", "taboo": ["GÜN", "ISILIK", "IŞIK", "GÖKYÜZÜ", "YILDIZ"] },
     { "word": "AY", "taboo": ["GECE", "GÖKYÜZÜ", "FAZLAR", "YILDIZLAR", "DOLUNAY"] },
-    { "word": "YILDIZ", "taboo": ["GECE", "GÖKYÜZÜ", "PARLAKLIK", "GALAKSİ", "ASTRONOMİ"] },
     { "word": "DENİZ", "taboo": ["SU", "OKYANUS", "KUM", "BALIK", "YÜZMEK"] },
     { "word": "DAĞ", "taboo": ["YÜKSEK", "TEPE", "NATÜREL", "YÜRÜYÜŞ", "KAR"] },
-    { "word": "AĞAÇ", "taboo": ["YEŞİL", "ODUN", "YAPRAK", "DOĞA", "GÖLGELİK"] },
-    { "word": "BİLGİSAYAR", "taboo": ["TEKNOLOJİ", "EKRAN", "KLAVYE", "İNTERNET", "OYUN"] },
-    { "word": "TELEFON", "taboo": ["ARAMA", "MESAJ", "KONUŞMAK", "İLETİŞİM", "CİHAZ"] },
-    { "word": "KITAP", "taboo": ["OKUMAK", "YAZAR", "KÜTÜPHANE", "BİLGİ", "HİKAYE"] },
-    { "word": "MÜZİK", "taboo": ["SES", "NOTA", "ENSTRÜMAN", "ŞARKI", "RİTM"] },
-    { "word": "BANKA", "taboo": ["ÇEK", "MÜŞTERİ", "HESAP", "PARA", "KREDİ KARTI"] },
-    { "word": "DOĞRU", "taboo": ["YANLIŞ", "GERÇEK", "TABU", "PAS", "YANIT"] },
-    { "word": "ELMA", "taboo": ["MEYVE", "KIRMIZI", "AĞAÇ", "YEŞİL", "YEMEK"] },
-
-    { "word": "OYUN", "taboo": ["EĞLENCE", "KAZANMAK", "KAYBETMEK", "REKABET", "TAKIM"] },
-    { "word": "TABU", "taboo": ["KELİME", "YASAK", "OYNAMA", "PAS", "KAZANMA"] },
+  { "word": "ORMAN", "taboo": ["AĞAÇ", "YEŞİL", "DOĞA", "YAPRAK", "HAYVAN"] },
+  
+  // HAYVANLAR
     { "word": "KEDİ", "taboo": ["HAYVAN", "PATI", "MİYAV", "EV", "KUŞ"] },
     { "word": "KÖPEK", "taboo": ["HAYVAN", "PATI", "HAVLAMAK", "EV", "KUŞ"] },
-    { "word": "ARABA", "taboo": ["TAŞIT", "YOL", "HIZ", "MOTOR", "GİTMEK"] },
-    { "word": "YEMEK", "taboo": ["AÇLIK", "MUTFAK", "PİŞİRMEK", "LEZZET", "MASA"] },
+  { "word": "ASLAN", "taboo": ["HAYVAN", "ORMAN", "KRAL", "YIRTICI", "KAFTAN"] },
+  { "word": "FİL", "taboo": ["HAYVAN", "HORTUM", "BÜYÜK", "AFRİKA", "GRİ"] },
+  { "word": "KAPLAN", "taboo": ["HAYVAN", "ÇİZGİ", "YIRTICI", "ORMAN", "TURUNCU"] },
+  
+  // MESLEKLER
+  { "word": "DOKTOR", "taboo": ["HASTANE", "SAĞLIK", "MUAYENE", "İLAÇ", "HEKİM"] },
+  { "word": "ÖĞRETMEN", "taboo": ["OKUL", "EĞİTİM", "DERS", "ÖĞRENCİ", "SINIF"] },
+  { "word": "MÜHENDİS", "taboo": ["TEKNİK", "PROJE", "İNŞAAT", "HESAP", "TASARIM"] },
+  { "word": "AVUKAT", "taboo": ["MAHKEME", "HUKUK", "DAVA", "ADALET", "KANUN"] },
+  { "word": "POLİS", "taboo": ["GÜVENLİK", "KANUN", "MEMUR", "ARABA", "GÖREV"] },
+  
+  // EĞLENCE & MEDYA
+  { "word": "FİLM", "taboo": ["SİNEMA", "OYUNCU", "HİKAYE", "EKRAN", "EĞLENCE"] },
+  { "word": "MÜZİK", "taboo": ["SES", "NOTA", "ENSTRÜMAN", "ŞARKI", "RİTM"] },
+  { "word": "KİTAP", "taboo": ["OKUMAK", "YAZAR", "KÜTÜPHANE", "BİLGİ", "HİKAYE"] },
+  { "word": "OYUN", "taboo": ["EĞLENCE", "KAZANMAK", "KAYBETMEK", "REKABET", "TAKIM"] },
+  { "word": "PARTİ", "taboo": ["EĞLENCE", "ARKADAŞ", "DOĞUMGÜNÜ", "KUTLAMA", "MÜZİK"] },
+  
+  // TEKNOLOJİ
+  { "word": "İNTERNET", "taboo": ["AĞ", "ONLİNE", "WEB", "BAĞLANTI", "TEKNOLOJİ"] },
+  { "word": "SOSYAL MEDYA", "taboo": ["FACEBOOK", "İNSTAGRAM", "PAYLAŞIM", "ARKADAŞ", "İNTERNET"] },
+  { "word": "UYGULAMA", "taboo": ["TELEFON", "İNDİRMEK", "PROGRAM", "YAZILIM", "CİHAZ"] },
+  { "word": "KAMERA", "taboo": ["FOTOĞRAF", "ÇEKMEK", "GÖRÜNTÜ", "TEKNOLOJİ", "RESİM"] },
+  { "word": "WİFİ", "taboo": ["İNTERNET", "BAĞLANTI", "KABLOSUZ", "AĞ", "SİNYAL"] },
+  
+  // SEYAHAT & ULAŞIM
+  { "word": "UÇAK", "taboo": ["HAVA", "YOLCULUK", "PİLOT", "GÖKYÜZÜ", "SEYAHAT"] },
+  { "word": "TREN", "taboo": ["RAY", "YOLCULUK", "İSTASYON", "ULAŞIM", "SEYAHAT"] },
+  { "word": "GEMİ", "taboo": ["DENİZ", "YOLCULUK", "KAPTAN", "OKYANUS", "SEYAHAT"] },
+  { "word": "OTOBÜS", "taboo": ["YOLCULUK", "DURAK", "YOLCU", "ULAŞIM", "SEYAHAT"] },
+  { "word": "TAKSİ", "taboo": ["TAKSİ", "ŞOFÖR", "YOLCULUK", "ULAŞIM", "ARABA"] },
+  
+  // ALIŞVERİŞ & TİCARET
+  { "word": "MARKET", "taboo": ["ALIŞVERİŞ", "ÜRÜN", "PARA", "MAĞAZA", "YEMEK"] },
+  { "word": "AVM", "taboo": ["ALIŞVERİŞ", "MAĞAZA", "EĞLENCE", "BÜYÜK", "TİCARET"] },
+  { "word": "BANKA", "taboo": ["ÇEK", "MÜŞTERİ", "HESAP", "PARA", "KREDİ KARTI"] },
+  { "word": "ATM", "taboo": ["PARA", "ÇEKMEK", "BANKA", "KART", "Nakit"] },
+  { "word": "PAZAR", "taboo": ["ALIŞVERİŞ", "SEBZE", "MEYVE", "TEZGAH", "SATIŞ"] },
+  
+  // SAĞLIK & VÜCUT
+  { "word": "KALP", "taboo": ["ORGAN", "KAN", "ATMAK", "SAĞLIK", "VÜCUT"] },
+  { "word": "GÖZ", "taboo": ["GÖRMEK", "ORGAN", "YÜZ", "SAĞLIK", "VÜCUT"] },
+  { "word": "BURUN", "taboo": ["KOKU", "ORGAN", "YÜZ", "SAĞLIK", "VÜCUT"] },
+  { "word": "AĞIZ", "taboo": ["KONUŞMAK", "YEMEK", "YÜZ", "SAĞLIK", "VÜCUT"] },
+  { "word": "KULAK", "taboo": ["DUYMAK", "ORGAN", "YÜZ", "SAĞLIK", "VÜCUT"] },
+  
+  // RENKLER & SANAT
+  { "word": "KIRMIZI", "taboo": ["RENK", "KAN", "ATEŞ", "SICAK", "GÖZ"] },
+  { "word": "MAVİ", "taboo": ["RENK", "GÖKYÜZÜ", "DENİZ", "SOĞUK", "GÖZ"] },
+  { "word": "YEŞİL", "taboo": ["RENK", "DOĞA", "AĞAÇ", "ÇİMEN", "GÖZ"] },
+  { "word": "SARI", "taboo": ["RENK", "GÜNEŞ", "ALTIN", "SICAK", "GÖZ"] },
+  { "word": "MOR", "taboo": ["RENK", "KRALİYET", "ÜZÜM", "GÖZ", "LÜKS"] },
+  
+  // DUYGULAR & KİŞİLİK
+  { "word": "MUTLU", "taboo": ["SEVİNÇ", "GÜLMEK", "DUYGU", "POZİTİF", "HİS"] },
+  { "word": "ÜZGÜN", "taboo": ["AĞLAMAK", "DUYGU", "NEGATİF", "HİS", "KEDER"] },
+  { "word": "KORKU", "taboo": ["DUYGU", "KORKMAK", "NEGATİF", "HİS", "ENDİŞE"] },
+  { "word": "ÖFKE", "taboo": ["DUYGU", "SİNİR", "NEGATİF", "HİS", "KIZMAK"] },
+  { "word": "AŞK", "taboo": ["DUYGU", "SEVMEK", "POZİTİF", "HİS", "ROMANTİK"] },
+  
+  // ZAMAN & TARİH
+  { "word": "SABAH", "taboo": ["GÜN", "ERKEN", "KAHVALTI", "ZAMAN", "UYANMAK"] },
+  { "word": "AKŞAM", "taboo": ["GÜN", "GEÇ", "AKŞAM YEMEĞİ", "ZAMAN", "UYUMAK"] },
+  { "word": "HAFTA", "taboo": ["GÜN", "7", "ZAMAN", "ÇALIŞMA", "TATİL"] },
+  { "word": "AY", "taboo": ["ZAMAN", "30", "TAKVİM", "YIL", "MEVSİM"] },
+  { "word": "YIL", "taboo": ["ZAMAN", "365", "TAKVİM", "DOĞUMGÜNÜ", "MEVSİM"] },
+  
+  // MEVSİMLER & HAVA
+  { "word": "YAZ", "taboo": ["SICAK", "GÜNEŞ", "TATİL", "MEVSİM", "DENİZ"] },
+  { "word": "KIŞ", "taboo": ["SOĞUK", "KAR", "MEVSİM", "KALIN", "BERE"] },
+  { "word": "İLKBAHAR", "taboo": ["ÇİÇEK", "MEVSİM", "YENİ", "YEŞİL", "HAVA"] },
+  { "word": "SONBAHAR", "taboo": ["YAPRAK", "MEVSİM", "DÖKÜLMEK", "SARI", "HAVA"] },
+  { "word": "YAĞMUR", "taboo": ["SU", "HAVA", "BULUT", "ŞEMSİYE", "ISLAK"] },
+  
+  // EV & MOBİLYA
+  { "word": "MASA", "taboo": ["MOBİLYA", "SANDALYE", "YEMEK", "ÇALIŞMA", "EV"] },
+  { "word": "KOLTUK", "taboo": ["OTURMAK", "MOBİLYA", "RAHAT", "EV", "SALON"] },
+  { "word": "YATAK", "taboo": ["UYUMAK", "MOBİLYA", "YATMAK", "ODA", "EV"] },
+  { "word": "DOLAP", "taboo": ["EŞYA", "MOBİLYA", "GİYSİ", "SAKLAMAK", "EV"] },
+  { "word": "MUTFAK", "taboo": ["YEMEK", "PİŞİRMEK", "ODA", "EV", "OCAK"] },
+  
+  // GİYSİ & MODA
+  { "word": "ELBİSE", "taboo": ["GİYSİ", "KADIN", "MODA", "GÜZEL", "GİYMEK"] },
+  { "word": "PANTOLON", "taboo": ["GİYSİ", "BACAK", "MODA", "GİYMEK", "KOT"] },
+  { "word": "AYAKKABI", "taboo": ["GİYSİ", "AYAK", "YÜRÜMEK", "GİYMEK", "TABAN"] },
+  { "word": "ŞAPKA", "taboo": ["GİYSİ", "BAŞ", "GÜNEŞ", "GİYMEK", "KORUMA"] },
+  { "word": "ÇANTA", "taboo": ["EŞYA", "TAŞIMAK", "KADIN", "MODA", "İÇİNE"] },
+  
+  // OYUNCAK & EĞLENCE
+  { "word": "OYUNCAK", "taboo": ["ÇOCUK", "EĞLENCE", "OYNAMAK", "EŞYA", "HEDİYE"] },
+  { "word": "PUZZLE", "taboo": ["PARÇA", "BİRLEŞTİRMEK", "OYUN", "ZOR", "RESİM"] },
+  { "word": "LEGO", "taboo": ["PARÇA", "BİRLEŞTİRMEK", "OYUNCAK", "ÇOCUK", "İNŞAAT"] },
+  { "word": "BEBEK", "taboo": ["ÇOCUK", "OYUNCAK", "KIZ", "OYNAMAK", "HEDİYE"] },
+  { "word": "ARABA OYUNCAĞI", "taboo": ["OYUNCAK", "ÇOCUK", "TEKER", "OYNAMAK", "HEDİYE"] },
+  
+  // MÜZİK & ENSTRÜMAN
+  { "word": "GİTAR", "taboo": ["ENSTRÜMAN", "TEL", "MÜZİK", "ÇALMAK", "SES"] },
+  { "word": "PİYANO", "taboo": ["ENSTRÜMAN", "TUŞ", "MÜZİK", "ÇALMAK", "SES"] },
+  { "word": "DAVUL", "taboo": ["ENSTRÜMAN", "VURMAK", "MÜZİK", "ÇALMAK", "SES"] },
+  { "word": "KEMAN", "taboo": ["ENSTRÜMAN", "TEL", "MÜZİK", "ÇALMAK", "SES"] },
+  { "word": "FLÜT", "taboo": ["ENSTRÜMAN", "ÜFLEMEK", "MÜZİK", "ÇALMAK", "SES"] },
+  
+  // BİLGİSAYAR OYUNLARI
+  { "word": "MARIO", "taboo": ["OYUN", "KARAKTER", "NİNTENDO", "PLATFORM", "ÇOCUK"] },
+  { "word": "MİNECRAFT", "taboo": ["OYUN", "BLOK", "İNŞAAT", "ÇOCUK", "SANAL"] },
+  { "word": "FORTNITE", "taboo": ["OYUN", "SAVAŞ", "BATTLE ROYALE", "ÇOCUK", "SANAL"] },
+  { "word": "POKEMON", "taboo": ["OYUN", "HAYVAN", "YAKALAMAK", "ÇOCUK", "SANAL"] },
+  { "word": "ANGRY BİRDS", "taboo": ["OYUN", "KUŞ", "DOMUZ", "ATMAK", "ÇOCUK"] },
+  
+  // YEMEK TARİFLERİ
+  { "word": "KEBAP", "taboo": ["ET", "TÜRK", "YEMEK", "PİŞİRMEK", "LEZZET"] },
+  { "word": "LAHMACUN", "taboo": ["HAMUR", "ET", "TÜRK", "YEMEK", "PİŞİRMEK"] },
+  { "word": "MANTI", "taboo": ["HAMUR", "ET", "TÜRK", "YEMEK", "PİŞİRMEK"] },
+  { "word": "DÖNER", "taboo": ["ET", "TÜRK", "YEMEK", "PİŞİRMEK", "LEZZET"] },
+  { "word": "BAKLAVA", "taboo": ["TATLI", "HAMUR", "TÜRK", "ŞERBET", "LEZZET"] },
+  
+  // İÇECEKLER
+  { "word": "ÇAY", "taboo": ["İÇECEK", "SICAK", "TÜRK", "DEMLEMEK", "FİNCAN"] },
     { "word": "SU", "taboo": ["İÇMEK", "SIVI", "HIDRATASYON", "NEHİR", "OKYANUS"] },
-    { "word": "GÜNEŞ", "taboo": ["GÜN", "ISILIK", "IŞIK",  ,"GÖKYÜZÜ" ,"YILDIZ"] },
-    { "word": "DENİZ", "taboo": ["SU", "OKYANUS", "KUM", "BALIK", "YÜZMEK"] },
-    { "word": "DAĞ", "taboo": ["YÜKSEK", "TEPE", "NATÜREL", "YÜRÜYÜŞ", "KAR"] },
-    { "word": "AĞAÇ", "taboo": ["YEŞİL", "ODUN", "YAPRAK", "DOĞA", "GÖLGELİK"] },   
-    { "word": "BİLGİSAYAR", "taboo": ["TEKNOLOJİ", "EKRAN", "KLAVYE", "İNTERNET", "OYUN"] },
-    { "word": "TELEFON", "taboo": ["ARAMA", "MESAJ", "KONUŞMAK", "İLETİŞİM", "CİHAZ"] },
-    { "word": "KITAP", "taboo": ["OKUMAK", "YAZAR", "KÜTÜPHANE", "BİLGİ", "HİKAYE"] },
-    { "word": "MÜZİK", "taboo": ["SES", "NOTA", "ENSTRÜMAN", "ŞARKI", "RİTM"] }
-
+  { "word": "MEYVE SUYU", "taboo": ["İÇECEK", "MEYVE", "SAĞLIKLI", "VİTAMİN", "LEZZET"] },
+  { "word": "SÜT", "taboo": ["İÇECEK", "BEYAZ", "SAĞLIKLI", "İNEK", "BEBEK"] },
+  { "word": "LİMONATA", "taboo": ["İÇECEK", "LİMON", "ASİT", "YAZ", "LEZZET"] },
+  
+  // SPOR TAKIMLARI
+  { "word": "GALATASARAY", "taboo": ["FUTBOL", "TAKIM", "SARI", "KIRMIZI", "İSTANBUL"] },
+  { "word": "FENERBAHÇE", "taboo": ["FUTBOL", "TAKIM", "SARI", "LACİVERT", "İSTANBUL"] },
+  { "word": "BEŞİKTAŞ", "taboo": ["FUTBOL", "TAKIM", "SİYAH", "BEYAZ", "İSTANBUL"] },
+  { "word": "TRABZONSPOR", "taboo": ["FUTBOL", "TAKIM", "BORDO", "MAVİ", "TRABZON"] },
+  { "word": "BAŞAKŞEHİR", "taboo": ["FUTBOL", "TAKIM", "TURUNCU", "MAVİ", "İSTANBUL"] },
+  
+  // ŞEHİRLER
+  { "word": "İSTANBUL", "taboo": ["ŞEHİR", "BOĞAZ", "TÜRKİYE", "BÜYÜK", "NÜFUS"] },
+  { "word": "ANKARA", "taboo": ["ŞEHİR", "BAŞKENT", "TÜRKİYE", "KALE", "NÜFUS"] },
+  { "word": "İZMİR", "taboo": ["ŞEHİR", "EGE", "TÜRKİYE", "DENİZ", "NÜFUS"] },
+  { "word": "ANTALYA", "taboo": ["ŞEHİR", "AKDENİZ", "TÜRKİYE", "TURİZM", "NÜFUS"] },
+  { "word": "BURSA", "taboo": ["ŞEHİR", "MARMARA", "TÜRKİYE", "OSMANLI", "NÜFUS"] },
+  
+  // ÜLKELER
+  { "word": "TÜRKİYE", "taboo": ["ÜLKE", "TÜRK", "BAŞKENT", "NÜFUS", "VATAN"] },
+  { "word": "ALMANYA", "taboo": ["ÜLKE", "ALMAN", "BERLİN", "AVRUPA", "NÜFUS"] },
+  { "word": "FRANSA", "taboo": ["ÜLKE", "FRANSIZ", "PARİS", "AVRUPA", "NÜFUS"] },
+  { "word": "İTALYA", "taboo": ["ÜLKE", "İTALYAN", "ROMA", "AVRUPA", "NÜFUS"] },
+  { "word": "İSPANYA", "taboo": ["ÜLKE", "İSPANYOL", "MADRİD", "AVRUPA", "NÜFUS"] },
+  
+  // TABU OYUNU KELİMELERİ
+  { "word": "TABU", "taboo": ["KELİME", "YASAK", "OYNAMA", "PAS", "KAZANMA"] },
+  { "word": "DOĞRU", "taboo": ["YANLIŞ", "GERÇEK", "TABU", "PAS", "YANIT"] },
+  { "word": "ELMA", "taboo": ["MEYVE", "KIRMIZI", "AĞAÇ", "YEŞİL", "YEMEK"] }
 ]
 
 
