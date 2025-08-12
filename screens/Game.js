@@ -1,12 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert, Image, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert, Image, Modal, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import words from '../data/words.json';
 import * as Font from 'expo-font';
+import { BlurView } from 'expo-blur';
 import heart from '../assets/heart.png';
 import exclamationMark from '../assets/exclamation-mark.png';
 import paperPlane from '../assets/paper-plane.png';
+import number1 from '../assets/number-1.png';
+import number2 from '../assets/number-2.png';
+import number3 from '../assets/numbre-3.png';
+import colosseum from '../assets/colosseum.png';
+import londonEye from '../assets/london-eye.png';
+import galataTower from '../assets/galata-tower.png';
+import pyramids from '../assets/pyramids.png';
 
 
 const { width, height } = Dimensions.get('window');
@@ -16,7 +24,7 @@ const translations = {
     gameOver: 'Oyun Bitti!',
     winner: 'Kazanan:',
     score: 'Skor:',
-    mainMenu: 'Ana Menü',
+    mainMenu: 'Oyunu Bitir',
     newGame: 'Yeni Oyun',
     roundOver: 'Tur Bitti!',
     correct: 'Doğru:',
@@ -32,12 +40,17 @@ const translations = {
     error: 'Hata',
     noWordsFound: 'Seçilen oyun modu için kelime bulunamadı. Lütfen NewGame ekranına dönün.',
     noMoreWords: 'BİTEBİLİR',
+    countdown: 'Geri Sayım',
+    start: 'BAŞLA!',
+    continueGame: 'Oyuna Devam Et',
+    playAgain: 'Tekrar Oyna',
+    tabooRightsEnded: 'Tabu hakkınız bitti!'
   },
   en: {
     gameOver: 'Game Over!',
     winner: 'Winner:',
     score: 'Score:',
-    mainMenu: 'Main Menu',
+    mainMenu: 'End Game',
     newGame: 'New Game',
     roundOver: 'Round Over!',
     correct: 'Correct:',
@@ -53,11 +66,17 @@ const translations = {
     error: 'Error',
     noWordsFound: 'No words found for the selected game mode. Please return to the NewGame screen.',
     noMoreWords: 'NO MORE WORDS',
+    countdown: 'Countdown',
+    start: 'START!',
+    continueGame: 'Continue Game',
+    playAgain: 'Play Again',
+    tabooRightsEnded: 'No taboo rights left!'
   },
 };
 
 const Game = ({ route, navigation }) => {
   const { teamA = 'A Takımı', teamB = 'B Takımı', timeLimit = 60, passCount: initialPass = 3, gameMode = 'adult', language = 'tr', tabooCount: initialTaboo = 3 } = route.params || {};
+  const routeMaxSets = route.params?.maxSets ?? 1;
 
   const [currentWord, setCurrentWord] = useState('');
   const [teamAScore, setTeamAScore] = useState(0);
@@ -73,19 +92,33 @@ const Game = ({ route, navigation }) => {
   const [showTurnModal, setShowTurnModal] = useState(false);
   const [isRoundOver, setIsRoundOver] = useState(false);
   const [gameStats, setGameStats] = useState({
-    totalRounds: 0,
+    totalRounds: 1, // Start with 1 as the first round is active
     totalCorrect: 0,
     totalPass: 0,
     totalTaboo: 0
   });
+  const [teamStats, setTeamStats] = useState({
+    A: { correct: 0, pass: 0, taboo: 0, tabooWords: [] },
+    B: { correct: 0, pass: 0, taboo: 0, tabooWords: [] },
+  });
   const [fontLoaded, setFontLoaded] = useState(false);
   const [availableWords, setAvailableWords] = useState([]);
+  const [countdown, setCountdown] = useState(3);
+  const [showCountdownModal, setShowCountdownModal] = useState(true);
+  const [maxRounds, setMaxRounds] = useState(routeMaxSets * 2); // A ve B için set sayısı x2
+  const [showFinalScoreModal, setShowFinalScoreModal] = useState(false);
+  const [winningScore, setWinningScore] = useState(route.params?.winPoints ?? 300); // Kazanma puanı
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const timerAnim = useRef(new Animated.Value(1)).current;
   const wordAnim = useRef(new Animated.Value(0)).current;
+  const countdownAnim = useRef(new Animated.Value(1)).current; // Başlangıçta 1, küçülecek
+  const countdownOpacityAnim = useRef(new Animated.Value(1)).current; // Başlangıçta görünür
+  const numberImageAnim = useRef(new Animated.Value(0)).current;
+  const countdownTranslateYAnim = useRef(new Animated.Value(30)).current; // aşağıdan yukarı anim
+  const isMounted = useRef(true); // Component'in mount durumunu takip etmek için
 
   useEffect(() => {
     (async () => {
@@ -95,7 +128,11 @@ const Game = ({ route, navigation }) => {
       setFontLoaded(true);
     })();
     
-    // Oyun moduna göre kelimeleri filtrele
+    // Component unmount olduğunda isMounted değerini false yap
+    return () => { isMounted.current = false; };
+  }, []);
+
+  useEffect(() => {
     let filteredWords;
     if (gameMode === 'child') {
       filteredWords = words.filter(word => word.mode === 'child' || word.mode === 'both');
@@ -104,44 +141,134 @@ const Game = ({ route, navigation }) => {
     }
     setAvailableWords(filteredWords);
 
-    // Kelime listesi boşsa uyarı ver
     if (filteredWords.length === 0) {
       Alert.alert(translations[language].error, translations[language].noWordsFound);
       navigation.goBack();
       return;
     }
 
-    getNextWord(filteredWords, language);
-    startAnimations();
-    setTabooLeft(initialTaboo);
-  }, [gameMode, language]); // gameMode ve language değiştiğinde bu useEffect tekrar çalışsın
+    if (!showCountdownModal && isMounted.current) {
+      getNextWord(filteredWords, language);
+      startAnimations();
+      setTabooLeft(initialTaboo);
+    }
+  }, [gameMode, language, showCountdownModal]);
 
-  // Yeni eklenen useEffect: timeLimit ve initialPass değiştiğinde state'leri güncelle
   useEffect(() => {
     setTimeLeft(timeLimit);
     setPassCount(initialPass);
   }, [timeLimit, initialPass]);
 
   useEffect(() => {
+    if (route.params?.initialTeamAScore !== undefined) {
+      setTeamAScore(route.params.initialTeamAScore);
+    }
+    if (route.params?.initialTeamBScore !== undefined) {
+      setTeamBScore(route.params.initialTeamBScore);
+    }
+  }, [route.params?.initialTeamAScore, route.params?.initialTeamBScore]);
+
+  useEffect(() => {
     if (isRoundOver) return;
     if (isPaused) return;
+    if (showCountdownModal) return;
     if (timeLeft <= 0) {
       handleTimeUp();
       return;
     }
     const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, isRoundOver, isPaused]);
+  }, [timeLeft, isRoundOver, isPaused, showCountdownModal]);
 
-  // Timer animasyonu
   useEffect(() => {
-    const progress = timeLeft / timeLimit;
-    Animated.timing(timerAnim, {
-      toValue: progress,
-      duration: 1000,
-      useNativeDriver: false,
-    }).start();
-  }, [timeLeft]);
+    if (!showCountdownModal) return;
+
+    countdownAnim.setValue(1); 
+    countdownOpacityAnim.setValue(0); 
+    countdownTranslateYAnim.setValue(30);
+    
+    // İlk değer (3) için animasyonu hemen oynat
+    Animated.sequence([
+      Animated.parallel([
+        Animated.timing(countdownAnim, { toValue: 1.2, duration: 260, useNativeDriver: true }),
+        Animated.timing(countdownOpacityAnim, { toValue: 1, duration: 260, useNativeDriver: true }),
+        Animated.timing(countdownTranslateYAnim, { toValue: 0, duration: 260, useNativeDriver: true }),
+      ]),
+      Animated.parallel([
+        Animated.timing(countdownAnim, { toValue: 0.95, duration: 240, useNativeDriver: true }),
+        Animated.timing(countdownOpacityAnim, { toValue: 0, duration: 240, useNativeDriver: true }),
+        Animated.timing(countdownTranslateYAnim, { toValue: -10, duration: 240, useNativeDriver: true }),
+      ]),
+    ]).start();
+    
+    const countdownInterval = setInterval(() => {
+      setCountdown(prev => {
+        if (prev === 1) {
+          clearInterval(countdownInterval);
+          // "BAŞLA!" için aynı anim mantığı
+          countdownTranslateYAnim.setValue(30);
+          countdownOpacityAnim.setValue(0);
+          Animated.sequence([
+            Animated.parallel([
+              Animated.timing(countdownAnim, { toValue: 1.5, duration: 350, useNativeDriver: true }),
+              Animated.timing(countdownOpacityAnim, { toValue: 1, duration: 350, useNativeDriver: true }),
+              Animated.timing(countdownTranslateYAnim, { toValue: 0, duration: 350, useNativeDriver: true }),
+            ]),
+            Animated.parallel([
+              Animated.timing(countdownAnim, { toValue: 0.9, duration: 300, useNativeDriver: true }),
+              Animated.timing(countdownOpacityAnim, { toValue: 0, duration: 280, useNativeDriver: true }),
+              Animated.timing(countdownTranslateYAnim, { toValue: -10, duration: 300, useNativeDriver: true }),
+            ]),
+          ]).start(() => {
+            // Animasyon bittiğinde modalı kapat ve oyunu başlat
+            setShowCountdownModal(false);
+            if (isMounted.current) { // Component hala mounted ise
+                getNextWord(availableWords, language);
+                startAnimations();
+                setTabooLeft(initialTaboo);
+            }
+          });
+          return translations[language].start; 
+        }
+        // 3, 2, 1 için giriş animasyonu (aşağıdan yukarı)
+        countdownTranslateYAnim.setValue(30);
+        countdownOpacityAnim.setValue(0);
+        Animated.sequence([
+          Animated.parallel([
+            Animated.timing(countdownAnim, { toValue: 1.2, duration: 260, useNativeDriver: true }),
+            Animated.timing(countdownOpacityAnim, { toValue: 1, duration: 260, useNativeDriver: true }),
+            Animated.timing(countdownTranslateYAnim, { toValue: 0, duration: 260, useNativeDriver: true }),
+          ]),
+          Animated.parallel([
+            Animated.timing(countdownAnim, { toValue: 0.95, duration: 240, useNativeDriver: true }),
+            Animated.timing(countdownOpacityAnim, { toValue: 0, duration: 240, useNativeDriver: true }),
+            Animated.timing(countdownTranslateYAnim, { toValue: -10, duration: 240, useNativeDriver: true }),
+          ]),
+        ]).start();
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(countdownInterval);
+  }, [showCountdownModal, language, availableWords]);
+  
+  useEffect(() => {
+    if (showCountdownModal && typeof countdown === 'number') {
+      Animated.sequence([
+        Animated.timing(numberImageAnim, {
+          toValue: 1,
+          duration: 0, 
+          useNativeDriver: true,
+        }),
+        Animated.timing(numberImageAnim, {
+          toValue: 0,
+          duration: 800, 
+          delay: 200, 
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [countdown, showCountdownModal]);
 
   const startAnimations = () => {
     Animated.parallel([
@@ -179,7 +306,15 @@ const Game = ({ route, navigation }) => {
     else setTeamBScore(prev => prev + 10);
     setCorrectCount(prev => prev + 1);
     setGameStats(prev => ({ ...prev, totalCorrect: prev.totalCorrect + 1 }));
+    setTeamStats(prev => ({
+      ...prev,
+      [currentTeam]: { ...prev[currentTeam], correct: prev[currentTeam].correct + 1 }
+    }));
     animateWord();
+    if (teamAScore + 10 >= winningScore || teamBScore + 10 >= winningScore) {
+        handleTimeUp(); // Puan limitine ulaşılırsa turu bitir
+        return;
+    }
     getNextWord(availableWords, language);
   };
 
@@ -189,31 +324,48 @@ const Game = ({ route, navigation }) => {
       setPassCount(prev => prev - 1);
       setPassUsedCount(prev => prev + 1);
       setGameStats(prev => ({ ...prev, totalPass: prev.totalPass + 1 }));
+      setTeamStats(prev => ({
+        ...prev,
+        [currentTeam]: { ...prev[currentTeam], pass: prev[currentTeam].pass + 1 }
+      }));
       animateWord();
       getNextWord(availableWords, language);
     } else {
-      // pas hakkı bittiğinde uyarı göstermeden görmezden gel
       return;
     }
   };
 
   const handleTaboo = () => {
+    // If no taboo rights left, behave like pass when rights are over: do nothing
+    if (tabooWordsUsed.length >= initialTaboo || tabooLeft <= 0) {
+      return;
+    }
     Vibration.vibrate([100, 50, 100]);
     if (currentTeam === 'A') setTeamAScore(prev => Math.max(0, prev - 5));
     else setTeamBScore(prev => Math.max(0, prev - 5));
     setTabooWordsUsed(prev => [...prev, currentWord]);
     setGameStats(prev => ({ ...prev, totalTaboo: prev.totalTaboo + 1 }));
+    setTeamStats(prev => ({
+      ...prev,
+      [currentTeam]: {
+        ...prev[currentTeam],
+        taboo: prev[currentTeam].taboo + 1,
+        tabooWords: [...prev[currentTeam].tabooWords, currentWord]
+      }
+    }));
     animateWord();
     setTabooLeft(prev => Math.max(0, prev - 1));
-    if (tabooLeft - 1 <= 0) {
-      // tabu hakkı bittiğinde daha fazla tabu sayılmaz
-      return;
-    }
+    
     getNextWord(availableWords, language);
   };
 
   const handleTimeUp = () => {
     Vibration.vibrate([200, 100, 200]);
+    // If game should end now (after B finished or someone reached winning score), go to final directly
+    if (gameStats.totalRounds >= maxRounds || teamAScore >= winningScore || teamBScore >= winningScore) {
+      endGame();
+      return;
+    }
     setIsRoundOver(true);
     setIsPaused(true);
     setShowTurnModal(true);
@@ -230,6 +382,14 @@ const Game = ({ route, navigation }) => {
   };
 
   const startNextRound = () => {
+    const someoneReachedTarget = teamAScore >= winningScore || teamBScore >= winningScore;
+    // End if maxRounds completed OR someone reached target and last played team was B (so both had chance)
+    if (gameStats.totalRounds >= maxRounds || (someoneReachedTarget && currentTeam === 'B')) {
+      endGame();
+      return;
+    }
+    setCountdown(3); // Geri sayımı sıfırla
+    setShowCountdownModal(true); // Yeni tur başlamadan önce geri sayımı göster
     setCurrentTeam(prev => (prev === 'A' ? 'B' : 'A'));
     setTimeLeft(timeLimit);
     setPassCount(initialPass);
@@ -238,8 +398,6 @@ const Game = ({ route, navigation }) => {
     setTabooWordsUsed([]);
     setIsRoundOver(false);
     setGameStats(prev => ({ ...prev, totalRounds: prev.totalRounds + 1 }));
-    getNextWord(availableWords, language);
-    startAnimations();
     setTabooLeft(initialTaboo);
   };
 
@@ -269,18 +427,72 @@ const Game = ({ route, navigation }) => {
     }
   };
 
-  const endGame = async () => {
+  const endGame = async (disableContinue = false) => {
     await saveScore();
-    const winner = teamAScore > teamBScore ? teamA : teamB;
-    const winnerScore = Math.max(teamAScore, teamBScore);
-    Alert.alert(
-      translations[language].gameOver,
-      `${translations[language].winner} ${winner}\n${translations[language].score} ${winnerScore}`,
-      [
-        { text: translations[language].mainMenu, onPress: () => navigation.navigate('TabuuMenu') },
-        { text: translations[language].newGame, onPress: () => navigation.navigate('NewGame') }
-      ]
-    );
+    const someoneReachedTarget = teamAScore >= winningScore || teamBScore >= winningScore;
+    const fairEndReached = gameStats.totalRounds >= maxRounds || (someoneReachedTarget && currentTeam === 'B');
+    const allowContinue = !(disableContinue || fairEndReached);
+    navigation.navigate('FinalResults', {
+      teamA,
+      teamB,
+      teamAScore,
+      teamBScore,
+      language,
+      totalCorrect: gameStats.totalCorrect,
+      totalPass: gameStats.totalPass,
+      totalTaboo: gameStats.totalTaboo,
+      teamAStats: teamStats.A,
+      teamBStats: teamStats.B,
+      timeLimit,
+      passCount: initialPass,
+      tabooCount: initialTaboo,
+      winPoints: winningScore,
+      gameMode,
+      allowContinue,
+    });
+  };
+
+  const endGameToMenu = async () => {
+    await saveScore();
+    setShowFinalScoreModal(false);
+    navigation.navigate('TabuuMenu');
+  };
+
+  const startNewSet = () => {
+    setShowFinalScoreModal(false);
+    setCountdown(3); 
+    setShowCountdownModal(true); 
+    setCurrentTeam('A'); // Always start new set with Team A
+    setTimeLeft(timeLimit);
+    setPassCount(initialPass);
+    setCorrectCount(0);
+    setPassUsedCount(0);
+    setTabooWordsUsed([]);
+    setIsRoundOver(false);
+    setGameStats(prev => ({ ...prev, totalRounds: 1, totalCorrect: 0, totalPass: 0, totalTaboo: 0 })); // Reset round stats
+    setTabooLeft(initialTaboo);
+    getNextWord(availableWords, language); // Get a new word for the new set
+    startAnimations();
+  };
+
+  const startRematch = () => {
+    // Completely restart scores but keep teams and settings
+    setShowFinalScoreModal(false);
+    setTeamAScore(0);
+    setTeamBScore(0);
+    setCountdown(3);
+    setShowCountdownModal(true);
+    setCurrentTeam('A');
+    setTimeLeft(timeLimit);
+    setPassCount(initialPass);
+    setCorrectCount(0);
+    setPassUsedCount(0);
+    setTabooWordsUsed([]);
+    setIsRoundOver(false);
+    setGameStats({ totalRounds: 1, totalCorrect: 0, totalPass: 0, totalTaboo: 0 });
+    setTabooLeft(initialTaboo);
+    getNextWord(availableWords, language);
+    startAnimations();
   };
 
   const formatTime = (seconds) => {
@@ -293,15 +505,30 @@ const Game = ({ route, navigation }) => {
     words.find(w => w.word === currentWord) || 
     words.find(w => w.english_word === currentWord)
   );
-  const displayTabooWords = language === 'en' ? currentTabooWords?.english_taboo : currentTabooWords?.taboo || [];
+  const displayTabooWords = language === 'en' 
+    ? (currentTabooWords?.english_taboo || []) 
+    : (currentTabooWords?.taboo || []);
 
   if (!fontLoaded) {
-    return null; // Font yüklenene kadar hiçbir şey gösterme
+    return null; 
   }
 
+  const getNumberImage = (num) => {
+    switch (num) {
+      case 1:
+        return number1;
+      case 2:
+        return number2;
+      case 3:
+        return number3;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.linedBackground}>
         {[...Array(20)].map((_, i) => (
           <View key={i} style={styles.line} />
@@ -309,8 +536,16 @@ const Game = ({ route, navigation }) => {
       </View>
       
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
+        {/* Doodles (behind content) */}
+        <View style={styles.doodlesContainer} pointerEvents="none">
+          <Image source={colosseum} style={styles.colosseumDoodle} />
+          <Image source={londonEye} style={styles.londonEyeDoodle} />
+          <Image source={galataTower} style={styles.galataTowerDoodle} />
+          <Image source={pyramids} style={styles.pyramidsDoodle} />
+        </View>
         {isRoundOver ? (
           <View style={styles.summaryContainer}>
+            <View style={styles.summaryBackdrop} />
             <View style={styles.notebookPage}>
               <Text style={styles.summaryTitle}>{translations[language].roundOver}</Text>
               <View style={styles.statsContainer}>
@@ -356,23 +591,28 @@ const Game = ({ route, navigation }) => {
           <View style={styles.scrollContent}>
             {/* Header */}
             <View style={styles.header}>
-              <View style={styles.timerContainer}>
+              <View style={styles.timerContainer}> 
                 <Ionicons name="hourglass-outline" size={24} color="#8B4513" style={{ marginRight: 8 }} />
                 <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
               </View>
               
-              <View style={styles.gameInfo}>
-                <Text style={[styles.gameTitle, { textAlign: 'center' }]}>{translations[language].tabooGame}</Text>
+              <View style={styles.centerHeaderContent}>
+                <Text style={styles.teamTurnText}>
+                  Sıra: {currentTeam === 'A' ? teamA : teamB}
+                </Text>
+              </View>
+              
+              <View style={styles.passTabooContainer}>
                 <View style={styles.passContainer}>
                   <Ionicons name="arrow-forward" size={20} color="#8B4513" />
                   <Text style={styles.passLabel}>{translations[language].pass}</Text>
                   <Text style={styles.passCount}>{passCount}</Text>
                 </View>
-              <View style={styles.passContainer}>
-                <Ionicons name="close-circle" size={20} color="#F44336" />
-                <Text style={styles.passLabel}>{translations[language].taboo}</Text>
-                <Text style={styles.passCount}>{tabooLeft}</Text>
-              </View>
+                <View style={styles.passContainer}>
+                  <Ionicons name="close-circle" size={20} color="#F44336" />
+                  <Text style={styles.passLabel}>{translations[language].taboo}</Text>
+                  <Text style={styles.passCount}>{initialTaboo - tabooWordsUsed.length}</Text>
+                </View>
               </View>
             </View>
 
@@ -472,29 +712,132 @@ const Game = ({ route, navigation }) => {
                   borderColor: '#8B4513',
                 }}
               >
-                <Text style={{ color: '#fff', fontFamily: 'IndieFlower', fontSize: 18, fontWeight: 'bold' }}>
-                  {isPaused ? 'Devam Et' : 'Durdur'}
-                </Text>
+                <Ionicons name={isPaused ? "play" : "pause"} size={24} color="#fff" />
               </TouchableOpacity>
             </View>
           </View>
         )}
       </Animated.View>
 
+      {isPaused && !isRoundOver && (
+        <View style={styles.blurOverlay}>
+          {Platform.OS === 'android' ? (
+            <>
+              <BlurView intensity={100} tint="default" style={StyleSheet.absoluteFillObject} />
+              <BlurView intensity={100} tint="dark" style={StyleSheet.absoluteFillObject} />
+              <View style={styles.blurAmplifierAndroid} />
+            </>
+          ) : (
+            <>
+              <BlurView intensity={100} tint="light" style={StyleSheet.absoluteFillObject} />
+              <View style={styles.blurAmplifierIOS} />
+            </>
+          )}
+          <View style={styles.pauseCard}>
+            <Ionicons name="pause" size={40} color="#8B4513" />
+            <Text style={styles.pauseText}>Durduruldu</Text>
+            <TouchableOpacity onPress={() => setIsPaused(false)} style={styles.resumeBtn}>
+              <Ionicons name="play" size={24} color="#fff" />
+              <Text style={styles.resumeText}>Devam Et</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => endGame(true)} style={styles.pauseEndBtn}>
+              <Ionicons name="stop" size={22} color="#fff" />
+              <Text style={styles.resumeText}>{translations[language].endGame}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+
       {/* Turn modal */}
       <Modal transparent visible={showTurnModal} animationType="fade">
-        <View style={{ flex:1, justifyContent:'center', alignItems:'center', backgroundColor:'rgba(0,0,0,0.25)' }}>
-          <View style={{ backgroundColor:'#fff', borderRadius:16, padding:24, borderWidth:2, borderColor:'#8B4513', width:'80%' }}>
-            <Text style={{ fontFamily:'IndieFlower', fontSize:24, color:'#8B4513', textAlign:'center', marginBottom:12 }}>
+        <View style={{ flex:1, justifyContent:'flex-end', alignItems:'center', backgroundColor:'rgba(0,0,0,0.25)' }}>
+          <View style={{ backgroundColor:'#fff', borderRadius:16, padding:24, borderWidth:2, borderColor:'#8B4513', width:'80%', alignItems:'center', marginBottom: 40 }}>
+            <Text style={{ fontFamily:'IndieFlower', fontSize:24, color:'#8B4513', textAlign:'center' }}>
               Sıra {currentTeam === 'A' ? teamB : teamA} takımında!
             </Text>
-            <TouchableOpacity onPress={() => { setShowTurnModal(false); setIsPaused(false); }} style={{ alignSelf:'center', backgroundColor:'#5b9bd5', paddingVertical:10, paddingHorizontal:16, borderRadius:12, borderWidth:2, borderColor:'#8B4513' }}>
-              <Text style={{ color:'#fff', fontFamily:'IndieFlower', fontSize:18, fontWeight:'bold' }}>Devam Et</Text>
+            <TouchableOpacity onPress={() => { setShowTurnModal(false); setIsPaused(false); startNextRound(); }} style={{ marginTop:12, alignSelf:'center', backgroundColor:'#7fb7ff', paddingVertical:10, paddingHorizontal:16, borderRadius:12, borderWidth:2, borderColor:'#8B4513' }}>
+              <Text style={{ color:'#fff', fontFamily:'IndieFlower', fontSize:18, fontWeight:'normal' }}>Devam Et</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-    </View>
+      {/* Countdown modal */}
+      <Modal
+        transparent
+        visible={showCountdownModal}
+        animationType="none" // Animasyon olmadan direkt görünür olsun
+      >
+        <View style={styles.countdownOverlay}>
+          <View style={styles.linedBackground}>
+            {[...Array(20)].map((_, i) => (
+              <View key={i} style={styles.line} />
+            ))}
+          </View>
+          <Animated.View style={[
+            styles.countdownCircle,
+            { transform: [{ scale: countdownAnim }, { translateY: countdownTranslateYAnim }], opacity: countdownOpacityAnim }
+          ]}>
+            {typeof countdown === 'number' ? (
+              <Image source={getNumberImage(countdown)} style={styles.countdownImage} />
+            ) : (
+              <Text style={styles.countdownText} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>{countdown}</Text>
+            )}
+          </Animated.View>
+        </View>
+      </Modal>
+      {/* Final Score Modal */}
+      <Modal transparent visible={showFinalScoreModal} animationType="fade">
+        <View style={styles.countdownOverlay}> 
+          <View style={styles.finalScoreNotebookPage}>
+            <Text style={styles.finalScoreTitle}>{translations[language].gameOver}</Text>
+            
+            <View style={styles.statsContainer}>
+                <View style={styles.statItem}>
+                  <Image source={heart} style={styles.finalScoreIcon} />
+                  <Text style={styles.statText}>{translations[language].correct} {gameStats.totalCorrect}</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Image source={paperPlane} style={styles.finalScoreIcon} />
+                  <Text style={styles.statText}>{translations[language].pass} {gameStats.totalPass}</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Image source={exclamationMark} style={styles.finalScoreIcon} />
+                  <Text style={styles.statText}>{translations[language].taboo} {gameStats.totalTaboo}</Text>
+                </View>
+            </View>
+
+            <View style={styles.finalScoreDetail}>
+              <Text style={styles.finalScoreText}>{teamA}: {teamAScore}</Text>
+            </View>
+            <View style={styles.finalScoreDetail}>
+              <Text style={styles.finalScoreText}>{teamB}: {teamBScore}</Text>
+            </View>
+            <Text style={styles.winnerText}>
+              {teamAScore > teamBScore ? `${translations[language].winner} ${teamA}` : teamBScore > teamAScore ? `${translations[language].winner} ${teamB}` : "Berabere!"}
+            </Text>
+            <View style={styles.summaryButtons}>
+              <TouchableOpacity style={styles.nextButton} onPress={startNewSet}>
+                <View style={styles.buttonContent}>
+                  <Text style={styles.buttonText}>{translations[language].continueGame}</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.endButton} onPress={startRematch}>
+                <View style={styles.buttonContent}>
+                  <Text style={styles.buttonText}>{translations[language].playAgain}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.summaryButtons}>
+              <TouchableOpacity style={[styles.endButton, { width: '80%' }]} onPress={endGameToMenu}>
+                <View style={styles.buttonContent}>
+                  <Text style={styles.buttonText}>{translations[language].endGame}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+    </SafeAreaView>
   );
 };
 
@@ -526,6 +869,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     // Removed as it's no longer a ScrollView
   },
+  doodlesContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 0,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -555,14 +902,30 @@ const styles = StyleSheet.create({
     color: '#8B4513',
     fontFamily: 'IndieFlower',
   },
-  gameInfo: {
+  centerHeaderContent: {
+    flex: 1, // Take up remaining space
+    alignItems: 'center', // Center its content
+  },
+  gameInfo: { // This style will no longer be used directly in JSX, but keeping it for reference if needed
     alignItems: 'center',
   },
-  gameTitle: {
+  gameTitle: { // This style is likely no longer needed in the header based on the new layout
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#8B4513',
     fontFamily: 'IndieFlower',
+    textAlign: 'center',
+  },
+  teamTurnText: {
+    fontSize: 18,
+    fontWeight: 'normal',
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    marginBottom: 8,
+  },
+  passTabooContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-end', // Align items to the right
   },
   passContainer: {
     flexDirection: 'row',
@@ -580,15 +943,15 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  passCount: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  passLabel: {
+    fontSize: 14,
     color: '#8B4513',
     marginLeft: 6,
     fontFamily: 'IndieFlower',
   },
-  passLabel: {
-    fontSize: 14,
+  passCount: {
+    fontSize: 18,
+    fontWeight: 'bold',
     color: '#8B4513',
     marginLeft: 6,
     fontFamily: 'IndieFlower',
@@ -611,7 +974,7 @@ const styles = StyleSheet.create({
   },
   currentWord: {
     fontSize: 40,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#4A6FA5',
     textAlign: 'center',
     fontFamily: 'IndieFlower',
@@ -634,7 +997,7 @@ const styles = StyleSheet.create({
   tabooTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#F44336',
+    color: '#9C27B0',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily: 'IndieFlower',
@@ -679,7 +1042,7 @@ const styles = StyleSheet.create({
   },
   teamScore: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#333',
     fontFamily: 'IndieFlower',
   },
@@ -719,7 +1082,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontSize: 16,
     marginTop: 6,
     fontFamily: 'IndieFlower',
@@ -748,7 +1111,7 @@ const styles = StyleSheet.create({
   },
   summaryTitle: {
     fontSize: 32, // Larger
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     marginBottom: 25,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
@@ -776,7 +1139,7 @@ const styles = StyleSheet.create({
   },
   tabooListTitle: {
     fontSize: 18, // Slightly larger
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#F44336',
     marginBottom: 12,
     textAlign: 'center',
@@ -815,7 +1178,160 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
+  countdownOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fdf6e3',
+  },
+  countdownCircle: {
+    width: Dimensions.get('window').width * 0.5,
+    height: Dimensions.get('window').width * 0.5,
+    borderRadius: Dimensions.get('window').width * 0.25,
+    backgroundColor: '#8B4513', // Kahverengi
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 5,
+    borderColor: '#fff',
+  },
+  countdownText: {
+    fontSize: 60,
+    fontWeight: 'normal',
+    color: '#fff',
+    fontFamily: 'IndieFlower',
+    textAlign: 'center',
+    paddingHorizontal: 6,
+  },
+  countdownImage: {
+    width: '80%',
+    height: '80%',
+    resizeMode: 'contain',
+  },
+  finalScoreNotebookPage: {
+    backgroundColor: '#fff',
+    borderRadius: 15, 
+    padding: 30, 
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    width: '85%',
+    alignItems: 'center',
+  },
+  finalScoreTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  finalScoreDetail: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
+  finalScoreText: {
+    fontSize: 20,
+    fontWeight: 'normal',
+    color: '#333',
+    fontFamily: 'IndieFlower',
+  },
+  winnerText: {
+    fontSize: 22,
+    fontWeight: 'normal',
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    marginBottom: 20,
+  },
+  finalScoreIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 8,
+  },
+  blurOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  summaryBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.18)'
+  },
+  pauseCard: {
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: 16,
+    paddingVertical: 18,
+    paddingHorizontal: 22,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    alignItems: 'center',
+  },
+  pauseText: {
+    fontFamily: 'IndieFlower',
+    fontSize: 20,
+    color: '#8B4513',
+    marginVertical: 8,
+  },
+  resumeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#5b9bd5',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    marginTop: 6,
+  },
+  resumeText: {
+    color: '#fff',
+    marginLeft: 8,
+    fontFamily: 'IndieFlower',
+    fontSize: 18,
+    fontWeight: 'normal',
+  },
+  pauseEndBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EF5350',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    marginTop: 10,
+  },
+  blurFallback: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.32)'
+  },
+  blurAmplifierIOS: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.45)'
+  },
+  blurAmplifierAndroid: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(255,255,255,0.95)'
+  },
+  colosseumDoodle: { position: 'absolute', top: 90, left: 8, width: 28, height: 28, opacity: 0.14, resizeMode: 'contain' },
+  londonEyeDoodle: { position: 'absolute', top: 60, right: 12, width: 30, height: 30, opacity: 0.14, resizeMode: 'contain' },
+  galataTowerDoodle: { position: 'absolute', bottom: 120, left: 16, width: 26, height: 26, opacity: 0.14, resizeMode: 'contain' },
+  pyramidsDoodle: { position: 'absolute', bottom: 60, right: 16, width: 32, height: 32, opacity: 0.14, resizeMode: 'contain' },
 });
+
+// Adjust padding for Android status bar
+if (Platform.OS === 'android') {
+  styles.container = { ...styles.container, paddingTop: StatusBar.currentHeight || 0 };
+}
 
 export default Game;
 

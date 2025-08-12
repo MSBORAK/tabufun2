@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Animated } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Animated, Platform } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +19,10 @@ import exclamationMark from '../assets/exclamation-mark.png';
 import car from '../assets/car.png';
 import eiffelTower from '../assets/eiffel-tower.png';
 import snorkel from '../assets/snorkel.png';
+import colosseum from '../assets/colosseum.png';
+import londonEye from '../assets/london-eye.png';
+import galataTower from '../assets/galata-tower.png';
+import pyramids from '../assets/pyramids.png';
 
 const translations = {
   tr: {
@@ -42,25 +46,34 @@ export default function TabuuMenu() {
   const [fontLoaded, setFontLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('tr');
 
+  const loadLanguage = async () => {
+    try {
+      const savedSettings = await AsyncStorage.getItem('tabuuSettings');
+      if (savedSettings) {
+        const parsed = JSON.parse(savedSettings);
+        setCurrentLanguage(parsed.language ?? 'tr');
+      }
+    } catch (error) {
+      console.log('Ayarlar yüklenemedi:', error);
+    }
+  };
+
   useEffect(() => {
     const loadAssetsAndSettings = async () => {
       await Font.loadAsync({
         'IndieFlower': require('../assets/IndieFlower-Regular.ttf'),
       });
       setFontLoaded(true);
-      
-      try {
-        const savedSettings = await AsyncStorage.getItem('tabuuSettings');
-        if (savedSettings) {
-          const parsed = JSON.parse(savedSettings);
-          setCurrentLanguage(parsed.language ?? 'tr');
-        }
-      } catch (error) {
-        console.log('Ayarlar yüklenemedi:', error);
-      }
+      await loadLanguage();
     };
     loadAssetsAndSettings();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadLanguage();
+    }, [])
+  );
 
   if (!fontLoaded) {
     return null; // Font yüklenene kadar hiçbir şey gösterme
@@ -126,6 +139,10 @@ export default function TabuuMenu() {
       <Image source={car} style={styles.carDoodle} />
       <Image source={eiffelTower} style={styles.eiffelDoodle} />
       <Image source={snorkel} style={styles.snorkelDoodle} />
+      <Image source={colosseum} style={styles.colosseumDoodle} />
+      <Image source={londonEye} style={styles.londonEyeDoodle} />
+      <Image source={galataTower} style={styles.galataTowerDoodle} />
+      <Image source={pyramids} style={styles.pyramidsDoodle} />
       <View style={styles.content}>
         {/* Başlık ve İkonlar */}
         <View style={styles.header}>
@@ -185,12 +202,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 100, // biraz daha yukarı
+    paddingTop: Platform.OS === 'ios' ? 80 : 100,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 30,
     position: 'relative',
+    marginTop: Platform.OS === 'ios' ? 60 : 80,
   },
   clockDoodle: {
     position: 'absolute',
@@ -203,7 +221,7 @@ const styles = StyleSheet.create({
   },
   titleBase: {
     fontFamily: 'IndieFlower',
-    fontSize: 72,
+    fontSize: 80,
     letterSpacing: 2,
     position: 'absolute',
     textTransform: 'uppercase',
@@ -389,6 +407,38 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     opacity: 0.22,
+  },
+  colosseumDoodle: {
+    position: 'absolute',
+    top: 50,
+    left: '40%',
+    width: 38,
+    height: 38,
+    opacity: 0.2,
+  },
+  londonEyeDoodle: {
+    position: 'absolute',
+    bottom: 200,
+    left: 20,
+    width: 42,
+    height: 42,
+    opacity: 0.2,
+  },
+  galataTowerDoodle: {
+    position: 'absolute',
+    top: 100,
+    right: 30,
+    width: 36,
+    height: 36,
+    opacity: 0.2,
+  },
+  pyramidsDoodle: {
+    position: 'absolute',
+    bottom: 80,
+    right: '45%',
+    width: 40,
+    height: 40,
+    opacity: 0.2,
   },
   bookIcon: {
     width: 24,

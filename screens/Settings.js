@@ -1,11 +1,15 @@
 // screens/Settings.js
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'react-native';
 import notebook from '../assets/notebook.png';
 import rightArrowOutline from '../assets/right-arrow-outline.png';
+import colosseum from '../assets/colosseum.png';
+import londonEye from '../assets/london-eye.png';
+import galataTower from '../assets/galata-tower.png';
+import pyramids from '../assets/pyramids.png';
 
 const Settings = ({ navigation }) => {
   const [timeLimit, setTimeLimit] = useState(180);
@@ -13,6 +17,8 @@ const Settings = ({ navigation }) => {
   const [winPoints, setWinPoints] = useState(250);
   const [passCount, setPassCount] = useState(3);
   const [language, setLanguage] = useState('tr'); // 'tr' veya 'en'
+  const [maxSets, setMaxSets] = useState(1);
+  const [soundEnabled, setSoundEnabled] = useState(true);
 
   // Uygulama açıldığında ayarları yükle
   useEffect(() => {
@@ -26,6 +32,8 @@ const Settings = ({ navigation }) => {
           setWinPoints(parsed.winPoints ?? 250);
           setPassCount(parsed.passCount ?? 3);
           setLanguage(parsed.language ?? 'tr'); // Dil ayarını yükle
+          setMaxSets(parsed.maxSets ?? 1);
+          setSoundEnabled(parsed.soundEnabled ?? true);
         }
       } catch (error) {
         console.log('Ayarlar yüklenemedi:', error);
@@ -36,7 +44,7 @@ const Settings = ({ navigation }) => {
 
   const handleSave = async () => {
     try {
-      const settingsData = { timeLimit, tabuCount, winPoints, passCount, language }; // Dili de kaydet
+      const settingsData = { timeLimit, tabuCount, winPoints, passCount, language, maxSets, soundEnabled }; // Dili de kaydet
       await AsyncStorage.setItem('tabuuSettings', JSON.stringify(settingsData));
       console.log('Ayarlar kaydedildi:', settingsData);
     } catch (error) {
@@ -52,6 +60,10 @@ const Settings = ({ navigation }) => {
       passRights: "Pas Hakkı:",
       tabooCount: "Tabu:",
       winPoints: "Kazanma Puanı:",
+      maxSets: "Set Sayısı:",
+      sound: "Ses:",
+      on: "Açık",
+      off: "Kapalı",
       language: "Dil:",
       turkish: "Türkçe",
       english: "English",
@@ -67,20 +79,29 @@ const Settings = ({ navigation }) => {
       turkish: "Turkish",
       english: "English",
       saveSettings: "Save Settings",
+      maxSets: "Sets:",
+      sound: "Sound:",
+      on: "On",
+      off: "Off",
     },
   }[language];
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.linedBackground}>
         {[...Array(20)].map((_, i) => (
           <View key={i} style={styles.line} />
         ))}
       </View>
       <View style={styles.content}>
+      <Image source={colosseum} style={styles.colosseumDoodle} />
+      <Image source={londonEye} style={styles.londonEyeDoodle} />
+      <Image source={galataTower} style={styles.galataTowerDoodle} />
+      <Image source={pyramids} style={styles.pyramidsDoodle} />
       <View style={styles.header}>
         <Image source={notebook} style={styles.headerNotebookIcon} />
-        <Ionicons name="settings-outline" size={32} color="#8B4513" />
+        <Ionicons name="settings-outline" size={28} color="#8B4513" />
         <Text style={styles.title}>{t.settingsTitle}</Text>
       </View>
 
@@ -128,6 +149,28 @@ const Settings = ({ navigation }) => {
         showArrowIcons={true}
       />
 
+      {/* Set sayısı */}
+      <SettingRow
+        label={t.maxSets}
+        value={maxSets}
+        decrease={() => setMaxSets(Math.max(1, maxSets - 1))}
+        increase={() => setMaxSets(Math.min(10, maxSets + 1))}
+        disableDecrease={maxSets <= 1}
+        disableIncrease={maxSets >= 10}
+        showArrowIcons={true}
+      />
+
+      {/* Ses Aç/Kapat */}
+      <SettingRow
+        label={t.sound}
+        value={soundEnabled ? t.on : t.off}
+        decrease={() => setSoundEnabled(prev => !prev)}
+        increase={() => setSoundEnabled(prev => !prev)}
+        disableDecrease={false}
+        disableIncrease={false}
+        showArrowIcons={true}
+      />
+
       {/* Dil Seçimi */}
       <View style={styles.languageSection}>
         <Text style={styles.languageLabel}>{t.language}</Text>
@@ -151,7 +194,7 @@ const Settings = ({ navigation }) => {
         <Text style={styles.saveButtonText}>{t.saveSettings}</Text>
       </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -200,86 +243,86 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 25,
+    padding: 16,
   },
   header: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    marginBottom: 30, 
-    marginTop: 30, // Increased margin
+    marginBottom: 20, 
+    marginTop: Platform.OS === 'ios' ? 8 : 48,
   },
   headerNotebookIcon: {
-    width: 40,
-    height: 40,
-    marginRight: 15,
+    width: 32,
+    height: 32,
+    marginRight: 10,
   },
   title: { 
-    fontSize: 34, // Larger title
+    fontSize: 28,
     fontWeight: 'bold', 
     color: '#8B4513', 
-    marginLeft: 15, // Increased margin
+    marginLeft: 10,
     fontFamily: 'IndieFlower',
   },
   settingRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20, // Increased padding
+    paddingVertical: 14,
     borderWidth: 2,
     borderColor: '#8B4513',
     backgroundColor: '#fff',
-    borderRadius: 15,
-    marginBottom: 15,
-    paddingHorizontal: 15,
+    borderRadius: 12,
+    marginBottom: 12,
+    paddingHorizontal: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   settingLabel: { 
-    fontSize: 20, // Larger font size
+    fontSize: 18,
     color: '#8B4513', 
     fontWeight: '500',
     fontFamily: 'IndieFlower',
   },
   valueContainer: { flexDirection: 'row', alignItems: 'center' },
   settingValue: { 
-    fontSize: 22, // Larger font size
+    fontSize: 20,
     fontWeight: '600', 
     color: '#4A6FA5', 
-    marginHorizontal: 18, // Increased margin
-    minWidth: 60, 
+    marginHorizontal: 12,
+    minWidth: 52, 
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
-  arrowButton: { padding: 10, borderRadius: 10 },
+  arrowButton: { padding: 8, borderRadius: 10 },
   decreaseButton: { backgroundColor: '#a9d5ee', borderWidth: 1, borderColor: '#8B4513' },
   increaseButton: { backgroundColor: '#a9d5ee', borderWidth: 1, borderColor: '#8B4513' },
   arrowButtonDisabled: { backgroundColor: '#e0e0e0' },
   arrowIcon: {
-    width: 24,
-    height: 24,
+    width: 22,
+    height: 22,
     tintColor: '#fff',
   },
   arrowIconDisabled: { tintColor: '#ccc' },
   saveButton: { 
-    backgroundColor: '#5b9bd5', // Soft blue
-    padding: 20, // Increased padding
-    borderRadius: 15, // More rounded
+    backgroundColor: '#5b9bd5',
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center', 
-    marginTop: 40, // Increased margin
+    marginTop: 24,
     borderWidth: 2,
     borderColor: '#8B4513',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 6,
   },
   saveButtonText: { 
     color: '#fff', 
-    fontSize: 22, // Larger font size
+    fontSize: 20,
     fontWeight: 'bold',
     fontFamily: 'IndieFlower',
   },
@@ -287,39 +330,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 20, // Increased padding
+    paddingVertical: 14,
     borderWidth: 2,
     borderColor: '#8B4513',
-    marginTop: 30, // Increased margin
+    marginTop: 20,
     backgroundColor: '#fff',
-    borderRadius: 15,
-    paddingHorizontal: 15,
+    borderRadius: 12,
+    paddingHorizontal: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    elevation: 2,
   },
   languageLabel: {
-    fontSize: 20, // Larger font size
+    fontSize: 18,
     color: '#333',
     fontWeight: '500',
     fontFamily: 'IndieFlower',
   },
   languageButtons: {
     flexDirection: 'row',
-    borderRadius: 12, // More rounded
+    borderRadius: 10,
     overflow: 'hidden',
     borderWidth: 2,
     borderColor: '#8B4513',
   },
   languageButton: {
-    paddingVertical: 10, // Increased padding
-    paddingHorizontal: 20, // Increased padding
-    backgroundColor: '#a9d5ee', // Soft blue for buttons
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    backgroundColor: '#a9d5ee',
   },
   languageButtonText: {
-    fontSize: 18, // Larger font size
+    fontSize: 16,
     color: '#8B4513',
     fontWeight: 'bold',
     fontFamily: 'IndieFlower',
@@ -329,6 +372,38 @@ const styles = StyleSheet.create({
   },
   activeLanguageButtonText: {
     color: '#fff',
+  },
+  colosseumDoodle: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    width: 38,
+    height: 38,
+    opacity: 0.15,
+  },
+  londonEyeDoodle: {
+    position: 'absolute',
+    bottom: 80,
+    right: 30,
+    width: 42,
+    height: 42,
+    opacity: 0.15,
+  },
+  galataTowerDoodle: {
+    position: 'absolute',
+    top: 250,
+    right: 10,
+    width: 36,
+    height: 36,
+    opacity: 0.15,
+  },
+  pyramidsDoodle: {
+    position: 'absolute',
+    bottom: 150,
+    left: 40,
+    width: 40,
+    height: 40,
+    opacity: 0.15,
   },
 });
 

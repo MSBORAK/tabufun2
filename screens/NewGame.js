@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Alert, ScrollView, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Alert, ScrollView, Image, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import car from '../assets/car.png';
 import notebook from '../assets/notebook.png';
+import colosseum from '../assets/colosseum.png';
+import londonEye from '../assets/london-eye.png';
+import galataTower from '../assets/galata-tower.png';
+import pyramids from '../assets/pyramids.png';
 
 const { width, height } = Dimensions.get('window');
 
@@ -19,7 +23,6 @@ const translations = {
     gameMode: 'Oyun Modu:',
     adultMode: 'Yetişkin Modu',
     childMode: 'Çocuk Modu',
-    gameSettings: 'Oyun Ayarları:',
     timeLimit: 'Süre Limiti (saniye):',
     passCount: 'Pas Hakkı Sayısı:',
     quickStart: 'Hızlı Başla',
@@ -37,7 +40,6 @@ const translations = {
     gameMode: 'Game Mode:',
     adultMode: 'Adult Mode',
     childMode: 'Child Mode',
-    gameSettings: 'Game Settings:',
     timeLimit: 'Time Limit (seconds):',
     passCount: 'Pass Count:',
     quickStart: 'Quick Start',
@@ -58,6 +60,8 @@ export default function NewGame() {
   const [gameMode, setGameMode] = useState('adult'); // 'adult', 'child' veya 'both'
   const [fontLoaded, setFontLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('tr');
+  const [winPoints, setWinPoints] = useState(250);
+  const [maxSets, setMaxSets] = useState(1);
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -79,6 +83,8 @@ export default function NewGame() {
           if (parsed.timeLimit) setTimeLimit(parsed.timeLimit);
           if (parsed.passCount !== undefined) setPassCount(parsed.passCount);
           if (parsed.tabuCount !== undefined) setTabooCount(parsed.tabuCount);
+          if (parsed.winPoints !== undefined) setWinPoints(parsed.winPoints);
+          if (parsed.maxSets !== undefined) setMaxSets(parsed.maxSets);
         }
       } catch (error) {
         console.log('Ayarlar yüklenemedi:', error);
@@ -107,32 +113,6 @@ export default function NewGame() {
 
   const t = translations[currentLanguage];
 
-  const LabelChip = ({ icon, label, onPress, pastelColor }) => {
-    const scale = React.useRef(new Animated.Value(1)).current;
-    const [pressed, setPressed] = React.useState(false);
-    const handleIn = () => {
-      setPressed(true);
-      Animated.spring(scale, { toValue: 1.05, useNativeDriver: true, friction: 6 }).start();
-    };
-    const handleOut = () => {
-      Animated.spring(scale, { toValue: 1, useNativeDriver: true, friction: 6 }).start(() => setPressed(false));
-    };
-    return (
-      <Animated.View style={[styles.chip, { transform: [{ scale }], backgroundColor: pressed ? pastelColor : '#fffaf0' }] }>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPressIn={handleIn}
-          onPressOut={handleOut}
-          onPress={onPress}
-          style={styles.chipInner}
-        >
-          <Ionicons name={icon} size={20} color="#2b2b2b" style={{ marginRight: 6 }} />
-          <Text style={styles.chipText}>{label}</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    );
-  };
-
   const handleStartGame = () => {
     if (teamA.trim() === '' || teamB.trim() === '') {
       Alert.alert(t.error, t.emptyTeamNames);
@@ -142,11 +122,11 @@ export default function NewGame() {
       Alert.alert(t.error, t.sameTeamNames);
       return;
     }
-    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount });
+    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount, winPoints, maxSets });
   };
 
   const handleQuickStart = () => {
-    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit, passCount, gameMode: 'adult', language: currentLanguage, tabooCount });
+    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit: 90, passCount: 3, gameMode: 'adult', language: currentLanguage, tabooCount: 3, winPoints: 300, maxSets });
   };
 
   if (!fontLoaded) {
@@ -154,8 +134,8 @@ export default function NewGame() {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.linedBackground}>
         {[...Array(20)].map((_, i) => (
           <View key={i} style={styles.line} />
@@ -163,6 +143,13 @@ export default function NewGame() {
       </View>
       
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+        {/* Doodles behind content */}
+        <View style={styles.doodlesContainer} pointerEvents="none">
+          <Image source={colosseum} style={styles.colosseumDoodle} />
+          <Image source={londonEye} style={styles.londonEyeDoodle} />
+          <Image source={galataTower} style={styles.galataTowerDoodle} />
+          <Image source={pyramids} style={styles.pyramidsDoodle} />
+        </View>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -172,22 +159,6 @@ export default function NewGame() {
             <Ionicons name="dice" size={32} color="#8B4513" />
             <Text style={styles.title}>{t.newGame}</Text>
           </View>
-        </View>
-
-        {/* Kısa erişim Sticker Chip'leri */}
-        <View style={styles.chipsRow}>
-          <LabelChip
-            icon="settings-outline"
-            label={t.gameSettings}
-            onPress={() => navigation.navigate('Settings')}
-            pastelColor="#fdebd0"
-          />
-          <LabelChip
-            icon="trophy-outline"
-            label={translations[currentLanguage].scores || 'Skorlar'}
-            onPress={() => navigation.navigate('Scores')}
-            pastelColor="#fff9cc"
-          />
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -256,7 +227,7 @@ export default function NewGame() {
           </View>
         </ScrollView>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -282,13 +253,18 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 60,
-    paddingBottom: 12,
+    paddingTop: 48,
+    paddingBottom: 20,
+    justifyContent: 'flex-start',
+  },
+  doodlesContainer: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 0,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 24,
   },
   backButton: {
     marginRight: 12,
@@ -311,21 +287,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
     fontFamily: 'IndieFlower',
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 12,
+    paddingBottom: 20,
+    justifyContent: 'flex-start',
   },
   section: {
     marginBottom: 18,
   },
   inputLabel: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#8B4513',
     marginBottom: 8,
     fontFamily: 'IndieFlower',
@@ -393,7 +370,7 @@ const styles = StyleSheet.create({
   },
   modeButtonText: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontFamily: 'IndieFlower',
     color: '#8B4513',
   },
@@ -427,7 +404,7 @@ const styles = StyleSheet.create({
   settingLabel: {
     fontSize: 18, // Slightly larger
     color: '#333',
-    fontWeight: '500',
+    fontWeight: 'normal',
     fontFamily: 'IndieFlower',
   },
   settingButtons: {
@@ -444,7 +421,7 @@ const styles = StyleSheet.create({
   },
   settingButtonText: {
     color: '#8B4513',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontFamily: 'IndieFlower',
     fontSize: 16,
   },
@@ -474,36 +451,6 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 10,
   },
-  chipsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
-    alignSelf: 'center',
-    marginBottom: 12,
-  },
-  chip: {
-    flex: 1,
-    marginHorizontal: 6,
-    borderWidth: 2,
-    borderColor: '#8B4513',
-    borderRadius: 14,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  chipInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  chipText: {
-    fontFamily: 'IndieFlower',
-    fontSize: 18,
-    color: '#2b2b2b',
-  },
   startButton: {
     width: '48%',
     borderRadius: 25, // More rounded
@@ -532,9 +479,41 @@ const styles = StyleSheet.create({
   },
   startButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontSize: 18,
     marginTop: 6,
     fontFamily: 'IndieFlower',
+  },
+  colosseumDoodle: {
+    position: 'absolute',
+    top: 20,
+    left: 10,
+    width: 36,
+    height: 36,
+    opacity: 0.15,
+  },
+  londonEyeDoodle: {
+    position: 'absolute',
+    top: 120,
+    right: 20,
+    width: 40,
+    height: 40,
+    opacity: 0.15,
+  },
+  galataTowerDoodle: {
+    position: 'absolute',
+    bottom: 120,
+    left: 30,
+    width: 34,
+    height: 34,
+    opacity: 0.15,
+  },
+  pyramidsDoodle: {
+    position: 'absolute',
+    bottom: 40,
+    right: 40,
+    width: 42,
+    height: 42,
+    opacity: 0.15,
   },
 });

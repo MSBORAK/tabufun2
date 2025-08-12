@@ -1,11 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, StatusBar, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, StatusBar, Alert, Image, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import notebook from '../assets/notebook.png';
 import pinwheel from '../assets/pinwheel.png';
+import colosseum from '../assets/colosseum.png';
+import londonEye from '../assets/london-eye.png';
+import galataTower from '../assets/galata-tower.png';
+import pyramids from '../assets/pyramids.png';
 
 
 const translations = {
@@ -159,8 +163,8 @@ export default function Scores() {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.linedBackground}>
         {[...Array(20)].map((_, i) => (
           <View key={i} style={styles.line} />
@@ -169,7 +173,12 @@ export default function Scores() {
       
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         {/* Doodle'lar */}
-        
+        <Image source={notebook} style={styles.notebookDoodle} />
+        <Image source={pinwheel} style={styles.pinwheelDoodle} />
+        <Image source={colosseum} style={styles.colosseumDoodle} />
+        <Image source={londonEye} style={styles.londonEyeDoodle} />
+        <Image source={galataTower} style={styles.galataTowerDoodle} />
+        <Image source={pyramids} style={styles.pyramidsDoodle} />
 
         {/* Header */}
         <View style={styles.header}>
@@ -253,7 +262,7 @@ export default function Scores() {
           )}
         </ScrollView>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -308,7 +317,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32, // Slightly larger
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
     fontFamily: 'IndieFlower',
@@ -332,7 +341,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 22, // Slightly larger
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#8B4513',
     marginBottom: 15,
     fontFamily: 'IndieFlower',
@@ -407,14 +416,14 @@ const styles = StyleSheet.create({
   },
   gameItemDetails: {
     fontSize: 18, // Slightly larger
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#333',
     marginBottom: 5,
     fontFamily: 'IndieFlower',
   },
   gameItemScore: {
     fontSize: 20, // Slightly larger
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#f47c20',
     fontFamily: 'IndieFlower',
   },
@@ -451,12 +460,66 @@ const styles = StyleSheet.create({
   },
   clearButtonText: {
     color: '#fff',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontSize: 18, // Slightly larger
     marginTop: 8,
     fontFamily: 'IndieFlower',
   },
   clearButtonColor: {
     backgroundColor: '#EF5350', // Matching softer red
+  },
+  notebookDoodle: {
+    position: 'absolute',
+    top: 100,
+    left: -50,
+    width: 100,
+    height: 100,
+    opacity: 0.1,
+    transform: [{ rotate: '-10deg' }],
+  },
+  pinwheelDoodle: {
+    position: 'absolute',
+    top: 200,
+    right: -30,
+    width: 80,
+    height: 80,
+    opacity: 0.1,
+    transform: [{ rotate: '15deg' }],
+  },
+  colosseumDoodle: {
+    position: 'absolute',
+    bottom: 100,
+    left: 100,
+    width: 120,
+    height: 120,
+    opacity: 0.1,
+    transform: [{ rotate: '-5deg' }],
+  },
+  londonEyeDoodle: {
+    position: 'absolute',
+    top: 300,
+    left: 200,
+    width: 150,
+    height: 150,
+    opacity: 0.1,
+    transform: [{ rotate: '5deg' }],
+  },
+  galataTowerDoodle: {
+    position: 'absolute',
+    bottom: 200,
+    right: 200,
+    width: 100,
+    height: 100,
+    opacity: 0.1,
+    transform: [{ rotate: '10deg' }],
+  },
+  pyramidsDoodle: {
+    position: 'absolute',
+    top: 400,
+    left: 300,
+    width: 180,
+    height: 180,
+    opacity: 0.1,
+    transform: [{ rotate: '-15deg' }],
   },
 });

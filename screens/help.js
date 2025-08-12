@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, ScrollView, Image, SafeAreaView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import book from '../assets/book.png';
+import colosseum from '../assets/colosseum.png';
+import londonEye from '../assets/london-eye.png';
+import galataTower from '../assets/galata-tower.png';
+import pyramids from '../assets/pyramids.png';
 
 const Help = () => {
   const navigation = useNavigation();
@@ -73,8 +77,8 @@ const Help = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.linedBackground}>
         {[...Array(20)].map((_, i) => (
           <View key={i} style={styles.line} />
@@ -82,6 +86,10 @@ const Help = () => {
       </View>
       
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+        <Image source={colosseum} style={styles.colosseumDoodle} />
+        <Image source={londonEye} style={styles.londonEyeDoodle} />
+        <Image source={galataTower} style={styles.galataTowerDoodle} />
+        <Image source={pyramids} style={styles.pyramidsDoodle} />
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#8B4513" />
@@ -115,7 +123,7 @@ const Help = () => {
           </TouchableOpacity>
         </ScrollView>
       </Animated.View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -175,7 +183,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32, 
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
     fontFamily: 'IndieFlower',
@@ -222,7 +230,7 @@ const styles = StyleSheet.create({
   },
   stepNumberText: {
     color: '#FFF',
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontSize: 16,
     fontFamily: 'IndieFlower',
   },
@@ -247,8 +255,40 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: '#FFF', 
     fontSize: 22, 
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     fontFamily: 'IndieFlower',
+  },
+  colosseumDoodle: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+    width: 38,
+    height: 38,
+    opacity: 0.15,
+  },
+  londonEyeDoodle: {
+    position: 'absolute',
+    bottom: 80,
+    right: 30,
+    width: 42,
+    height: 42,
+    opacity: 0.15,
+  },
+  galataTowerDoodle: {
+    position: 'absolute',
+    top: 250,
+    right: 10,
+    width: 36,
+    height: 36,
+    opacity: 0.15,
+  },
+  pyramidsDoodle: {
+    position: 'absolute',
+    bottom: 150,
+    left: 40,
+    width: 40,
+    height: 40,
+    opacity: 0.15,
   },
 });
 
