@@ -4,9 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import number1 from '../assets/number-1.png';
-import number2 from '../assets/number-2.png';
-import number3 from '../assets/numbre-3.png'; // Corrected typo for numbre-3.png
 import car from '../assets/car.png';
 import notebook from '../assets/notebook.png';
 
@@ -57,6 +54,7 @@ export default function NewGame() {
   const [teamB, setTeamB] = useState('Takım B');
   const [timeLimit, setTimeLimit] = useState(60);
   const [passCount, setPassCount] = useState(3);
+  const [tabooCount, setTabooCount] = useState(3);
   const [gameMode, setGameMode] = useState('adult'); // 'adult', 'child' veya 'both'
   const [fontLoaded, setFontLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('tr');
@@ -78,6 +76,9 @@ export default function NewGame() {
         if (savedSettings) {
           const parsed = JSON.parse(savedSettings);
           setCurrentLanguage(parsed.language ?? 'tr');
+          if (parsed.timeLimit) setTimeLimit(parsed.timeLimit);
+          if (parsed.passCount !== undefined) setPassCount(parsed.passCount);
+          if (parsed.tabuCount !== undefined) setTabooCount(parsed.tabuCount);
         }
       } catch (error) {
         console.log('Ayarlar yüklenemedi:', error);
@@ -106,6 +107,32 @@ export default function NewGame() {
 
   const t = translations[currentLanguage];
 
+  const LabelChip = ({ icon, label, onPress, pastelColor }) => {
+    const scale = React.useRef(new Animated.Value(1)).current;
+    const [pressed, setPressed] = React.useState(false);
+    const handleIn = () => {
+      setPressed(true);
+      Animated.spring(scale, { toValue: 1.05, useNativeDriver: true, friction: 6 }).start();
+    };
+    const handleOut = () => {
+      Animated.spring(scale, { toValue: 1, useNativeDriver: true, friction: 6 }).start(() => setPressed(false));
+    };
+    return (
+      <Animated.View style={[styles.chip, { transform: [{ scale }], backgroundColor: pressed ? pastelColor : '#fffaf0' }] }>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPressIn={handleIn}
+          onPressOut={handleOut}
+          onPress={onPress}
+          style={styles.chipInner}
+        >
+          <Ionicons name={icon} size={20} color="#2b2b2b" style={{ marginRight: 6 }} />
+          <Text style={styles.chipText}>{label}</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  };
+
   const handleStartGame = () => {
     if (teamA.trim() === '' || teamB.trim() === '') {
       Alert.alert(t.error, t.emptyTeamNames);
@@ -115,11 +142,11 @@ export default function NewGame() {
       Alert.alert(t.error, t.sameTeamNames);
       return;
     }
-    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage });
+    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount });
   };
 
   const handleQuickStart = () => {
-    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit: 60, passCount: 3, gameMode: 'adult', language: currentLanguage });
+    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit, passCount, gameMode: 'adult', language: currentLanguage, tabooCount });
   };
 
   if (!fontLoaded) {
@@ -145,6 +172,22 @@ export default function NewGame() {
             <Ionicons name="dice" size={32} color="#8B4513" />
             <Text style={styles.title}>{t.newGame}</Text>
           </View>
+        </View>
+
+        {/* Kısa erişim Sticker Chip'leri */}
+        <View style={styles.chipsRow}>
+          <LabelChip
+            icon="settings-outline"
+            label={t.gameSettings}
+            onPress={() => navigation.navigate('Settings')}
+            pastelColor="#fdebd0"
+          />
+          <LabelChip
+            icon="trophy-outline"
+            label={translations[currentLanguage].scores || 'Skorlar'}
+            onPress={() => navigation.navigate('Scores')}
+            pastelColor="#fff9cc"
+          />
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -238,20 +281,20 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 100, // Increased padding top for better spacing
-    paddingBottom: 20,
+    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingBottom: 12,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 16,
   },
   backButton: {
-    marginRight: 15,
+    marginRight: 12,
     backgroundColor: '#fff',
     borderRadius: 25, // More rounded
-    padding: 10, // Increased padding
+    padding: 8,
     borderWidth: 2,
     borderColor: '#8B4513',
     shadowColor: '#000',
@@ -267,7 +310,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 32, // Slightly larger
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#8B4513',
     marginLeft: 10,
@@ -275,24 +318,24 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 20,
+    paddingBottom: 12,
   },
   section: {
-    marginBottom: 30,
+    marginBottom: 18,
   },
   inputLabel: {
-    fontSize: 20, // Slightly larger
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#8B4513',
-    marginBottom: 10,
+    marginBottom: 8,
     fontFamily: 'IndieFlower',
   },
   inputCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 18, // Increased padding
-    borderRadius: 20, // More rounded
-    marginBottom: 15, // Increased margin bottom
+    padding: 12,
+    borderRadius: 16,
+    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
@@ -303,36 +346,36 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   inputIcon: {
-    marginRight: 15, // Increased margin
+    marginRight: 10,
   },
   input: {
     flex: 1,
-    fontSize: 20, // Slightly larger
+    fontSize: 18,
     color: '#333',
     fontFamily: 'IndieFlower',
   },
   vsText: {
-    fontSize: 28, // Slightly larger
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#8B4513',
     textAlign: 'center',
-    marginVertical: 15, // Increased vertical margin
+    marginVertical: 10,
     fontFamily: 'IndieFlower',
   },
   settingsTitle: {
-    fontSize: 22, // Slightly larger
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#8B4513',
-    marginBottom: 15,
+    marginBottom: 10,
     fontFamily: 'IndieFlower',
   },
   modeButtonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 25, // Increased margin bottom
+    marginBottom: 14,
     backgroundColor: '#fff',
-    borderRadius: 18, // More rounded
-    padding: 12, // Increased padding
+    borderRadius: 16,
+    padding: 10,
     borderWidth: 2,
     borderColor: '#8B4513',
     shadowColor: '#000',
@@ -343,13 +386,13 @@ const styles = StyleSheet.create({
   },
   modeButton: {
     flex: 1,
-    paddingVertical: 15, // Increased vertical padding
-    borderRadius: 12, // More rounded
+    paddingVertical: 10,
+    borderRadius: 12,
     alignItems: 'center',
-    marginHorizontal: 8, // Increased horizontal margin
+    marginHorizontal: 6,
   },
   modeButtonText: {
-    fontSize: 18, // Slightly larger
+    fontSize: 16,
     fontWeight: 'bold',
     fontFamily: 'IndieFlower',
     color: '#8B4513',
@@ -361,8 +404,8 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   modeIcon: {
-    width: 40,
-    height: 40,
+    width: 32,
+    height: 32,
     marginBottom: 8,
   },
   settingItem: {
@@ -419,7 +462,7 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 30, // Increased margin top
+    marginTop: 16,
   },
   quickStartButton: {
     width: '48%',
@@ -430,6 +473,36 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 10,
     elevation: 10,
+  },
+  chipsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: 300,
+    alignSelf: 'center',
+    marginBottom: 12,
+  },
+  chip: {
+    flex: 1,
+    marginHorizontal: 6,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    borderRadius: 14,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  chipInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+  chipText: {
+    fontFamily: 'IndieFlower',
+    fontSize: 18,
+    color: '#2b2b2b',
   },
   startButton: {
     width: '48%',
@@ -442,8 +515,8 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   buttonContent: {
-    paddingVertical: 20, // Increased padding
-    paddingHorizontal: 15, // Increased padding
+    paddingVertical: 14,
+    paddingHorizontal: 12,
     alignItems: 'center',
     backgroundColor: '#f4a460', // Soft orange
   },
@@ -453,15 +526,15 @@ const styles = StyleSheet.create({
   quickStartText: {
     color: '#8B4513', // Brown text
     fontWeight: 'bold',
-    fontSize: 18, // Slightly larger
-    marginTop: 8, // Increased margin
+    fontSize: 16,
+    marginTop: 6,
     fontFamily: 'IndieFlower',
   },
   startButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 20, // Slightly larger
-    marginTop: 8, // Increased margin
+    fontSize: 18,
+    marginTop: 6,
     fontFamily: 'IndieFlower',
   },
 });

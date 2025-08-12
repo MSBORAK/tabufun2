@@ -72,6 +72,12 @@ const Settings = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.linedBackground}>
+        {[...Array(20)].map((_, i) => (
+          <View key={i} style={styles.line} />
+        ))}
+      </View>
+      <View style={styles.content}>
       <View style={styles.header}>
         <Image source={notebook} style={styles.headerNotebookIcon} />
         <Ionicons name="settings-outline" size={32} color="#8B4513" />
@@ -144,6 +150,7 @@ const Settings = ({ navigation }) => {
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
         <Text style={styles.saveButtonText}>{t.saveSettings}</Text>
       </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -153,12 +160,20 @@ const SettingRow = ({ label, value, decrease, increase, disableDecrease, disable
   <View style={styles.settingRow}>
     <Text style={styles.settingLabel}>{label}</Text>
     <View style={styles.valueContainer}>
-      <TouchableOpacity style={styles.arrowButton} onPress={decrease}>
-        {showArrowIcons ? <Image source={rightArrowOutline} style={[styles.arrowIcon, { transform: [{ rotateY: '180deg' }] }]} /> : <Ionicons name="chevron-back" size={24} color={disableDecrease ? "#ccc" : "#8B4513"} />}
+      <TouchableOpacity style={[styles.arrowButton, styles.decreaseButton, disableDecrease && styles.arrowButtonDisabled]} onPress={decrease} disabled={disableDecrease}>
+        {showArrowIcons ? (
+          <Image source={rightArrowOutline} style={[styles.arrowIcon, { transform: [{ rotateY: '180deg' }] }, disableDecrease && styles.arrowIconDisabled]} />
+        ) : (
+          <Ionicons name="chevron-back" size={24} color={disableDecrease ? "#ccc" : "#fff"} />
+        )}
       </TouchableOpacity>
       <Text style={styles.settingValue}>{value}</Text>
-      <TouchableOpacity style={styles.arrowButton} onPress={increase}>
-        {showArrowIcons ? <Image source={rightArrowOutline} style={styles.arrowIcon} /> : <Ionicons name="chevron-forward" size={24} color={disableIncrease ? "#ccc" : "#8B4513"} />}
+      <TouchableOpacity style={[styles.arrowButton, styles.increaseButton, disableIncrease && styles.arrowButtonDisabled]} onPress={increase} disabled={disableIncrease}>
+        {showArrowIcons ? (
+          <Image source={rightArrowOutline} style={[styles.arrowIcon, disableIncrease && styles.arrowIconDisabled]} />
+        ) : (
+          <Ionicons name="chevron-forward" size={24} color={disableIncrease ? "#ccc" : "#fff"} />
+        )}
       </TouchableOpacity>
     </View>
   </View>
@@ -168,7 +183,24 @@ const styles = StyleSheet.create({
   container: { 
     flex: 1, 
     backgroundColor: '#fdf6e3', 
-    padding: 25, // Increased padding
+  },
+  linedBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingTop: 80,
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#e0e0e0',
+    marginVertical: 18,
+    width: '100%',
+  },
+  content: {
+    flex: 1,
+    padding: 25,
   },
   header: { 
     flexDirection: 'row', 
@@ -193,8 +225,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20, // Increased padding
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0', // Softer border color
+    borderWidth: 2,
+    borderColor: '#8B4513',
     backgroundColor: '#fff',
     borderRadius: 15,
     marginBottom: 15,
@@ -207,7 +239,7 @@ const styles = StyleSheet.create({
   },
   settingLabel: { 
     fontSize: 20, // Larger font size
-    color: '#333', 
+    color: '#8B4513', 
     fontWeight: '500',
     fontFamily: 'IndieFlower',
   },
@@ -221,18 +253,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
-  arrowButton: { padding: 10, borderRadius: 10, backgroundColor: '#a9d5ee' }, // Styled button
+  arrowButton: { padding: 10, borderRadius: 10 },
+  decreaseButton: { backgroundColor: '#a9d5ee', borderWidth: 1, borderColor: '#8B4513' },
+  increaseButton: { backgroundColor: '#a9d5ee', borderWidth: 1, borderColor: '#8B4513' },
+  arrowButtonDisabled: { backgroundColor: '#e0e0e0' },
   arrowIcon: {
     width: 24,
     height: 24,
-    tintColor: '#8B4513',
+    tintColor: '#fff',
   },
+  arrowIconDisabled: { tintColor: '#ccc' },
   saveButton: { 
     backgroundColor: '#5b9bd5', // Soft blue
     padding: 20, // Increased padding
     borderRadius: 15, // More rounded
     alignItems: 'center', 
     marginTop: 40, // Increased margin
+    borderWidth: 2,
+    borderColor: '#8B4513',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.35,
@@ -250,8 +288,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 20, // Increased padding
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderWidth: 2,
+    borderColor: '#8B4513',
     marginTop: 30, // Increased margin
     backgroundColor: '#fff',
     borderRadius: 15,

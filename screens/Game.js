@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert, Image, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import words from '../data/words.json';
@@ -57,7 +57,7 @@ const translations = {
 };
 
 const Game = ({ route, navigation }) => {
-  const { teamA = 'A Takımı', teamB = 'B Takımı', timeLimit = 60, passCount: initialPass = 3, gameMode = 'adult', language = 'tr' } = route.params || {};
+  const { teamA = 'A Takımı', teamB = 'B Takımı', timeLimit = 60, passCount: initialPass = 3, gameMode = 'adult', language = 'tr', tabooCount: initialTaboo = 3 } = route.params || {};
 
   const [currentWord, setCurrentWord] = useState('');
   const [teamAScore, setTeamAScore] = useState(0);
@@ -68,6 +68,9 @@ const Game = ({ route, navigation }) => {
   const [correctCount, setCorrectCount] = useState(0);
   const [passUsedCount, setPassUsedCount] = useState(0);
   const [tabooWordsUsed, setTabooWordsUsed] = useState([]);
+  const [tabooLeft, setTabooLeft] = useState(initialTaboo);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showTurnModal, setShowTurnModal] = useState(false);
   const [isRoundOver, setIsRoundOver] = useState(false);
   const [gameStats, setGameStats] = useState({
     totalRounds: 0,
@@ -110,6 +113,7 @@ const Game = ({ route, navigation }) => {
 
     getNextWord(filteredWords, language);
     startAnimations();
+    setTabooLeft(initialTaboo);
   }, [gameMode, language]); // gameMode ve language değiştiğinde bu useEffect tekrar çalışsın
 
   // Yeni eklenen useEffect: timeLimit ve initialPass değiştiğinde state'leri güncelle
@@ -120,13 +124,14 @@ const Game = ({ route, navigation }) => {
 
   useEffect(() => {
     if (isRoundOver) return;
+    if (isPaused) return;
     if (timeLeft <= 0) {
       handleTimeUp();
       return;
     }
     const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, isRoundOver]);
+  }, [timeLeft, isRoundOver, isPaused]);
 
   // Timer animasyonu
   useEffect(() => {
@@ -187,7 +192,8 @@ const Game = ({ route, navigation }) => {
       animateWord();
       getNextWord(availableWords, language);
     } else {
-      Alert.alert(translations[language].noPassRights, translations[language].passRightsEnded);
+      // pas hakkı bittiğinde uyarı göstermeden görmezden gel
+      return;
     }
   };
 
@@ -198,12 +204,19 @@ const Game = ({ route, navigation }) => {
     setTabooWordsUsed(prev => [...prev, currentWord]);
     setGameStats(prev => ({ ...prev, totalTaboo: prev.totalTaboo + 1 }));
     animateWord();
+    setTabooLeft(prev => Math.max(0, prev - 1));
+    if (tabooLeft - 1 <= 0) {
+      // tabu hakkı bittiğinde daha fazla tabu sayılmaz
+      return;
+    }
     getNextWord(availableWords, language);
   };
 
   const handleTimeUp = () => {
     Vibration.vibrate([200, 100, 200]);
     setIsRoundOver(true);
+    setIsPaused(true);
+    setShowTurnModal(true);
   };
 
   const getNextWord = (wordList, lang) => {
@@ -227,6 +240,7 @@ const Game = ({ route, navigation }) => {
     setGameStats(prev => ({ ...prev, totalRounds: prev.totalRounds + 1 }));
     getNextWord(availableWords, language);
     startAnimations();
+    setTabooLeft(initialTaboo);
   };
 
   const saveScore = async () => {
@@ -343,24 +357,22 @@ const Game = ({ route, navigation }) => {
             {/* Header */}
             <View style={styles.header}>
               <View style={styles.timerContainer}>
-                <Animated.View 
-                  style={[
-                    styles.timerProgress,
-                    { width: timerAnim.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: ['0%', '100%']
-                    })}
-                  ]}
-                />
+                <Ionicons name="hourglass-outline" size={24} color="#8B4513" style={{ marginRight: 8 }} />
                 <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
               </View>
               
               <View style={styles.gameInfo}>
-                <Text style={styles.gameTitle}>{translations[language].tabooGame}</Text>
+                <Text style={[styles.gameTitle, { textAlign: 'center' }]}>{translations[language].tabooGame}</Text>
                 <View style={styles.passContainer}>
                   <Ionicons name="arrow-forward" size={20} color="#8B4513" />
+                  <Text style={styles.passLabel}>{translations[language].pass}</Text>
                   <Text style={styles.passCount}>{passCount}</Text>
                 </View>
+              <View style={styles.passContainer}>
+                <Ionicons name="close-circle" size={20} color="#F44336" />
+                <Text style={styles.passLabel}>{translations[language].taboo}</Text>
+                <Text style={styles.passCount}>{tabooLeft}</Text>
+              </View>
               </View>
             </View>
 
@@ -375,7 +387,14 @@ const Game = ({ route, navigation }) => {
               ]}
             >
               <View style={styles.wordCard}>
-                <Text style={styles.currentWord}>{currentWord}</Text>
+                <Text
+                  style={styles.currentWord}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.6}
+                >
+                  {currentWord}
+                </Text>
               </View>
             </Animated.View>
 
@@ -439,9 +458,42 @@ const Game = ({ route, navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
+
+            {/* Pause/Resume */}
+            <View style={{ marginTop: 12, alignItems: 'center' }}>
+              <TouchableOpacity
+                onPress={() => setIsPaused(prev => !prev)}
+                style={{
+                  backgroundColor: isPaused ? '#66BB6A' : '#FFB74D',
+                  paddingVertical: 10,
+                  paddingHorizontal: 16,
+                  borderRadius: 12,
+                  borderWidth: 2,
+                  borderColor: '#8B4513',
+                }}
+              >
+                <Text style={{ color: '#fff', fontFamily: 'IndieFlower', fontSize: 18, fontWeight: 'bold' }}>
+                  {isPaused ? 'Devam Et' : 'Durdur'}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </Animated.View>
+
+      {/* Turn modal */}
+      <Modal transparent visible={showTurnModal} animationType="fade">
+        <View style={{ flex:1, justifyContent:'center', alignItems:'center', backgroundColor:'rgba(0,0,0,0.25)' }}>
+          <View style={{ backgroundColor:'#fff', borderRadius:16, padding:24, borderWidth:2, borderColor:'#8B4513', width:'80%' }}>
+            <Text style={{ fontFamily:'IndieFlower', fontSize:24, color:'#8B4513', textAlign:'center', marginBottom:12 }}>
+              Sıra {currentTeam === 'A' ? teamB : teamA} takımında!
+            </Text>
+            <TouchableOpacity onPress={() => { setShowTurnModal(false); setIsPaused(false); }} style={{ alignSelf:'center', backgroundColor:'#5b9bd5', paddingVertical:10, paddingHorizontal:16, borderRadius:12, borderWidth:2, borderColor:'#8B4513' }}>
+              <Text style={{ color:'#fff', fontFamily:'IndieFlower', fontSize:18, fontWeight:'bold' }}>Devam Et</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -467,8 +519,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 25, // Increased horizontal padding
-    paddingTop: 40, // Reduced padding top for more space
+    paddingHorizontal: 16,
+    paddingTop: 28,
     // paddingBottom removed as flex will handle it
   },
   scrollContent: {
@@ -478,33 +530,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 25, // Adjusted margin
+    marginBottom: 16,
   },
   timerContainer: {
     position: 'relative',
     backgroundColor: '#fff',
-    borderRadius: 30, // More rounded
-    padding: 18, // Increased padding
-    minWidth: 120, // Wider
+    borderRadius: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    minWidth: 110,
     alignItems: 'center',
+    flexDirection: 'row',
     borderWidth: 2,
     borderColor: '#8B4513',
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 3 }, // Stronger shadow
-    shadowOpacity: 0.25,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  timerProgress: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    bottom: 0,
-    backgroundColor: '#f4a460', // Soft orange for timer progress
-    borderRadius: 28,
+    shadowOffset: { width: 2, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
   },
   timer: {
-    fontSize: 26, // Slightly larger
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#8B4513',
     fontFamily: 'IndieFlower',
@@ -513,7 +559,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   gameTitle: {
-    fontSize: 34, // Larger title
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#8B4513',
     fontFamily: 'IndieFlower',
@@ -522,31 +568,37 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 20, // More rounded
-    paddingHorizontal: 12, // Adjusted padding
-    paddingVertical: 8, // Adjusted padding
-    marginTop: 8, // Adjusted margin
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginTop: 6,
     borderWidth: 2,
     borderColor: '#8B4513',
     shadowColor: '#000',
     shadowOffset: { width: 1, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowOpacity: 0.12,
+    shadowRadius: 2,
+    elevation: 2,
   },
   passCount: {
-    fontSize: 20, // Slightly larger
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#8B4513',
-    marginLeft: 8, // Adjusted margin
+    marginLeft: 6,
+    fontFamily: 'IndieFlower',
+  },
+  passLabel: {
+    fontSize: 14,
+    color: '#8B4513',
+    marginLeft: 6,
     fontFamily: 'IndieFlower',
   },
   wordContainer: {
-    marginBottom: 15, // Reduced margin
+    marginBottom: 10,
   },
   wordCard: {
-    padding: 35, // Increased padding
-    borderRadius: 25, // More rounded
+    padding: 24,
+    borderRadius: 18,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
@@ -558,18 +610,18 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   currentWord: {
-    fontSize: 48, // Larger font size
+    fontSize: 40,
     fontWeight: 'bold',
     color: '#4A6FA5',
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
   tabooWordsContainer: {
-    marginBottom: 20, // Reduced margin
+    marginBottom: 14,
   },
   tabooCard: {
-    padding: 25, // Increased padding
-    borderRadius: 20, // More rounded
+    padding: 18,
+    borderRadius: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.25,
@@ -580,7 +632,7 @@ const styles = StyleSheet.create({
     borderColor: '#F44336', // Red border for taboo
   },
   tabooTitle: {
-    fontSize: 18, // Slightly larger
+    fontSize: 16,
     fontWeight: 'bold',
     color: '#F44336',
     marginBottom: 12,
@@ -591,7 +643,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabooWord: {
-    fontSize: 18, // Slightly larger
+    fontSize: 16,
     color: '#F44336',
     marginBottom: 6,
     fontFamily: 'IndieFlower',
@@ -600,14 +652,14 @@ const styles = StyleSheet.create({
   teamsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20, // Reduced margin
+    marginBottom: 14,
   },
   team: {
     width: '48%',
   },
   teamCard: {
-    padding: 25, // Increased padding
-    borderRadius: 20, // More rounded
+    padding: 18,
+    borderRadius: 16,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
@@ -619,14 +671,14 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   teamName: {
-    fontSize: 20, // Slightly larger
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#333',
     fontFamily: 'IndieFlower',
   },
   teamScore: {
-    fontSize: 28, // Larger score
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
     fontFamily: 'IndieFlower',
@@ -652,8 +704,8 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   buttonContent: {
-    paddingVertical: 18, // Increased padding
-    paddingHorizontal: 12, // Increased padding
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     alignItems: 'center',
   },
   correctButton: {
@@ -668,14 +720,14 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 18, // Slightly larger
-    marginTop: 8, // Adjusted margin
+    fontSize: 16,
+    marginTop: 6,
     fontFamily: 'IndieFlower',
   },
   actionIcon: {
-    width: 24,
-    height: 24,
-    marginBottom: 5,
+    width: 20,
+    height: 20,
+    marginBottom: 4,
   },
   summaryContainer: {
     flex: 1,
