@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert, Image, Modal, SafeAreaView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Image, Modal, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import words from '../data/words.json';
@@ -44,7 +44,11 @@ const translations = {
     start: 'BAŞLA!',
     continueGame: 'Oyuna Devam Et',
     playAgain: 'Tekrar Oyna',
-    tabooRightsEnded: 'Tabu hakkınız bitti!'
+    tabooRightsEnded: 'Tabu hakkınız bitti!',
+    paused: 'Durduruldu',
+    resume: 'Devam Et',
+    turn: 'Sıra:',
+    draw: 'Berabere!'
   },
   en: {
     gameOver: 'Game Over!',
@@ -70,7 +74,12 @@ const translations = {
     start: 'START!',
     continueGame: 'Continue Game',
     playAgain: 'Play Again',
-    tabooRightsEnded: 'No taboo rights left!'
+    tabooRightsEnded: 'No taboo rights left!',
+    ok: 'OK',
+    paused: 'Paused',
+    resume: 'Resume',
+    turn: 'Turn:',
+    draw: 'Draw!'
   },
 };
 
@@ -98,8 +107,8 @@ const Game = ({ route, navigation }) => {
     totalTaboo: 0
   });
   const [teamStats, setTeamStats] = useState({
-    A: { correct: 0, pass: 0, taboo: 0, tabooWords: [] },
-    B: { correct: 0, pass: 0, taboo: 0, tabooWords: [] },
+    A: { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
+    B: { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
   });
   const [fontLoaded, setFontLoaded] = useState(false);
   const [availableWords, setAvailableWords] = useState([]);
@@ -108,6 +117,7 @@ const Game = ({ route, navigation }) => {
   const [maxRounds, setMaxRounds] = useState(routeMaxSets * 2); // A ve B için set sayısı x2
   const [showFinalScoreModal, setShowFinalScoreModal] = useState(false);
   const [winningScore, setWinningScore] = useState(route.params?.winPoints ?? 300); // Kazanma puanı
+  const [errorModal, setErrorModal] = useState({ visible: false, title: '', message: '' });
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -142,8 +152,7 @@ const Game = ({ route, navigation }) => {
     setAvailableWords(filteredWords);
 
     if (filteredWords.length === 0) {
-      Alert.alert(translations[language].error, translations[language].noWordsFound);
-      navigation.goBack();
+      setErrorModal({ visible: true, title: translations[language].error, message: translations[language].noWordsFound });
       return;
     }
 
@@ -308,7 +317,11 @@ const Game = ({ route, navigation }) => {
     setGameStats(prev => ({ ...prev, totalCorrect: prev.totalCorrect + 1 }));
     setTeamStats(prev => ({
       ...prev,
-      [currentTeam]: { ...prev[currentTeam], correct: prev[currentTeam].correct + 1 }
+      [currentTeam]: {
+        ...prev[currentTeam],
+        correct: prev[currentTeam].correct + 1,
+        correctWords: [...prev[currentTeam].correctWords, currentWord],
+      }
     }));
     animateWord();
     if (teamAScore + 10 >= winningScore || teamBScore + 10 >= winningScore) {
@@ -326,7 +339,11 @@ const Game = ({ route, navigation }) => {
       setGameStats(prev => ({ ...prev, totalPass: prev.totalPass + 1 }));
       setTeamStats(prev => ({
         ...prev,
-        [currentTeam]: { ...prev[currentTeam], pass: prev[currentTeam].pass + 1 }
+        [currentTeam]: {
+          ...prev[currentTeam],
+          pass: prev[currentTeam].pass + 1,
+          passWords: [...prev[currentTeam].passWords, currentWord],
+        }
       }));
       animateWord();
       getNextWord(availableWords, language);
@@ -414,6 +431,8 @@ const Game = ({ route, navigation }) => {
         teamBScore,
         gameMode,
         language,
+        teamAStats,
+        teamBStats,
       };
 
       const existingScores = await AsyncStorage.getItem('tabuuScores');
@@ -427,12 +446,9 @@ const Game = ({ route, navigation }) => {
     }
   };
 
-  const endGame = async (disableContinue = false) => {
+  const endGame = async () => {
     await saveScore();
-    const someoneReachedTarget = teamAScore >= winningScore || teamBScore >= winningScore;
-    const fairEndReached = gameStats.totalRounds >= maxRounds || (someoneReachedTarget && currentTeam === 'B');
-    const allowContinue = !(disableContinue || fairEndReached);
-    navigation.navigate('FinalResults', {
+    navigation.replace('FinalResults', {
       teamA,
       teamB,
       teamAScore,
@@ -448,14 +464,14 @@ const Game = ({ route, navigation }) => {
       tabooCount: initialTaboo,
       winPoints: winningScore,
       gameMode,
-      allowContinue,
+      allowContinue: false,
     });
   };
 
   const endGameToMenu = async () => {
     await saveScore();
     setShowFinalScoreModal(false);
-    navigation.navigate('TabuuMenu');
+    navigation.reset({ index: 0, routes: [{ name: 'TabuuMenu' }] });
   };
 
   const startNewSet = () => {
@@ -513,6 +529,9 @@ const Game = ({ route, navigation }) => {
     return null; 
   }
 
+  const otherTeamName = currentTeam === 'A' ? teamB : teamA;
+  const turnMessage = language === 'en' ? `It's ${otherTeamName}'s turn!` : `Sıra ${otherTeamName} takımında!`;
+
   const getNumberImage = (num) => {
     switch (num) {
       case 1:
@@ -548,27 +567,29 @@ const Game = ({ route, navigation }) => {
             <View style={styles.summaryBackdrop} />
             <View style={styles.notebookPage}>
               <Text style={styles.summaryTitle}>{translations[language].roundOver}</Text>
-              <View style={styles.statsContainer}>
-                <View style={styles.statItem}>
-                  <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
-                  <Text style={styles.statText}>{translations[language].correct} {correctCount}</Text>
+              <View style={styles.badgesRow}>
+                <View style={[styles.badge, { backgroundColor: '#66BB6A' }]}>
+                  <Image source={heart} style={styles.badgeIcon} />
+                  <Text style={styles.badgeCount}>{correctCount}</Text>
                 </View>
-                <View style={styles.statItem}>
-                  <Ionicons name="arrow-forward" size={24} color="#FF9800" />
-                  <Text style={styles.statText}>{translations[language].pass} {passUsedCount}</Text>
+                <View style={[styles.badge, { backgroundColor: '#FFB74D' }]}>
+                  <Image source={paperPlane} style={styles.badgeIcon} />
+                  <Text style={styles.badgeCount}>{passUsedCount}</Text>
                 </View>
-                <View style={styles.statItem}>
-                  <Ionicons name="close-circle" size={24} color="#F44336" />
-                  <Text style={styles.statText}>{translations[language].taboo} {tabooWordsUsed.length}</Text>
+                <View style={[styles.badge, { backgroundColor: '#EF5350' }]}>
+                  <Image source={exclamationMark} style={styles.badgeIcon} />
+                  <Text style={styles.badgeCount}>{tabooWordsUsed.length}</Text>
                 </View>
               </View>
               
-              {displayTabooWords.length > 0 && (
+              {tabooWordsUsed.length > 0 && (
                 <View style={styles.tabooList}>
                   <Text style={styles.tabooListTitle}>{translations[language].tabooedWords}</Text>
-                  {tabooWordsUsed.map((word, index) => (
-                    <Text key={index} style={styles.tabooItem}>• {word}</Text>
-                  ))}
+                  <View style={styles.wordsPanel}>
+                    {tabooWordsUsed.map((word, index) => (
+                      <Text key={index} style={[styles.wordItem, styles.tabooWord]}>• {word}</Text>
+                    ))}
+                  </View>
                 </View>
               )}
               
@@ -598,7 +619,7 @@ const Game = ({ route, navigation }) => {
               
               <View style={styles.centerHeaderContent}>
                 <Text style={styles.teamTurnText}>
-                  Sıra: {currentTeam === 'A' ? teamA : teamB}
+                  {translations[language].turn} {currentTeam === 'A' ? teamA : teamB}
                 </Text>
               </View>
               
@@ -735,10 +756,10 @@ const Game = ({ route, navigation }) => {
           )}
           <View style={styles.pauseCard}>
             <Ionicons name="pause" size={40} color="#8B4513" />
-            <Text style={styles.pauseText}>Durduruldu</Text>
+            <Text style={styles.pauseText}>{translations[language].paused}</Text>
             <TouchableOpacity onPress={() => setIsPaused(false)} style={styles.resumeBtn}>
               <Ionicons name="play" size={24} color="#fff" />
-              <Text style={styles.resumeText}>Devam Et</Text>
+              <Text style={styles.resumeText}>{translations[language].resume}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => endGame(true)} style={styles.pauseEndBtn}>
               <Ionicons name="stop" size={22} color="#fff" />
@@ -753,10 +774,10 @@ const Game = ({ route, navigation }) => {
         <View style={{ flex:1, justifyContent:'flex-end', alignItems:'center', backgroundColor:'rgba(0,0,0,0.25)' }}>
           <View style={{ backgroundColor:'#fff', borderRadius:16, padding:24, borderWidth:2, borderColor:'#8B4513', width:'80%', alignItems:'center', marginBottom: 40 }}>
             <Text style={{ fontFamily:'IndieFlower', fontSize:24, color:'#8B4513', textAlign:'center' }}>
-              Sıra {currentTeam === 'A' ? teamB : teamA} takımında!
+              {turnMessage}
             </Text>
             <TouchableOpacity onPress={() => { setShowTurnModal(false); setIsPaused(false); startNextRound(); }} style={{ marginTop:12, alignSelf:'center', backgroundColor:'#7fb7ff', paddingVertical:10, paddingHorizontal:16, borderRadius:12, borderWidth:2, borderColor:'#8B4513' }}>
-              <Text style={{ color:'#fff', fontFamily:'IndieFlower', fontSize:18, fontWeight:'normal' }}>Devam Et</Text>
+              <Text style={{ color:'#fff', fontFamily:'IndieFlower', fontSize:18, fontWeight:'normal' }}>{translations[language].continueGame}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -834,6 +855,26 @@ const Game = ({ route, navigation }) => {
                 </View>
               </TouchableOpacity>
             </View>
+          </View>
+        </View>
+      </Modal>
+      {/* Error Modal */}
+      <Modal visible={errorModal.visible} transparent animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Ionicons name="alert-circle" size={42} color="#8B4513" style={{ marginBottom: 8 }} />
+            <Text style={styles.modalTitle}>{errorModal.title}</Text>
+            <Text style={styles.modalMessage}>{errorModal.message}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                setErrorModal({ visible: false, title: '', message: '' });
+                navigation.goBack();
+              }}
+              style={styles.modalButton}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.modalButtonText}>{translations[language].ok}</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </Modal>
@@ -1126,6 +1167,10 @@ const styles = StyleSheet.create({
   statItem: {
     alignItems: 'center',
   },
+  badgesRow: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', marginBottom: 10 },
+  badge: { flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingVertical: 10, paddingHorizontal: 12, marginHorizontal: 6 },
+  badgeIcon: { width: 20, height: 20, marginRight: 8, resizeMode: 'contain' },
+  badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: 20, fontWeight: 'bold' },
   statText: {
     fontSize: 18, // Slightly larger
     fontWeight: '500',
@@ -1145,6 +1190,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
+  wordsPanel: { marginTop: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
+  wordItem: { fontFamily: 'IndieFlower', fontSize: 16, marginBottom: 6, marginRight: 10, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.03)' },
+  tabooWord: { color: '#EF5350' },
   tabooItem: {
     fontSize: 16, // Slightly larger
     color: '#F44336',
@@ -1326,6 +1374,58 @@ const styles = StyleSheet.create({
   londonEyeDoodle: { position: 'absolute', top: 60, right: 12, width: 30, height: 30, opacity: 0.14, resizeMode: 'contain' },
   galataTowerDoodle: { position: 'absolute', bottom: 120, left: 16, width: 26, height: 26, opacity: 0.14, resizeMode: 'contain' },
   pyramidsDoodle: { position: 'absolute', bottom: 60, right: 16, width: 32, height: 32, opacity: 0.14, resizeMode: 'contain' },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    width: '85%',
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    marginBottom: 6,
+    fontWeight: 'bold',
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: 'IndieFlower',
+  },
+  modalButton: {
+    backgroundColor: '#a9d5ee',
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    width: '60%',
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: '#8B4513',
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: 'IndieFlower',
+  },
 });
 
 // Adjust padding for Android status bar

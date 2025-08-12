@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Alert, ScrollView, Image, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Modal, ScrollView, Image, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import car from '../assets/car.png';
-import notebook from '../assets/notebook.png';
+import family from '../assets/family.png';
 import colosseum from '../assets/colosseum.png';
 import londonEye from '../assets/london-eye.png';
 import galataTower from '../assets/galata-tower.png';
@@ -17,12 +17,12 @@ const translations = {
   tr: {
     newGame: 'YENİ OYUN',
     teamNames: 'Takım İsimleri:',
-    teamA: 'Takım A Adı',
-    teamB: 'Takım B Adı',
+    teamA: 'A Takımı Adı',
+    teamB: 'B Takımı Adı',
     vs: 'VS',
-    gameMode: 'Oyun Modu:',
+    gameMode: 'Oyun Modu:', 
     adultMode: 'Yetişkin Modu',
-    childMode: 'Çocuk Modu',
+    childMode: 'Aile Modu',
     timeLimit: 'Süre Limiti (saniye):',
     passCount: 'Pas Hakkı Sayısı:',
     quickStart: 'Hızlı Başla',
@@ -30,6 +30,7 @@ const translations = {
     error: 'Hata',
     emptyTeamNames: 'Takım isimleri boş bırakılamaz!',
     sameTeamNames: 'Takım isimleri aynı olamaz!',
+    ok: 'Tamam',
   },
   en: {
     newGame: 'NEW GAME',
@@ -39,7 +40,7 @@ const translations = {
     vs: 'VS',
     gameMode: 'Game Mode:',
     adultMode: 'Adult Mode',
-    childMode: 'Child Mode',
+    childMode: 'Family Mode',
     timeLimit: 'Time Limit (seconds):',
     passCount: 'Pass Count:',
     quickStart: 'Quick Start',
@@ -47,13 +48,14 @@ const translations = {
     error: 'Error',
     emptyTeamNames: 'Team names cannot be empty!',
     sameTeamNames: 'Team names cannot be the same!',
+    ok: 'OK',
   },
 };
 
 export default function NewGame() {
   const navigation = useNavigation();
-  const [teamA, setTeamA] = useState('Takım A');
-  const [teamB, setTeamB] = useState('Takım B');
+  const [teamA, setTeamA] = useState('A Takımı');
+  const [teamB, setTeamB] = useState('B Takımı');
   const [timeLimit, setTimeLimit] = useState(60);
   const [passCount, setPassCount] = useState(3);
   const [tabooCount, setTabooCount] = useState(3);
@@ -62,6 +64,7 @@ export default function NewGame() {
   const [currentLanguage, setCurrentLanguage] = useState('tr');
   const [winPoints, setWinPoints] = useState(250);
   const [maxSets, setMaxSets] = useState(1);
+  const [errorModal, setErrorModal] = useState({ visible: false, title: '', message: '' });
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -115,18 +118,18 @@ export default function NewGame() {
 
   const handleStartGame = () => {
     if (teamA.trim() === '' || teamB.trim() === '') {
-      Alert.alert(t.error, t.emptyTeamNames);
+      setErrorModal({ visible: true, title: t.error, message: t.emptyTeamNames });
       return;
     }
     if (teamA.trim().toLowerCase() === teamB.trim().toLowerCase()) {
-      Alert.alert(t.error, t.sameTeamNames);
+      setErrorModal({ visible: true, title: t.error, message: t.sameTeamNames });
       return;
     }
     navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount, winPoints, maxSets });
   };
 
   const handleQuickStart = () => {
-    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit: 90, passCount: 3, gameMode: 'adult', language: currentLanguage, tabooCount: 3, winPoints: 300, maxSets });
+    navigation.navigate('Game', { teamA: 'A Takımı', teamB: 'B Takımı', timeLimit: 90, passCount: 3, gameMode: 'adult', language: currentLanguage, tabooCount: 3, winPoints: 300, maxSets });
   };
 
   if (!fontLoaded) {
@@ -203,10 +206,24 @@ export default function NewGame() {
                 style={[styles.modeButton, gameMode === 'child' && styles.activeModeButton]}
                 onPress={() => setGameMode('child')}
               >
-                <Image source={notebook} style={styles.modeIcon} />
+                <Image source={family} style={styles.modeIcon} />
                 <Text style={[styles.modeButtonText, gameMode === 'child' && styles.activeModeButtonText]}>{t.childMode}</Text>
               </TouchableOpacity>
             </View>
+          </View>
+
+          {/* Ayarlar Kısayolu */}
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={styles.settingsShortcutButton}
+              onPress={() => navigation.navigate('Settings')}
+              activeOpacity={0.85}
+            >
+              <View style={[styles.buttonContent, styles.settingsShortcutColor]}> 
+                <Ionicons name="settings" size={22} color="#8B4513" />
+                <Text style={styles.settingsShortcutText}>{currentLanguage === 'tr' ? 'Oyun Ayarları' : 'Game Settings'}</Text>
+              </View>
+            </TouchableOpacity>
           </View>
 
           {/* Başlat Butonları */}
@@ -227,6 +244,23 @@ export default function NewGame() {
           </View>
         </ScrollView>
       </Animated.View>
+      {/* Güzel Hata Modali */}
+      <Modal visible={errorModal.visible} transparent animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Ionicons name="alert-circle" size={42} color="#8B4513" style={{ marginBottom: 8 }} />
+            <Text style={styles.modalTitle}>{errorModal.title}</Text>
+            <Text style={styles.modalMessage}>{errorModal.message}</Text>
+            <TouchableOpacity
+              style={[styles.buttonContent, styles.settingsShortcutColor, styles.modalButton]}
+              onPress={() => setErrorModal({ visible: false, title: '', message: '' })}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.modalButtonText}>{t.ok}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -470,12 +504,80 @@ const styles = StyleSheet.create({
   startButtonColor: {
     backgroundColor: '#5b9bd5', // Soft blue
   },
+  settingsShortcutColor: {
+    backgroundColor: '#a9d5ee',
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    width: '100%',
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    marginBottom: 6,
+    fontWeight: 'bold',
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: 'IndieFlower',
+  },
+  modalButton: {
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    width: '60%',
+  },
+  modalButtonText: {
+    color: '#8B4513',
+    fontSize: 18,
+    textAlign: 'center',
+    fontFamily: 'IndieFlower',
+  },
   quickStartText: {
     color: '#8B4513', // Brown text
     fontWeight: 'bold',
     fontSize: 16,
     marginTop: 6,
     fontFamily: 'IndieFlower',
+  },
+  settingsShortcutText: {
+    color: '#8B4513',
+    fontWeight: 'normal',
+    fontSize: 16,
+    marginTop: 6,
+    fontFamily: 'IndieFlower',
+  },
+  settingsShortcutButton: {
+    width: '100%',
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 6,
   },
   startButtonText: {
     color: '#fff',

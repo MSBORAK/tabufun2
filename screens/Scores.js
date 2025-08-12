@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, StatusBar, Alert, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, StatusBar, Image, SafeAreaView, Modal } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -74,6 +74,8 @@ export default function Scores() {
   const [scores, setScores] = useState([]);
   const [fontLoaded, setFontLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('tr');
+  const [confirmModal, setConfirmModal] = useState({ visible: false });
+  const [infoModal, setInfoModal] = useState({ visible: false, title: '', message: '' });
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -126,25 +128,7 @@ export default function Scores() {
   };
 
   const clearScores = async () => {
-    Alert.alert(
-      t.clearScores,
-      t.confirmClearScores,
-      [
-        { text: t.cancel, style: 'cancel' },
-        { text: t.delete, onPress: async () => {
-            try {
-              await AsyncStorage.removeItem('tabuuScores');
-              setScores([]);
-              Alert.alert(t.success, t.scoresCleared);
-            } catch (error) {
-              console.log(t.failedToClearScores, error);
-              Alert.alert(t.error, t.failedToClearScores);
-            }
-          }
-        }
-      ],
-      { cancelable: false }
-    );
+    setConfirmModal({ visible: true });
   };
 
   const totalGames = scores.length;
@@ -262,6 +246,53 @@ export default function Scores() {
           )}
         </ScrollView>
       </Animated.View>
+
+      {/* Confirm Delete Modal */}
+      <Modal transparent visible={confirmModal.visible} animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Ionicons name="trash" size={36} color="#8B4513" />
+            <Text style={styles.modalTitle}>{t.clearScores}</Text>
+            <Text style={styles.modalMessage}>{t.confirmClearScores}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8 }}>
+              <TouchableOpacity style={[styles.modalBtn, { backgroundColor: '#a9d5ee' }]} onPress={() => setConfirmModal({ visible: false })}>
+                <Text style={styles.modalBtnText}>{t.cancel}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalBtn, { backgroundColor: '#EF5350' }]}
+                onPress={async () => {
+                  try {
+                    await AsyncStorage.removeItem('tabuuScores');
+                    setScores([]);
+                    setConfirmModal({ visible: false });
+                    setInfoModal({ visible: true, title: t.success, message: t.scoresCleared });
+                  } catch (error) {
+                    console.log(t.failedToClearScores, error);
+                    setConfirmModal({ visible: false });
+                    setInfoModal({ visible: true, title: t.error, message: t.failedToClearScores });
+                  }
+                }}
+              >
+                <Text style={[styles.modalBtnText, { color: '#fff' }]}>{t.delete}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Info Modal */}
+      <Modal transparent visible={infoModal.visible} animationType="fade">
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalCard}>
+            <Ionicons name="information-circle" size={36} color="#8B4513" />
+            <Text style={styles.modalTitle}>{infoModal.title}</Text>
+            <Text style={styles.modalMessage}>{infoModal.message}</Text>
+            <TouchableOpacity style={[styles.modalBtn, { backgroundColor: '#a9d5ee', alignSelf: 'center' }]} onPress={() => setInfoModal({ visible: false, title: '', message: '' })}>
+              <Text style={styles.modalBtnText}>OK</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -521,5 +552,57 @@ const styles = StyleSheet.create({
     height: 180,
     opacity: 0.1,
     transform: [{ rotate: '-15deg' }],
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  modalCard: {
+    width: '85%',
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    alignItems: 'center',
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    elevation: 10,
+  },
+  modalTitle: {
+    fontSize: 20,
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    marginVertical: 6,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#333',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: 'IndieFlower',
+  },
+  modalBtn: {
+    flex: 1,
+    marginHorizontal: 6,
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    alignItems: 'center',
+  },
+  modalBtnText: {
+    color: '#8B4513',
+    fontSize: 16,
+    fontFamily: 'IndieFlower',
   },
 });

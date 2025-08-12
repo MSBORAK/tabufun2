@@ -43,9 +43,9 @@ export default function App() {
         <Stack.Screen name="Help" component={Help} />
         <Stack.Screen name="NewGame" component={NewGame} />
         <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Game" component={Game} />
+        <Stack.Screen name="Game" component={Game} options={{ gestureEnabled: false }} />
         <Stack.Screen name="Scores" component={Scores} />
-        <Stack.Screen name="FinalResults" component={FinalResults} />
+        <Stack.Screen name="FinalResults" component={FinalResults} options={{ gestureEnabled: false }} />
       </Stack.Navigator>
       
     </NavigationContainer>

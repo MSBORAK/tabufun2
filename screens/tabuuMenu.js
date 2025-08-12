@@ -5,6 +5,7 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import book from '../assets/book.png';
+import gameIcon from '../assets/game.png';
 import heart from '../assets/heart.png';
 import starfish from '../assets/starfish.png';
 import pinwheel from '../assets/pinwheel.png';
@@ -28,14 +29,14 @@ const translations = {
   tr: {
     title: 'Tabu',
     startGame: 'Oyuna Başla',
-    rules: 'Kurallar',
+    rules: 'Klavuz',
     settings: 'Ayarlar',
     scores: 'Skorlar',
   },
   en: {
     title: 'Taboo',
     startGame: 'Start Game',
-    rules: 'Rules',
+    rules: 'Guide',
     settings: 'Settings',
     scores: 'Scores',
   },
@@ -151,6 +152,7 @@ export default function TabuuMenu() {
 
         {/* Menü Butonları */}
         <TouchableOpacity style={[styles.button, styles.orange]} onPress={() => navigation.navigate('NewGame')} activeOpacity={0.85}>
+          <Image source={gameIcon} style={styles.bookIcon} />
           <Text style={styles.buttonText}>{t.startGame}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.blue]} onPress={() => navigation.navigate('Help')} activeOpacity={0.85}>

@@ -39,8 +39,8 @@ export default function FinalResults({ route, navigation }) {
     totalCorrect = 0, totalPass = 0, totalTaboo = 0,
     timeLimit, passCount, tabooCount, winPoints, gameMode,
     allowContinue = true,
-    teamAStats = { correct: 0, pass: 0, taboo: 0, tabooWords: [] },
-    teamBStats = { correct: 0, pass: 0, taboo: 0, tabooWords: [] },
+    teamAStats = { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
+    teamBStats = { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
   } = route.params || {};
   const t = translations[language];
 
@@ -71,21 +71,27 @@ export default function FinalResults({ route, navigation }) {
             <View style={styles.badgesRow}>
               <View style={[styles.badge, { backgroundColor: '#66BB6A' }]}>
                 <Image source={heart} style={styles.badgeIcon} />
-                <Text style={styles.badgeText}>{t.correct}: {teamAStats.correct}</Text>
+                <Text style={styles.badgeCount}>{teamAStats.correct}</Text>
               </View>
               <View style={[styles.badge, { backgroundColor: '#FFB74D' }]}>
                 <Image source={paperPlane} style={styles.badgeIcon} />
-                <Text style={styles.badgeText}>{t.pass}: {teamAStats.pass}</Text>
+                <Text style={styles.badgeCount}>{teamAStats.pass}</Text>
               </View>
               <View style={[styles.badge, { backgroundColor: '#EF5350' }]}>
                 <Image source={exclamationMark} style={styles.badgeIcon} />
-                <Text style={styles.badgeText}>{t.taboo}: {teamAStats.taboo}</Text>
+                <Text style={styles.badgeCount}>{teamAStats.taboo}</Text>
               </View>
             </View>
-            {teamAStats.tabooWords?.length > 0 && (
+            {(teamAStats.correctWords?.length > 0 || teamAStats.passWords?.length > 0 || teamAStats.tabooWords?.length > 0) && (
               <View style={styles.wordsPanel}>
-                {teamAStats.tabooWords.map((w, idx) => (
-                  <Text key={idx} style={styles.wordItem}>• {w}</Text>
+                {teamAStats.correctWords?.map((w, idx) => (
+                  <Text key={`A-c-${idx}`} style={[styles.wordItem, styles.correctWord]}>• {w}</Text>
+                ))}
+                {teamAStats.passWords?.map((w, idx) => (
+                  <Text key={`A-p-${idx}`} style={[styles.wordItem, styles.passWord]}>• {w}</Text>
+                ))}
+                {teamAStats.tabooWords?.map((w, idx) => (
+                  <Text key={`A-t-${idx}`} style={[styles.wordItem, styles.tabooWord]}>• {w}</Text>
                 ))}
               </View>
             )}
@@ -98,21 +104,27 @@ export default function FinalResults({ route, navigation }) {
             <View style={styles.badgesRow}>
               <View style={[styles.badge, { backgroundColor: '#66BB6A' }]}>
                 <Image source={heart} style={styles.badgeIcon} />
-                <Text style={styles.badgeText}>{t.correct}: {teamBStats.correct}</Text>
+                <Text style={styles.badgeCount}>{teamBStats.correct}</Text>
               </View>
               <View style={[styles.badge, { backgroundColor: '#FFB74D' }]}>
                 <Image source={paperPlane} style={styles.badgeIcon} />
-                <Text style={styles.badgeText}>{t.pass}: {teamBStats.pass}</Text>
+                <Text style={styles.badgeCount}>{teamBStats.pass}</Text>
               </View>
               <View style={[styles.badge, { backgroundColor: '#EF5350' }]}>
                 <Image source={exclamationMark} style={styles.badgeIcon} />
-                <Text style={styles.badgeText}>{t.taboo}: {teamBStats.taboo}</Text>
+                <Text style={styles.badgeCount}>{teamBStats.taboo}</Text>
               </View>
             </View>
-            {teamBStats.tabooWords?.length > 0 && (
+            {(teamBStats.correctWords?.length > 0 || teamBStats.passWords?.length > 0 || teamBStats.tabooWords?.length > 0) && (
               <View style={styles.wordsPanel}>
-                {teamBStats.tabooWords.map((w, idx) => (
-                  <Text key={idx} style={styles.wordItem}>• {w}</Text>
+                {teamBStats.correctWords?.map((w, idx) => (
+                  <Text key={`B-c-${idx}`} style={[styles.wordItem, styles.correctWord]}>• {w}</Text>
+                ))}
+                {teamBStats.passWords?.map((w, idx) => (
+                  <Text key={`B-p-${idx}`} style={[styles.wordItem, styles.passWord]}>• {w}</Text>
+                ))}
+                {teamBStats.tabooWords?.map((w, idx) => (
+                  <Text key={`B-t-${idx}`} style={[styles.wordItem, styles.tabooWord]}>• {w}</Text>
                 ))}
               </View>
             )}
@@ -120,36 +132,11 @@ export default function FinalResults({ route, navigation }) {
 
           <Text style={styles.winnerText}>{t.winner} {teamAScore > teamBScore ? teamA : teamB}</Text>
 
-          {allowContinue && (
-            <View style={styles.buttonsRow}>
-              <TouchableOpacity style={[styles.button, styles.primary]} onPress={() => {
-                navigation.replace('Game', {
-                  teamA,
-                  teamB,
-                  timeLimit,
-                  passCount,
-                  tabooCount,
-                  winPoints,
-                  gameMode,
-                  language,
-                  initialTeamAScore: teamAScore,
-                  initialTeamBScore: teamBScore,
-                });
-              }}>
-                <Text style={styles.buttonText}>{t.continueGame}</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          {/* Devam et butonu devre dışı (allowContinue false) */}
 
-          <View style={styles.buttonsRow}>
-            <TouchableOpacity style={[styles.button, styles.secondary]} onPress={() => {
-              navigation.replace('Game', { teamA, teamB, timeLimit, passCount, tabooCount, winPoints, gameMode, language });
-            }}>
-              <Text style={styles.buttonText}>{t.playAgain}</Text>
-            </TouchableOpacity>
-          </View>
+          {/* Tekrar Oyna devre dışı */}
 
-          <TouchableOpacity style={[styles.button, styles.tertiary]} onPress={() => navigation.navigate('TabuuMenu')}>
+          <TouchableOpacity style={[styles.button, styles.tertiary]} onPress={() => navigation.reset({ index: 0, routes: [{ name: 'TabuuMenu' }] })}>
             <Text style={styles.buttonText}>{t.mainMenu}</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -160,8 +147,8 @@ export default function FinalResults({ route, navigation }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.25)' },
-  card: { width: '90%', backgroundColor: '#fff', borderRadius: 16, borderWidth: 2, borderColor: '#8B4513', padding: 16, alignItems: 'center', overflow: 'hidden' },
-  title: { fontFamily: 'IndieFlower', fontSize: 28, color: '#8B4513', marginBottom: 8, fontWeight: 'normal' },
+  card: { width: '95%', backgroundColor: '#fff', borderRadius: 16, borderWidth: 2, borderColor: '#8B4513', padding: 18, alignItems: 'center', overflow: 'hidden' },
+  title: { fontFamily: 'IndieFlower', fontSize: 32, color: '#8B4513', marginBottom: 12, marginTop: 6, fontWeight: 'normal', textAlign: 'center' },
   // notebook background
   linedBackground: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, paddingTop: 60 },
   line: { height: 1, backgroundColor: '#e0e0e0', marginVertical: 18, width: '100%' },
@@ -171,15 +158,19 @@ const styles = StyleSheet.create({
   galataTowerDoodle: { position: 'absolute', bottom: 50, left: 16, width: 26, height: 26, opacity: 0.12 },
   pyramidsDoodle: { position: 'absolute', bottom: 50, right: 16, width: 30, height: 30, opacity: 0.12 },
   // team blocks
-  teamBlock: { backgroundColor: '#fff', borderWidth: 2, borderColor: '#8B4513', borderRadius: 12, padding: 12, marginVertical: 6 },
-  teamTitle: { fontFamily: 'IndieFlower', fontSize: 20, color: '#8B4513' },
+  teamBlock: { backgroundColor: '#fff', borderWidth: 2, borderColor: '#8B4513', borderRadius: 14, padding: 14, marginVertical: 8, alignSelf: 'stretch', width: '100%' },
+  teamTitle: { fontFamily: 'IndieFlower', fontSize: 20, color: '#8B4513', textAlign: 'center' },
   scoreText: { fontFamily: 'IndieFlower', fontSize: 28, color: '#4A6FA5', textAlign: 'center', marginVertical: 4 },
   badgesRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  badge: { flex: 1, flexDirection: 'row', alignItems: 'center', borderRadius: 10, paddingVertical: 8, paddingHorizontal: 10, marginHorizontal: 4 },
-  badgeIcon: { width: 18, height: 18, marginRight: 6 },
+  badge: { flex: 1, flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingVertical: 14, paddingHorizontal: 12, marginHorizontal: 6 },
+  badgeIcon: { width: 22, height: 22, marginRight: 8, resizeMode: 'contain' },
   badgeText: { color: '#fff', fontFamily: 'IndieFlower', fontSize: 16 },
-  wordsPanel: { marginTop: 8, borderTopWidth: 1, borderColor: '#eee', paddingTop: 6 },
-  wordItem: { fontFamily: 'IndieFlower', fontSize: 16, color: '#F44336', marginBottom: 2 },
+  badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: 22, fontWeight: 'bold' },
+  wordsPanel: { marginTop: 8, borderTopWidth: 1, borderColor: '#eee', paddingTop: 10, flexDirection: 'row', flexWrap: 'wrap' },
+  wordItem: { fontFamily: 'IndieFlower', fontSize: 16, color: '#F44336', marginBottom: 8, marginRight: 12, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.03)' },
+  correctWord: { color: '#4CAF50' },
+  passWord: { color: '#FFB74D' },
+  tabooWord: { color: '#EF5350' },
   winnerText: { fontFamily: 'IndieFlower', fontSize: 22, color: '#8B4513', fontWeight: 'normal', marginVertical: 10, textAlign: 'center' },
   buttonsRow: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8, marginBottom: 6 },
   button: { borderRadius: 16, paddingVertical: 12, paddingHorizontal: 16, borderWidth: 2, borderColor: '#8B4513', alignItems: 'center', width: '100%', marginBottom: 8 },
