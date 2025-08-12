@@ -1,10 +1,55 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Alert, ScrollView, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import number1 from '../assets/number-1.png';
+import number2 from '../assets/number-2.png';
+import number3 from '../assets/numbre-3.png'; // Corrected typo for numbre-3.png
+import car from '../assets/car.png';
+import notebook from '../assets/notebook.png';
 
 const { width, height } = Dimensions.get('window');
+
+const translations = {
+  tr: {
+    newGame: 'YENİ OYUN',
+    teamNames: 'Takım İsimleri:',
+    teamA: 'Takım A Adı',
+    teamB: 'Takım B Adı',
+    vs: 'VS',
+    gameMode: 'Oyun Modu:',
+    adultMode: 'Yetişkin Modu',
+    childMode: 'Çocuk Modu',
+    gameSettings: 'Oyun Ayarları:',
+    timeLimit: 'Süre Limiti (saniye):',
+    passCount: 'Pas Hakkı Sayısı:',
+    quickStart: 'Hızlı Başla',
+    startGame: 'OYUNU BAŞLAT',
+    error: 'Hata',
+    emptyTeamNames: 'Takım isimleri boş bırakılamaz!',
+    sameTeamNames: 'Takım isimleri aynı olamaz!',
+  },
+  en: {
+    newGame: 'NEW GAME',
+    teamNames: 'Team Names:',
+    teamA: 'Team A Name',
+    teamB: 'Team B Name',
+    vs: 'VS',
+    gameMode: 'Game Mode:',
+    adultMode: 'Adult Mode',
+    childMode: 'Child Mode',
+    gameSettings: 'Game Settings:',
+    timeLimit: 'Time Limit (seconds):',
+    passCount: 'Pass Count:',
+    quickStart: 'Quick Start',
+    startGame: 'START GAME',
+    error: 'Error',
+    emptyTeamNames: 'Team names cannot be empty!',
+    sameTeamNames: 'Team names cannot be the same!',
+  },
+};
 
 export default function NewGame() {
   const navigation = useNavigation();
@@ -12,6 +57,9 @@ export default function NewGame() {
   const [teamB, setTeamB] = useState('Takım B');
   const [timeLimit, setTimeLimit] = useState(60);
   const [passCount, setPassCount] = useState(3);
+  const [gameMode, setGameMode] = useState('adult'); // 'adult', 'child' veya 'both'
+  const [fontLoaded, setFontLoaded] = useState(false);
+  const [currentLanguage, setCurrentLanguage] = useState('tr');
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -19,6 +67,24 @@ export default function NewGame() {
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
   useEffect(() => {
+    const loadAssetsAndSettings = async () => {
+      await Font.loadAsync({
+        'IndieFlower': require('../assets/IndieFlower-Regular.ttf'),
+      });
+      setFontLoaded(true);
+
+      try {
+        const savedSettings = await AsyncStorage.getItem('tabuuSettings');
+        if (savedSettings) {
+          const parsed = JSON.parse(savedSettings);
+          setCurrentLanguage(parsed.language ?? 'tr');
+        }
+      } catch (error) {
+        console.log('Ayarlar yüklenemedi:', error);
+      }
+    };
+    loadAssetsAndSettings();
+
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -38,153 +104,142 @@ export default function NewGame() {
     ]).start();
   }, []);
 
+  const t = translations[currentLanguage];
+
   const handleStartGame = () => {
     if (teamA.trim() === '' || teamB.trim() === '') {
-      Alert.alert('Hata', 'Takım isimleri boş bırakılamaz!');
+      Alert.alert(t.error, t.emptyTeamNames);
       return;
     }
     if (teamA.trim().toLowerCase() === teamB.trim().toLowerCase()) {
-      Alert.alert('Hata', 'Takım isimleri aynı olamaz!');
+      Alert.alert(t.error, t.sameTeamNames);
       return;
     }
-    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount });
+    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage });
   };
 
   const handleQuickStart = () => {
-    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit: 60, passCount: 3 });
+    navigation.navigate('Game', { teamA: 'Takım A', teamB: 'Takım B', timeLimit: 60, passCount: 3, gameMode: 'adult', language: currentLanguage });
   };
 
+  if (!fontLoaded) {
+    return null; // Font yüklenene kadar hiçbir şey gösterme
+  }
+
   return (
-    <LinearGradient
-      colors={['#667eea', '#764ba2', '#f093fb']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <View style={styles.linedBackground}>
+        {[...Array(20)].map((_, i) => (
+          <View key={i} style={styles.line} />
+        ))}
+      </View>
       
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         {/* Header */}
         <View style={styles.header}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color="#8B4513" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>
-            <Ionicons name="dice" size={32} color="#fff" />
-            <Text style={styles.title}>YENİ OYUN</Text>
+            <Ionicons name="dice" size={32} color="#8B4513" />
+            <Text style={styles.title}>{t.newGame}</Text>
           </View>
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Takım İsimleri */}
           <View style={styles.section}>
-            <Text style={styles.inputLabel}>Takım İsimleri:</Text>
-            <LinearGradient
-              colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.7)']}
-              style={styles.inputCard}
-            >
-              <Ionicons name="people" size={20} color="#764ba2" style={styles.inputIcon} />
+            <Text style={styles.inputLabel}>{t.teamNames}</Text>
+            <View style={styles.inputCard}>
+              <Ionicons name="people" size={20} color="#8B4513" style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="Takım A Adı"
+                placeholder={t.teamA}
                 placeholderTextColor="#A0522D"
                 value={teamA}
                 onChangeText={setTeamA}
               />
-            </LinearGradient>
-            <Text style={styles.vsText}>VS</Text>
-            <LinearGradient
-              colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.7)']}
-              style={styles.inputCard}
-            >
-              <Ionicons name="people" size={20} color="#764ba2" style={styles.inputIcon} />
+            </View>
+            <Text style={styles.vsText}>{t.vs}</Text>
+            <View style={styles.inputCard}>
+              <Ionicons name="people" size={20} color="#8B4513" style={styles.inputIcon} />
               <TextInput
                 style={styles.input}
-                placeholder="Takım B Adı"
+                placeholder={t.teamB}
                 placeholderTextColor="#A0522D"
                 value={teamB}
                 onChangeText={setTeamB}
               />
-            </LinearGradient>
+            </View>
           </View>
 
-          {/* Oyun Ayarları */}
+          {/* Oyun Modu Seçimi */}
           <View style={styles.section}>
-            <Text style={styles.settingsTitle}>Oyun Ayarları:</Text>
-            
-            <LinearGradient
-              colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.7)']}
-              style={styles.settingItem}
-            >
-              <Text style={styles.settingLabel}>Süre Limiti (saniye):</Text>
-              <View style={styles.settingButtons}>
-                {[30, 60, 90, 120].map(time => (
-                  <TouchableOpacity
-                    key={time}
-                    style={[styles.settingButton, timeLimit === time && styles.activeSettingButton]}
-                    onPress={() => setTimeLimit(time)}
-                  >
-                    <Text style={[styles.settingButtonText, timeLimit === time && styles.activeSettingButtonText]}>{time}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </LinearGradient>
-
-            <LinearGradient
-              colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.7)']}
-              style={styles.settingItem}
-            >
-              <Text style={styles.settingLabel}>Pas Hakkı Sayısı:</Text>
-              <View style={styles.settingButtons}>
-                {[0, 1, 2, 3, 4, 5].map(pass => (
-                  <TouchableOpacity
-                    key={pass}
-                    style={[styles.settingButton, passCount === pass && styles.activeSettingButton]}
-                    onPress={() => setPassCount(pass)}
-                  >
-                    <Text style={[styles.settingButtonText, passCount === pass && styles.activeSettingButtonText]}>{pass}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </LinearGradient>
+            <Text style={styles.settingsTitle}>{t.gameMode}</Text>
+            <View style={styles.modeButtonsContainer}>
+              <TouchableOpacity
+                style={[styles.modeButton, gameMode === 'adult' && styles.activeModeButton]}
+                onPress={() => setGameMode('adult')}
+              >
+                <Image source={car} style={styles.modeIcon} />
+                <Text style={[styles.modeButtonText, gameMode === 'adult' && styles.activeModeButtonText]}>{t.adultMode}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modeButton, gameMode === 'child' && styles.activeModeButton]}
+                onPress={() => setGameMode('child')}
+              >
+                <Image source={notebook} style={styles.modeIcon} />
+                <Text style={[styles.modeButtonText, gameMode === 'child' && styles.activeModeButtonText]}>{t.childMode}</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Başlat Butonları */}
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={styles.quickStartButton} onPress={handleQuickStart} activeOpacity={0.8}>
-              <LinearGradient
-                colors={['#4CAF50', '#45a049']}
-                style={styles.buttonGradient}
-              >
-                <Ionicons name="flash" size={24} color="#fff" />
-                <Text style={styles.quickStartText}>Hızlı Başla</Text>
-              </LinearGradient>
+              <View style={styles.buttonContent}>
+                <Ionicons name="flash" size={24} color="#8B4513" />
+                <Text style={styles.quickStartText}>{t.quickStart}</Text>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.startButton} onPress={handleStartGame} activeOpacity={0.8}>
-              <LinearGradient
-                colors={['#FF9800', '#F57C00']}
-                style={styles.buttonGradient}
-              >
+              <View style={[styles.buttonContent, styles.startButtonColor]}>
                 <Ionicons name="play" size={24} color="#fff" />
-                <Text style={styles.startButtonText}>OYUNU BAŞLAT</Text>
-              </LinearGradient>
+                <Text style={styles.startButtonText}>{t.startGame}</Text>
+              </View>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </Animated.View>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+  },
+  linedBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingTop: 80,
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#e0e0e0', // Çizgi rengi
+    marginVertical: 18, // Çizgiler arası boşluk
+    width: '100%',
   },
   content: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 100, // Increased padding top for better spacing
     paddingBottom: 20,
   },
   header: {
@@ -194,9 +249,16 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginRight: 15,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 20,
-    padding: 8,
+    backgroundColor: '#fff',
+    borderRadius: 25, // More rounded
+    padding: 10, // Increased padding
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -205,13 +267,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: 32, // Slightly larger
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#8B4513',
     marginLeft: 10,
-    textShadowColor: 'rgba(0,0,0,0.5)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    fontFamily: 'IndieFlower',
   },
   scrollContent: {
     flexGrow: 1,
@@ -221,131 +281,187 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   inputLabel: {
-    fontSize: 18,
+    fontSize: 20, // Slightly larger
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#8B4513',
     marginBottom: 10,
-    textShadowColor: 'rgba(0,0,0,0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
+    fontFamily: 'IndieFlower',
   },
   inputCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 10,
+    padding: 18, // Increased padding
+    borderRadius: 20, // More rounded
+    marginBottom: 15, // Increased margin bottom
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#8B4513',
   },
   inputIcon: {
-    marginRight: 10,
+    marginRight: 15, // Increased margin
   },
   input: {
     flex: 1,
-    fontSize: 18,
+    fontSize: 20, // Slightly larger
     color: '#333',
+    fontFamily: 'IndieFlower',
   },
   vsText: {
-    fontSize: 24,
+    fontSize: 28, // Slightly larger
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#8B4513',
     textAlign: 'center',
-    marginVertical: 10,
-    textShadowColor: 'rgba(0,0,0,0.5)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    marginVertical: 15, // Increased vertical margin
+    fontFamily: 'IndieFlower',
   },
   settingsTitle: {
-    fontSize: 20,
+    fontSize: 22, // Slightly larger
     fontWeight: 'bold',
-    color: '#fff',
+    color: '#8B4513',
     marginBottom: 15,
-    textShadowColor: 'rgba(0,0,0,0.3)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
+    fontFamily: 'IndieFlower',
+  },
+  modeButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 25, // Increased margin bottom
+    backgroundColor: '#fff',
+    borderRadius: 18, // More rounded
+    padding: 12, // Increased padding
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  modeButton: {
+    flex: 1,
+    paddingVertical: 15, // Increased vertical padding
+    borderRadius: 12, // More rounded
+    alignItems: 'center',
+    marginHorizontal: 8, // Increased horizontal margin
+  },
+  modeButtonText: {
+    fontSize: 18, // Slightly larger
+    fontWeight: 'bold',
+    fontFamily: 'IndieFlower',
+    color: '#8B4513',
+  },
+  activeModeButton: {
+    backgroundColor: '#f4a460', // Soft orange for active
+  },
+  activeModeButtonText: {
+    color: '#fff',
+  },
+  modeIcon: {
+    width: 40,
+    height: 40,
+    marginBottom: 8,
   },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
-    borderRadius: 15,
-    marginBottom: 15,
+    padding: 18, // Increased padding
+    borderRadius: 18, // More rounded
+    marginBottom: 18, // Increased margin bottom
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 5,
+    elevation: 4,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#8B4513',
   },
   settingLabel: {
-    fontSize: 16,
+    fontSize: 18, // Slightly larger
     color: '#333',
     fontWeight: '500',
+    fontFamily: 'IndieFlower',
   },
   settingButtons: {
     flexDirection: 'row',
   },
   settingButton: {
-    backgroundColor: 'rgba(255,255,255,0.5)',
-    borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginLeft: 10,
+    backgroundColor: '#a9d5ee', // Soft blue for buttons
+    borderRadius: 12, // More rounded
+    paddingVertical: 10, // Increased padding
+    paddingHorizontal: 15, // Increased padding
+    marginLeft: 12, // Increased margin
+    borderWidth: 1,
+    borderColor: '#8B4513',
   },
   settingButtonText: {
-    color: '#333',
+    color: '#8B4513',
     fontWeight: 'bold',
+    fontFamily: 'IndieFlower',
+    fontSize: 16,
   },
   activeSettingButton: {
-    backgroundColor: '#667eea',
+    backgroundColor: '#8B4513',
   },
   activeSettingButtonText: {
     color: '#fff',
   },
+  passIcon: {
+    width: 20,
+    height: 20,
+    marginRight: 8,
+  },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 20,
+    marginTop: 30, // Increased margin top
   },
   quickStartButton: {
     width: '48%',
-    borderRadius: 20,
+    borderRadius: 25, // More rounded
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 10,
   },
   startButton: {
     width: '48%',
-    borderRadius: 20,
+    borderRadius: 25, // More rounded
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 10,
   },
-  buttonGradient: {
-    paddingVertical: 18,
-    paddingHorizontal: 10,
+  buttonContent: {
+    paddingVertical: 20, // Increased padding
+    paddingHorizontal: 15, // Increased padding
     alignItems: 'center',
+    backgroundColor: '#f4a460', // Soft orange
+  },
+  startButtonColor: {
+    backgroundColor: '#5b9bd5', // Soft blue
   },
   quickStartText: {
-    color: '#fff',
+    color: '#8B4513', // Brown text
     fontWeight: 'bold',
-    fontSize: 16,
-    marginTop: 5,
+    fontSize: 18, // Slightly larger
+    marginTop: 8, // Increased margin
+    fontFamily: 'IndieFlower',
   },
   startButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 18,
-    marginTop: 5,
+    fontSize: 20, // Slightly larger
+    marginTop: 8, // Increased margin
+    fontFamily: 'IndieFlower',
   },
 });

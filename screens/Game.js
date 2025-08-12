@@ -1,14 +1,63 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Alert, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import words from '../data/words.json';
+import * as Font from 'expo-font';
+import heart from '../assets/heart.png';
+import exclamationMark from '../assets/exclamation-mark.png';
+import paperPlane from '../assets/paper-plane.png';
+
 
 const { width, height } = Dimensions.get('window');
 
+const translations = {
+  tr: {
+    gameOver: 'Oyun Bitti!',
+    winner: 'Kazanan:',
+    score: 'Skor:',
+    mainMenu: 'Ana Menü',
+    newGame: 'Yeni Oyun',
+    roundOver: 'Tur Bitti!',
+    correct: 'Doğru:',
+    pass: 'Pas:',
+    taboo: 'Tabu:',
+    tabooedWords: 'Tabu Yapılan Kelimeler:',
+    nextRound: 'Sonraki Tur',
+    endGame: 'Oyunu Bitir',
+    noPassRights: 'Pas Hakkı Yok!',
+    passRightsEnded: 'Pas hakkınız bitti!',
+    tabooTitle: 'YASAKLI KELİMELER',
+    tabooGame: 'TABU',
+    error: 'Hata',
+    noWordsFound: 'Seçilen oyun modu için kelime bulunamadı. Lütfen NewGame ekranına dönün.',
+    noMoreWords: 'BİTEBİLİR',
+  },
+  en: {
+    gameOver: 'Game Over!',
+    winner: 'Winner:',
+    score: 'Score:',
+    mainMenu: 'Main Menu',
+    newGame: 'New Game',
+    roundOver: 'Round Over!',
+    correct: 'Correct:',
+    pass: 'Pass:',
+    taboo: 'Taboo:',
+    tabooedWords: 'Tabooed Words:',
+    nextRound: 'Next Round',
+    endGame: 'End Game',
+    noPassRights: 'No Pass Rights!',
+    passRightsEnded: 'You have no pass rights left!',
+    tabooTitle: 'TABOO WORDS',
+    tabooGame: 'TABOO',
+    error: 'Error',
+    noWordsFound: 'No words found for the selected game mode. Please return to the NewGame screen.',
+    noMoreWords: 'NO MORE WORDS',
+  },
+};
+
 const Game = ({ route, navigation }) => {
-  const { teamA = 'A Takımı', teamB = 'B Takımı', timeLimit = 60, passCount: initialPass = 3 } = route.params || {};
+  const { teamA = 'A Takımı', teamB = 'B Takımı', timeLimit = 60, passCount: initialPass = 3, gameMode = 'adult', language = 'tr' } = route.params || {};
 
   const [currentWord, setCurrentWord] = useState('');
   const [teamAScore, setTeamAScore] = useState(0);
@@ -26,6 +75,8 @@ const Game = ({ route, navigation }) => {
     totalPass: 0,
     totalTaboo: 0
   });
+  const [fontLoaded, setFontLoaded] = useState(false);
+  const [availableWords, setAvailableWords] = useState([]);
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -34,9 +85,38 @@ const Game = ({ route, navigation }) => {
   const wordAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    getNextWord();
+    (async () => {
+      await Font.loadAsync({
+        'IndieFlower': require('../assets/IndieFlower-Regular.ttf'),
+      });
+      setFontLoaded(true);
+    })();
+    
+    // Oyun moduna göre kelimeleri filtrele
+    let filteredWords;
+    if (gameMode === 'child') {
+      filteredWords = words.filter(word => word.mode === 'child' || word.mode === 'both');
+    } else {
+      filteredWords = words.filter(word => word.mode === 'adult' || word.mode === 'both');
+    }
+    setAvailableWords(filteredWords);
+
+    // Kelime listesi boşsa uyarı ver
+    if (filteredWords.length === 0) {
+      Alert.alert(translations[language].error, translations[language].noWordsFound);
+      navigation.goBack();
+      return;
+    }
+
+    getNextWord(filteredWords, language);
     startAnimations();
-  }, []);
+  }, [gameMode, language]); // gameMode ve language değiştiğinde bu useEffect tekrar çalışsın
+
+  // Yeni eklenen useEffect: timeLimit ve initialPass değiştiğinde state'leri güncelle
+  useEffect(() => {
+    setTimeLeft(timeLimit);
+    setPassCount(initialPass);
+  }, [timeLimit, initialPass]);
 
   useEffect(() => {
     if (isRoundOver) return;
@@ -95,7 +175,7 @@ const Game = ({ route, navigation }) => {
     setCorrectCount(prev => prev + 1);
     setGameStats(prev => ({ ...prev, totalCorrect: prev.totalCorrect + 1 }));
     animateWord();
-    getNextWord();
+    getNextWord(availableWords, language);
   };
 
   const handlePass = () => {
@@ -105,9 +185,9 @@ const Game = ({ route, navigation }) => {
       setPassUsedCount(prev => prev + 1);
       setGameStats(prev => ({ ...prev, totalPass: prev.totalPass + 1 }));
       animateWord();
-      getNextWord();
+      getNextWord(availableWords, language);
     } else {
-      Alert.alert('Pas Hakkı Yok!', 'Pas hakkınız bitti!');
+      Alert.alert(translations[language].noPassRights, translations[language].passRightsEnded);
     }
   };
 
@@ -118,7 +198,7 @@ const Game = ({ route, navigation }) => {
     setTabooWordsUsed(prev => [...prev, currentWord]);
     setGameStats(prev => ({ ...prev, totalTaboo: prev.totalTaboo + 1 }));
     animateWord();
-    getNextWord();
+    getNextWord(availableWords, language);
   };
 
   const handleTimeUp = () => {
@@ -126,9 +206,14 @@ const Game = ({ route, navigation }) => {
     setIsRoundOver(true);
   };
 
-  const getNextWord = () => {
-    const nextWord = words[Math.floor(Math.random() * words.length)];
-    setCurrentWord(nextWord.word);
+  const getNextWord = (wordList, lang) => {
+    if (wordList.length === 0) {
+      setCurrentWord(translations[lang].noMoreWords);
+      return;
+    }
+    const randomIndex = Math.floor(Math.random() * wordList.length);
+    const nextWordObject = wordList[randomIndex];
+    setCurrentWord(lang === 'en' ? nextWordObject.english_word : nextWordObject.word);
   };
 
   const startNextRound = () => {
@@ -140,7 +225,7 @@ const Game = ({ route, navigation }) => {
     setTabooWordsUsed([]);
     setIsRoundOver(false);
     setGameStats(prev => ({ ...prev, totalRounds: prev.totalRounds + 1 }));
-    getNextWord();
+    getNextWord(availableWords, language);
     startAnimations();
   };
 
@@ -154,7 +239,9 @@ const Game = ({ route, navigation }) => {
         taboo: gameStats.totalTaboo,
         winner: teamAScore > teamBScore ? teamA : teamB,
         teamAScore,
-        teamBScore
+        teamBScore,
+        gameMode,
+        language,
       };
 
       const existingScores = await AsyncStorage.getItem('tabuuScores');
@@ -173,11 +260,11 @@ const Game = ({ route, navigation }) => {
     const winner = teamAScore > teamBScore ? teamA : teamB;
     const winnerScore = Math.max(teamAScore, teamBScore);
     Alert.alert(
-      'Oyun Bitti!',
-      `Kazanan: ${winner}\nSkor: ${winnerScore}`,
+      translations[language].gameOver,
+      `${translations[language].winner} ${winner}\n${translations[language].score} ${winnerScore}`,
       [
-        { text: 'Ana Menü', onPress: () => navigation.navigate('TabuuMenu') },
-        { text: 'Yeni Oyun', onPress: () => navigation.navigate('NewGame') }
+        { text: translations[language].mainMenu, onPress: () => navigation.navigate('TabuuMenu') },
+        { text: translations[language].newGame, onPress: () => navigation.navigate('NewGame') }
       ]
     );
   };
@@ -188,43 +275,48 @@ const Game = ({ route, navigation }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const currentTabooWords = words.find(w => w.word === currentWord)?.taboo || [];
+  const currentTabooWords = (
+    words.find(w => w.word === currentWord) || 
+    words.find(w => w.english_word === currentWord)
+  );
+  const displayTabooWords = language === 'en' ? currentTabooWords?.english_taboo : currentTabooWords?.taboo || [];
+
+  if (!fontLoaded) {
+    return null; // Font yüklenene kadar hiçbir şey gösterme
+  }
 
   return (
-    <LinearGradient
-      colors={['#667eea', '#764ba2', '#f093fb']}
-      style={styles.container}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-    >
-      <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      <View style={styles.linedBackground}>
+        {[...Array(20)].map((_, i) => (
+          <View key={i} style={styles.line} />
+        ))}
+      </View>
       
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
         {isRoundOver ? (
           <View style={styles.summaryContainer}>
-            <LinearGradient
-              colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.7)']}
-              style={styles.summaryCard}
-            >
-              <Text style={styles.summaryTitle}>🎯 Tur Bitti!</Text>
+            <View style={styles.notebookPage}>
+              <Text style={styles.summaryTitle}>{translations[language].roundOver}</Text>
               <View style={styles.statsContainer}>
                 <View style={styles.statItem}>
                   <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
-                  <Text style={styles.statText}>Doğru: {correctCount}</Text>
+                  <Text style={styles.statText}>{translations[language].correct} {correctCount}</Text>
                 </View>
                 <View style={styles.statItem}>
                   <Ionicons name="arrow-forward" size={24} color="#FF9800" />
-                  <Text style={styles.statText}>Pas: {passUsedCount}</Text>
+                  <Text style={styles.statText}>{translations[language].pass} {passUsedCount}</Text>
                 </View>
                 <View style={styles.statItem}>
                   <Ionicons name="close-circle" size={24} color="#F44336" />
-                  <Text style={styles.statText}>Tabu: {tabooWordsUsed.length}</Text>
+                  <Text style={styles.statText}>{translations[language].taboo} {tabooWordsUsed.length}</Text>
                 </View>
               </View>
               
-              {tabooWordsUsed.length > 0 && (
+              {displayTabooWords.length > 0 && (
                 <View style={styles.tabooList}>
-                  <Text style={styles.tabooListTitle}>Tabu Yapılan Kelimeler:</Text>
+                  <Text style={styles.tabooListTitle}>{translations[language].tabooedWords}</Text>
                   {tabooWordsUsed.map((word, index) => (
                     <Text key={index} style={styles.tabooItem}>• {word}</Text>
                   ))}
@@ -233,27 +325,21 @@ const Game = ({ route, navigation }) => {
               
               <View style={styles.summaryButtons}>
                 <TouchableOpacity style={styles.nextButton} onPress={startNextRound}>
-                  <LinearGradient
-                    colors={['#4CAF50', '#45a049']}
-                    style={styles.buttonGradient}
-                  >
-                    <Text style={styles.buttonText}>Sonraki Tur</Text>
-                  </LinearGradient>
+                  <View style={styles.buttonContent}>
+                    <Text style={styles.buttonText}>{translations[language].nextRound}</Text>
+                  </View>
                 </TouchableOpacity>
                 
                 <TouchableOpacity style={styles.endButton} onPress={endGame}>
-                  <LinearGradient
-                    colors={['#F44336', '#d32f2f']}
-                    style={styles.buttonGradient}
-                  >
-                    <Text style={styles.buttonText}>Oyunu Bitir</Text>
-                  </LinearGradient>
+                  <View style={styles.buttonContent}>
+                    <Text style={styles.buttonText}>{translations[language].endGame}</Text>
+                  </View>
                 </TouchableOpacity>
               </View>
-            </LinearGradient>
+            </View>
           </View>
         ) : (
-          <>
+          <View style={styles.scrollContent}>
             {/* Header */}
             <View style={styles.header}>
               <View style={styles.timerContainer}>
@@ -270,9 +356,9 @@ const Game = ({ route, navigation }) => {
               </View>
               
               <View style={styles.gameInfo}>
-                <Text style={styles.gameTitle}>TABU</Text>
+                <Text style={styles.gameTitle}>{translations[language].tabooGame}</Text>
                 <View style={styles.passContainer}>
-                  <Ionicons name="arrow-forward" size={20} color="#FFD700" />
+                  <Ionicons name="arrow-forward" size={20} color="#8B4513" />
                   <Text style={styles.passCount}>{passCount}</Text>
                 </View>
               </View>
@@ -288,335 +374,394 @@ const Game = ({ route, navigation }) => {
                 })}] }
               ]}
             >
-              <LinearGradient
-                colors={['rgba(255,255,255,0.95)', 'rgba(255,255,255,0.85)']}
-                style={styles.wordCard}
-              >
+              <View style={styles.wordCard}>
                 <Text style={styles.currentWord}>{currentWord}</Text>
-              </LinearGradient>
+              </View>
             </Animated.View>
 
             {/* Taboo Words */}
             <View style={styles.tabooWordsContainer}>
-              <LinearGradient
-                colors={['rgba(255,255,255,0.9)', 'rgba(255,255,255,0.7)']}
-                style={styles.tabooCard}
-              >
-                <Text style={styles.tabooTitle}>YASAKLI KELİMELER</Text>
+              <View style={styles.tabooCard}>
+                <Text style={styles.tabooTitle}>{translations[language].tabooTitle}</Text>
                 <View style={styles.tabooWordsList}>
-                  {currentTabooWords.map((word, index) => (
+                  {displayTabooWords.map((word, index) => (
                     <Text key={index} style={styles.tabooWord}>{word}</Text>
                   ))}
                 </View>
-              </LinearGradient>
+              </View>
             </View>
 
             {/* Teams */}
             <View style={styles.teamsContainer}>
               <View style={[styles.team, currentTeam === 'A' && styles.activeTeam]}>
-                <LinearGradient
-                  colors={currentTeam === 'A' ? ['#4CAF50', '#45a049'] : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,0.6)']}
-                  style={styles.teamCard}
-                >
+                <View style={styles.teamCard}>
                   <Text style={[styles.teamName, currentTeam === 'A' && styles.activeTeamText]}>
                     {teamA}
                   </Text>
                   <Text style={[styles.teamScore, currentTeam === 'A' && styles.activeTeamText]}>
                     {teamAScore}
                   </Text>
-                </LinearGradient>
+                </View>
               </View>
               
               <View style={[styles.team, currentTeam === 'B' && styles.activeTeam]}>
-                <LinearGradient
-                  colors={currentTeam === 'B' ? ['#2196F3', '#1976D2'] : ['rgba(255,255,255,0.8)', 'rgba(255,255,255,0.6)']}
-                  style={styles.teamCard}
-                >
+                <View style={styles.teamCard}>
                   <Text style={[styles.teamName, currentTeam === 'B' && styles.activeTeamText]}>
                     {teamB}
                   </Text>
                   <Text style={[styles.teamScore, currentTeam === 'B' && styles.activeTeamText]}>
                     {teamBScore}
                   </Text>
-                </LinearGradient>
+                </View>
               </View>
             </View>
 
             {/* Action Buttons */}
             <View style={styles.buttonsContainer}>
               <TouchableOpacity style={styles.actionButton} onPress={handleCorrect} activeOpacity={0.8}>
-                <LinearGradient
-                  colors={['#4CAF50', '#45a049']}
-                  style={styles.buttonGradient}
-                >
-                  <Ionicons name="checkmark-circle" size={24} color="#fff" />
-                  <Text style={styles.buttonText}>DOĞRU</Text>
-                </LinearGradient>
+                <View style={[styles.buttonContent, styles.correctButton]}>
+                  <Image source={heart} style={styles.actionIcon} />
+                  <Text style={styles.buttonText}>{translations[language].correct}</Text>
+                </View>
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.actionButton} onPress={handlePass} activeOpacity={0.8}>
-                <LinearGradient
-                  colors={['#FF9800', '#F57C00']}
-                  style={styles.buttonGradient}
-                >
-                  <Ionicons name="arrow-forward" size={24} color="#fff" />
-                  <Text style={styles.buttonText}>PAS</Text>
-                </LinearGradient>
+                <View style={[styles.buttonContent, styles.passButton]}>
+                  <Image source={paperPlane} style={styles.actionIcon} />
+                  <Text style={styles.buttonText}>{translations[language].pass}</Text>
+                </View>
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.actionButton} onPress={handleTaboo} activeOpacity={0.8}>
-                <LinearGradient
-                  colors={['#F44336', '#d32f2f']}
-                  style={styles.buttonGradient}
-                >
-                  <Ionicons name="close-circle" size={24} color="#fff" />
-                  <Text style={styles.buttonText}>TABU</Text>
-                </LinearGradient>
+                <View style={[styles.buttonContent, styles.tabooButton]}>
+                  <Image source={exclamationMark} style={styles.actionIcon} />
+                  <Text style={styles.buttonText}>{translations[language].taboo}</Text>
+                </View>
               </TouchableOpacity>
             </View>
-          </>
+          </View>
         )}
       </Animated.View>
-    </LinearGradient>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+  },
+  linedBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingTop: 80,
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#e0e0e0', // Çizgi rengi
+    marginVertical: 18, // Çizgiler arası boşluk
+    width: '100%',
   },
   content: {
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
+    paddingHorizontal: 25, // Increased horizontal padding
+    paddingTop: 40, // Reduced padding top for more space
+    // paddingBottom removed as flex will handle it
+  },
+  scrollContent: {
+    // Removed as it's no longer a ScrollView
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 25, // Adjusted margin
   },
   timerContainer: {
     position: 'relative',
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 25,
-    padding: 15,
-    minWidth: 100,
+    backgroundColor: '#fff',
+    borderRadius: 30, // More rounded
+    padding: 18, // Increased padding
+    minWidth: 120, // Wider
     alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 3 }, // Stronger shadow
+    shadowOpacity: 0.25,
+    shadowRadius: 5,
+    elevation: 5,
   },
   timerProgress: {
     position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255,255,255,0.3)',
-    borderRadius: 25,
+    backgroundColor: '#f4a460', // Soft orange for timer progress
+    borderRadius: 28,
   },
   timer: {
-    fontSize: 24,
+    fontSize: 26, // Slightly larger
     fontWeight: 'bold',
-    color: '#fff',
-    textShadowColor: 'rgba(0,0,0,0.5)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
   },
   gameInfo: {
     alignItems: 'center',
   },
   gameTitle: {
-    fontSize: 28,
+    fontSize: 34, // Larger title
     fontWeight: 'bold',
-    color: '#fff',
-    textShadowColor: 'rgba(0,0,0,0.5)',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
   },
   passContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 15,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginTop: 5,
+    backgroundColor: '#fff',
+    borderRadius: 20, // More rounded
+    paddingHorizontal: 12, // Adjusted padding
+    paddingVertical: 8, // Adjusted padding
+    marginTop: 8, // Adjusted margin
+    borderWidth: 2,
+    borderColor: '#8B4513',
+    shadowColor: '#000',
+    shadowOffset: { width: 1, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 3,
   },
   passCount: {
-    fontSize: 18,
+    fontSize: 20, // Slightly larger
     fontWeight: 'bold',
-    color: '#FFD700',
-    marginLeft: 5,
+    color: '#8B4513',
+    marginLeft: 8, // Adjusted margin
+    fontFamily: 'IndieFlower',
   },
   wordContainer: {
-    marginBottom: 20,
+    marginBottom: 15, // Reduced margin
   },
   wordCard: {
-    padding: 30,
-    borderRadius: 20,
+    padding: 35, // Increased padding
+    borderRadius: 25, // More rounded
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 10,
+    backgroundColor: '#fff',
+    borderWidth: 3, // Thicker border
+    borderColor: '#8B4513',
   },
   currentWord: {
-    fontSize: 42,
+    fontSize: 48, // Larger font size
     fontWeight: 'bold',
     color: '#4A6FA5',
     textAlign: 'center',
+    fontFamily: 'IndieFlower',
   },
   tabooWordsContainer: {
-    marginBottom: 30,
+    marginBottom: 20, // Reduced margin
   },
   tabooCard: {
-    padding: 20,
-    borderRadius: 15,
+    padding: 25, // Increased padding
+    borderRadius: 20, // More rounded
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 5,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#F44336', // Red border for taboo
   },
   tabooTitle: {
-    fontSize: 16,
+    fontSize: 18, // Slightly larger
     fontWeight: 'bold',
     color: '#F44336',
-    marginBottom: 10,
+    marginBottom: 12,
     textAlign: 'center',
+    fontFamily: 'IndieFlower',
   },
   tabooWordsList: {
     alignItems: 'center',
   },
   tabooWord: {
-    fontSize: 16,
+    fontSize: 18, // Slightly larger
     color: '#F44336',
-    marginBottom: 5,
+    marginBottom: 6,
+    fontFamily: 'IndieFlower',
+    textDecorationLine: 'line-through',
   },
   teamsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 20, // Reduced margin
   },
   team: {
     width: '48%',
   },
   teamCard: {
-    padding: 20,
-    borderRadius: 15,
+    padding: 25, // Increased padding
+    borderRadius: 20, // More rounded
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 5,
+    backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#8B4513',
   },
   teamName: {
-    fontSize: 18,
+    fontSize: 20, // Slightly larger
     fontWeight: 'bold',
-    marginBottom: 5,
+    marginBottom: 8,
     color: '#333',
+    fontFamily: 'IndieFlower',
   },
   teamScore: {
-    fontSize: 24,
+    fontSize: 28, // Larger score
     fontWeight: 'bold',
     color: '#333',
+    fontFamily: 'IndieFlower',
+  },
+  activeTeam: {
+    transform: [{ scale: 1.08 }], // More pronounced active effect
   },
   activeTeamText: {
-    color: '#fff',
+    color: '#4A6FA5', // Blue for active team text
   },
   buttonsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   actionButton: {
-    width: '30%',
-    borderRadius: 15,
+    width: '31%', // Adjusted width for better spacing
+    borderRadius: 20, // More rounded
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 10,
   },
-  buttonGradient: {
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+  buttonContent: {
+    paddingVertical: 18, // Increased padding
+    paddingHorizontal: 12, // Increased padding
     alignItems: 'center',
+  },
+  correctButton: {
+    backgroundColor: '#66BB6A', // Softer green
+  },
+  passButton: {
+    backgroundColor: '#FFB74D', // Softer orange
+  },
+  tabooButton: {
+    backgroundColor: '#EF5350', // Softer red
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
-    fontSize: 16,
-    marginTop: 5,
+    fontSize: 18, // Slightly larger
+    marginTop: 8, // Adjusted margin
+    fontFamily: 'IndieFlower',
+  },
+  actionIcon: {
+    width: 24,
+    height: 24,
+    marginBottom: 5,
   },
   summaryContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  summaryCard: {
-    padding: 30,
-    borderRadius: 20,
-    width: '90%',
+  notebookPage: {
+    backgroundColor: '#fff',
+    borderRadius: 15, // More rounded
+    padding: 30, // Increased padding
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    elevation: 6,
+    borderWidth: 2,
+    borderColor: '#8B4513',
+  },
+  summaryTitle: {
+    fontSize: 32, // Larger
+    fontWeight: 'bold',
+    marginBottom: 25,
+    color: '#8B4513',
+    fontFamily: 'IndieFlower',
+    textAlign: 'center',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 25,
+  },
+  statItem: {
     alignItems: 'center',
+  },
+  statText: {
+    fontSize: 18, // Slightly larger
+    fontWeight: '500',
+    color: '#8B4513',
+    marginTop: 8,
+    fontFamily: 'IndieFlower',
+  },
+  tabooList: {
+    width: '100%',
+    marginBottom: 25,
+  },
+  tabooListTitle: {
+    fontSize: 18, // Slightly larger
+    fontWeight: 'bold',
+    color: '#F44336',
+    marginBottom: 12,
+    textAlign: 'center',
+    fontFamily: 'IndieFlower',
+  },
+  tabooItem: {
+    fontSize: 16, // Slightly larger
+    color: '#F44336',
+    marginBottom: 5,
+    fontFamily: 'IndieFlower',
+    textAlign: 'center',
+  },
+  summaryButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 25,
+  },
+  nextButton: {
+    width: '48%',
+    borderRadius: 20, // More rounded
+    overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
   },
-  summaryTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginBottom: 20,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
-    marginTop: 5,
-  },
-  tabooList: {
-    width: '100%',
-    marginBottom: 20,
-  },
-  tabooListTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#F44336',
-    marginBottom: 10,
-    textAlign: 'center',
-  },
-  tabooItem: {
-    fontSize: 14,
-    color: '#F44336',
-    marginBottom: 3,
-  },
-  summaryButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-  },
-  nextButton: {
-    width: '45%',
-    borderRadius: 15,
-    overflow: 'hidden',
-  },
   endButton: {
-    width: '45%',
-    borderRadius: 15,
+    width: '48%',
+    borderRadius: 20,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
 });
 
