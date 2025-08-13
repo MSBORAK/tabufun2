@@ -18,6 +18,7 @@ import colosseum from '../assets/colosseum.png';
 import londonEye from '../assets/london-eye.png';
 import galataTower from '../assets/galata-tower.png';
 import pyramids from '../assets/pyramids.png';
+import SoundManager from '../utils/sounds';
 
 
 const { width, height } = Dimensions.get('window');
@@ -42,7 +43,7 @@ const translations = {
     tabooTitle: 'YASAKLI KELİMELER',
     tabooGame: 'TABU',
     error: 'Hata',
-    noWordsFound: 'Seçilen oyun modu için kelime bulunamadı. Lütfen NewGame ekranına dönün.',
+    noWordsFound: 'Seçilen oyun modu için kelime bulunamadı. Lütfen Yeni Oyun ekranına dönün.',
     noMoreWords: 'BİTEBİLİR',
     countdown: 'Geri Sayım',
     start: 'BAŞLA!',
@@ -53,7 +54,8 @@ const translations = {
     resume: 'Devam Et',
     turn: 'Sıra:',
     draw: 'Berabere!',
-    threeTabooPenalty: '3 Tabu Cezası!'
+    threeTabooPenalty: '3 Tabu Cezası!',
+    ok: 'Tamam'
   },
   en: {
     gameOver: 'Game Over!',
@@ -73,7 +75,7 @@ const translations = {
     tabooTitle: 'TABOO WORDS',
     tabooGame: 'TABOO',
     error: 'Error',
-    noWordsFound: 'No words found for the selected game mode. Please return to the NewGame screen.',
+    noWordsFound: 'No words found for the selected game mode. Please return to the New Game screen.',
     noMoreWords: 'NO MORE WORDS',
     countdown: 'Countdown',
     start: 'START!',
@@ -85,7 +87,8 @@ const translations = {
     resume: 'Resume',
     turn: 'Turn:',
     draw: 'Draw!',
-    threeTabooPenalty: '3 Tabu Cezası!'
+    threeTabooPenalty: '3 Tabu Cezası!',
+    ok: 'OK'
   },
 };
 
@@ -155,6 +158,8 @@ const Game = ({ route, navigation }) => {
         'IndieFlower': require('../assets/IndieFlower-Regular.ttf'),
       });
       setFontLoaded(true);
+      // Sesleri hazırla
+      await SoundManager.init();
       // Load advanced settings
       try {
         const saved = await AsyncStorage.getItem('tabuuSettings');
@@ -164,6 +169,9 @@ const Game = ({ route, navigation }) => {
           setPenaltyPoints(Number(s.penaltyPoints ?? 20)); // Düzeltme burada: ?? 1 yerine ?? 20
           setComboEnabled(s.comboEnabled ?? true);
           setCombo3Bonus(Number(s.combo3 ?? 5));
+          if (typeof s.soundEnabled === 'boolean') {
+            SoundManager.setEnabled(s.soundEnabled);
+          }
         }
       } catch (e) {
         // noop
@@ -210,17 +218,15 @@ const Game = ({ route, navigation }) => {
       if (cancelled) return;
       setAvailableWords(baseWords);
       if (baseWords.length === 0) {
+        setIsPaused(true);
+        setShowTurnModal(false);
+        setShowCountdownModal(false);
         setErrorModal({ visible: true, title: translations[language].error, message: translations[language].noWordsFound, shouldGoBack: true });
         return;
       }
-      if (!showCountdownModal && isMounted.current) {
-        getNextWord(baseWords, language);
-        startAnimations();
-        setTabooLeft(initialTaboo);
-      }
     })();
     return () => { cancelled = true; };
-  }, [gameMode, language, showCountdownModal, silentMode, initialTaboo]);
+  }, [gameMode, language, silentMode]);
 
   useEffect(() => {
     setTimeLeft(timeLimit);
@@ -240,16 +246,18 @@ const Game = ({ route, navigation }) => {
     if (isRoundOver) return;
     if (isPaused) return;
     if (showCountdownModal) return;
+    if (errorModal.visible) return;
     if (timeLeft <= 0) {
       handleTimeUp();
       return;
     }
     const timer = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
     return () => clearInterval(timer);
-  }, [timeLeft, isRoundOver, isPaused, showCountdownModal]);
+  }, [timeLeft, isRoundOver, isPaused, showCountdownModal, errorModal.visible]);
 
   useEffect(() => {
     if (!showCountdownModal) return;
+    if (errorModal.visible) return;
 
     countdownAnim.setValue(1); 
     countdownOpacityAnim.setValue(0); 
@@ -287,7 +295,8 @@ const Game = ({ route, navigation }) => {
               Animated.timing(countdownTranslateYAnim, { toValue: -10, duration: 300, useNativeDriver: true }),
             ]),
           ]).start(() => {
-            // Animasyon bittiğinde yalnızca modalı kapat; kelimeyi ayrı effect alacak
+            // Animasyon bittiğinde önce pause'u kaldır, sonra modalı kapat
+            setIsPaused(false);
             setShowCountdownModal(false);
           });
           return translations[language].start; 
@@ -311,18 +320,19 @@ const Game = ({ route, navigation }) => {
     }, 1000);
 
     return () => clearInterval(countdownInterval);
-  }, [showCountdownModal, language, availableWords]);
+  }, [showCountdownModal, language, errorModal.visible]);
 
   // When countdown closes, fetch next word and start animations
   useEffect(() => {
     if (!showCountdownModal && isMounted.current) {
+      if (errorModal.visible) return;
+      // Kelimeyi ve UI'ı hazırla; modal kapanmadan çağrılmış olabilir
       getNextWord(availableWords, language);
       startAnimations();
       setTabooLeft(initialTaboo);
-      setIsPaused(false);
       setShowTurnModal(false);
     }
-  }, [showCountdownModal, availableWords, language, initialTaboo]);
+  }, [showCountdownModal, language, initialTaboo, errorModal.visible]);
 
   const startAnimations = () => {
     // Animasyonları sıfırla; küçük değerler daha akıcı
@@ -343,6 +353,7 @@ const Game = ({ route, navigation }) => {
 
   const handleCorrect = () => {
     if (!silentMode) Vibration.vibrate(100);
+    SoundManager.playCorrect();
     let added = 10;
     const newStreak = consecutiveCorrect + 1;
     if (comboEnabled && newStreak % 3 === 0) {
@@ -372,6 +383,7 @@ const Game = ({ route, navigation }) => {
   const handlePass = () => {
     if (passCount > 0) {
       if (!silentMode) Vibration.vibrate(50);
+      SoundManager.playPass();
       setPassCount(prev => prev - 1);
       setPassUsedCount(prev => prev + 1);
       setConsecutiveCorrect(0);
@@ -399,6 +411,7 @@ const Game = ({ route, navigation }) => {
       return;
     }
     if (!silentMode) Vibration.vibrate([100, 50, 100]);
+    SoundManager.playTaboo();
     const normalPenalty = 10; // Her tabu için sabit kesinti
     const newTabooStreak = consecutiveTaboos + 1;
     // 3. ardışık tabu ise, tek seferde sadece penaltyPoints kadar kes (10 + ekstra değil)
@@ -486,8 +499,9 @@ const Game = ({ route, navigation }) => {
     }
     // Ensure content won’t flash any previous word while countdown shows
     setCurrentWord('');
+    setIsPaused(true); // Geri sayım boyunca pause modunda tut
+    setShowTurnModal(false);
     setCountdown(3); // Geri sayımı sıfırla
-    setShowTurnModal(false); // Yeni tur başlamadan önce "Devam Et / Oyunu Bitir" modalını kapat
     setShowCountdownModal(true); // Yeni tur başlamadan önce geri sayımı göster
     setCurrentTeam(prev => (prev === 'A' ? 'B' : 'A'));
     setTimeLeft(timeLimit);
@@ -500,10 +514,7 @@ const Game = ({ route, navigation }) => {
     setIsRoundOver(false);
     setGameStats(prev => ({ ...prev, totalRounds: prev.totalRounds + 1 }));
     setTabooLeft(initialTaboo);
-    setTeamStats({
-      A: { correct: teamStats.A.correct, pass: teamStats.A.pass, taboo: teamStats.A.taboo, correctWords: [], passWords: [], tabooWords: [] },
-      B: { correct: teamStats.B.correct, pass: teamStats.B.pass, taboo: teamStats.B.taboo, correctWords: [], passWords: [], tabooWords: [] },
-    });
+    // Takım bazlı kelime listelerini koru; sadece tur bazlı listeleri sıfırlıyoruz
   };
 
   const saveScore = async () => {
@@ -854,7 +865,7 @@ const Game = ({ route, navigation }) => {
       </Animated.View>
       )}
 
-      {isPaused && !isRoundOver && (
+      {(isPaused && !isRoundOver && !errorModal.visible && !showCountdownModal) && (
         <View style={styles.blurOverlay}>
           {Platform.OS === 'android' ? (
             <>
@@ -900,7 +911,7 @@ const Game = ({ route, navigation }) => {
       {/* Countdown modal */}
       <Modal
         transparent
-        visible={showCountdownModal}
+        visible={showCountdownModal && !errorModal.visible}
         animationType="none" // Animasyon olmadan direkt görünür olsun
       >
         <View style={styles.countdownOverlay}>
@@ -974,8 +985,8 @@ const Game = ({ route, navigation }) => {
         </View>
       </Modal>
       {/* Error Modal */}
-      <Modal visible={errorModal.visible} transparent animationType="fade">
-        <View style={styles.modalBackdrop}>
+      <Modal visible={errorModal.visible} transparent animationType="fade" onRequestClose={() => setErrorModal({ visible: false, title: '', message: '', shouldGoBack: false })}>
+        <View style={styles.modalBackdrop} pointerEvents="auto">
           <View style={styles.modalCard}>
             <Ionicons name="alert-circle" size={42} color="#8B4513" style={{ marginBottom: 8 }} />
             <Text style={styles.modalTitle}>{errorModal.title}</Text>

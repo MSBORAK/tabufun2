@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, StatusBar, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SoundManager from '../utils/sounds';
 import { Image } from 'react-native';
 import colosseum from '../assets/colosseum.png';
 import londonEye from '../assets/london-eye.png';
@@ -70,6 +71,12 @@ const Settings = ({ navigation }) => {
       console.log('Ayarlar kaydedildi:', settingsData);
     } catch (error) {
       console.log('Ayarlar kaydedilemedi:', error);
+    }
+    SoundManager.setEnabled(soundEnabled);
+    if (soundEnabled) {
+      SoundManager.startBGM(0.08);
+    } else {
+      SoundManager.stopBGM();
     }
     navigation.goBack();
   };
@@ -212,7 +219,7 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         {comboEnabled && (
-          <SettingRow label={t.threeCorrectBonus} value={`+${combo3}`} decrease={() => setCombo3(Math.max(20, combo3 - 10))} increase={() => setCombo3(Math.min(50, combo3 + 10))} disableDecrease={combo3 <= 20} disableIncrease={combo3 >= 50} showArrowIcons={true} />
+          <SettingRow label={t.threeCorrectBonus} value={`${combo3}`} decrease={() => setCombo3(Math.max(20, combo3 - 10))} increase={() => setCombo3(Math.min(50, combo3 + 10))} disableDecrease={combo3 <= 20} disableIncrease={combo3 >= 50} showArrowIcons={true} />
         )}
 
         {/* Random time removed */}

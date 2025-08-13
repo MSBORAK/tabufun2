@@ -8,6 +8,7 @@ import colosseum from '../assets/colosseum.png';
 import londonEye from '../assets/london-eye.png';
 import galataTower from '../assets/galata-tower.png';
 import pyramids from '../assets/pyramids.png';
+import SoundManager from '../utils/sounds';
 
 const { width, height } = Dimensions.get('window');
 
@@ -84,6 +85,7 @@ export default function NewGame() {
         'IndieFlower': require('../assets/IndieFlower-Regular.ttf'),
       });
       setFontLoaded(true);
+      await SoundManager.init();
 
       try {
         const savedSettings = await AsyncStorage.getItem('tabuuSettings');
@@ -285,14 +287,14 @@ export default function NewGame() {
 
           {/* Başlat Butonları */}
           <View style={styles.buttonsContainer}>
-            <TouchableOpacity style={styles.quickStartButton} onPress={handleQuickStart} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.quickStartButton} onPress={() => { SoundManager.playPage(); handleQuickStart(); }} activeOpacity={0.8}>
               <View style={styles.buttonContent}>
                 <Ionicons name="flash" size={24} color="#8B4513" />
                 <Text style={styles.quickStartText}>{t.quickStart}</Text>
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.startButton} onPress={handleStartGame} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.startButton} onPress={() => { SoundManager.playPage(); handleStartGame(); }} activeOpacity={0.8}>
               <View style={[styles.buttonContent, styles.startButtonColor]}>
                 <Ionicons name="play" size={24} color="#fff" />
                 <Text style={styles.startButtonText}>{t.startGame}</Text>

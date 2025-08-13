@@ -167,10 +167,10 @@ export default function MyWords({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Platform.OS === 'android' ? '#fff9ef' : '#fdf6e3', paddingTop: Platform.OS === 'android' ? 8 : 18 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 12, paddingBottom: 8 },
+  container: { flex: 1, backgroundColor: Platform.OS === 'android' ? '#fff9ef' : '#fdf6e3', paddingTop: Platform.OS === 'android' ? 16 : 28 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16, paddingTop: 8, paddingBottom: 8 },
   backButton: { width: 40, height: 40, borderRadius: 20, borderWidth: 2, borderColor: '#8B4513', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' },
-  title: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 22 : 24, color: '#8B4513', fontWeight: 'normal' },
+  title: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 21 : 23, color: '#8B4513', fontWeight: 'normal', marginTop: 2 },
   empty: { fontFamily: 'IndieFlower', color: '#8B4513', textAlign: 'center', marginTop: 40, fontSize: Platform.OS === 'android' ? 16 : 18, fontWeight: 'normal' },
   helper: { fontFamily: 'IndieFlower', color: '#8B4513', textAlign: 'center', marginTop: 6, fontSize: Platform.OS === 'android' ? 13 : 14, fontWeight: 'normal' },
   item: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderWidth: 2, borderColor: '#8B4513', borderRadius: 14, padding: Platform.OS === 'android' ? 10 : 12, marginVertical: 6 },

@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text, TextInput } from 'react-native';
 import * as Font from 'expo-font';
+import SoundManager from './utils/sounds';
 
 import TabuuMenu from './screens/tabuuMenu'; // TabuuMenu bileşenin dosya yoluna göre değiştir
 import Help from './screens/help';      // Help ekranının dosya yolu
@@ -24,6 +25,9 @@ export default function App() {
         await Font.loadAsync({
           IndieFlower: require('./assets/IndieFlower-Regular.ttf'),
         });
+        await SoundManager.init();
+        // düşük volümlü arka plan müziği başlat
+        SoundManager.startBGM(0.08);
         // Set global default font
         Text.defaultProps = Text.defaultProps || {};
         Text.defaultProps.style = [{ fontFamily: 'IndieFlower' }, Text.defaultProps.style].filter(Boolean);

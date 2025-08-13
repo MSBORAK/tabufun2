@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, ScrollView, Image, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import SoundManager from '../utils/sounds';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import book from '../assets/book.png';
@@ -140,7 +141,7 @@ const Help = () => {
         <Image source={galataTower} style={styles.galataTowerDoodle} />
         <Image source={pyramids} style={styles.pyramidsDoodle} />
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <TouchableOpacity onPress={() => { SoundManager.playPage(); navigation.goBack(); }} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color="#8B4513" />
           </TouchableOpacity>
           <View style={styles.titleContainer}>

@@ -4,6 +4,7 @@ import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SoundManager from '../utils/sounds';
 import book from '../assets/book.png';
 import heart from '../assets/heart.png';
 import starfish from '../assets/starfish.png';
@@ -60,6 +61,7 @@ export default function TabuuMenu() {
       });
       setFontLoaded(true);
       await loadLanguage();
+      await SoundManager.init();
     };
     loadAssetsAndSettings();
   }, []);
@@ -114,23 +116,23 @@ export default function TabuuMenu() {
         </View>
 
         {/* Menü Butonları */}
-        <TouchableOpacity style={[styles.menuButton, styles.btnBlue]} onPress={() => navigation.navigate('NewGame')} activeOpacity={0.85}>
+        <TouchableOpacity style={[styles.menuButton, styles.btnBlue]} onPress={() => { SoundManager.playPage(); navigation.navigate('NewGame'); }} activeOpacity={0.85}>
           <Ionicons name="game-controller" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{t.startGame}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnGreen]} onPress={() => navigation.navigate('Scores')} activeOpacity={0.85}>
+        <TouchableOpacity style={[styles.menuButton, styles.btnGreen]} onPress={() => { SoundManager.playPage(); navigation.navigate('Scores'); }} activeOpacity={0.85}>
           <Ionicons name="trophy" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{t.scores}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnCyan]} onPress={() => navigation.navigate('MyWords')} activeOpacity={0.85}>
+        <TouchableOpacity style={[styles.menuButton, styles.btnCyan]} onPress={() => { SoundManager.playPage(); navigation.navigate('MyWords'); }} activeOpacity={0.85}>
           <Ionicons name="create" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{currentLanguage === 'tr' ? 'Kendi Kartların' : 'My Cards'}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => navigation.navigate('Settings')} activeOpacity={0.85}>
+        <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => { SoundManager.playPage(); navigation.navigate('Settings'); }} activeOpacity={0.85}>
           <Ionicons name="settings" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{t.settings}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => navigation.navigate('Help')} activeOpacity={0.85}>
+        <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => { SoundManager.playPage(); navigation.navigate('Help'); }} activeOpacity={0.85}>
           <Ionicons name="help-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{t.rules}</Text>
         </TouchableOpacity>
