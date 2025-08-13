@@ -118,14 +118,6 @@ export default function TabuuMenu() {
           <Ionicons name="game-controller" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{t.startGame}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => navigation.navigate('Help')} activeOpacity={0.85}>
-          <Ionicons name="help-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{t.rules}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => navigation.navigate('Settings')} activeOpacity={0.85}>
-          <Ionicons name="settings" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{t.settings}</Text>
-        </TouchableOpacity>
         <TouchableOpacity style={[styles.menuButton, styles.btnGreen]} onPress={() => navigation.navigate('Scores')} activeOpacity={0.85}>
           <Ionicons name="trophy" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{t.scores}</Text>
@@ -133,6 +125,14 @@ export default function TabuuMenu() {
         <TouchableOpacity style={[styles.menuButton, styles.btnCyan]} onPress={() => navigation.navigate('MyWords')} activeOpacity={0.85}>
           <Ionicons name="create" size={20} color="#fff" style={{ marginRight: 8 }} />
           <Text style={styles.menuButtonText}>{currentLanguage === 'tr' ? 'Kendi Kartların' : 'My Cards'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => navigation.navigate('Settings')} activeOpacity={0.85}>
+          <Ionicons name="settings" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{t.settings}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => navigation.navigate('Help')} activeOpacity={0.85}>
+          <Ionicons name="help-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{t.rules}</Text>
         </TouchableOpacity>
 
       </View>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     position: 'absolute',
     textTransform: 'uppercase',
-    fontWeight: 'normal', // Ensure normal weight for IndieFlower
+    // Ensure normal weight for IndieFlower
   },
   titleFill: {
     color: '#f47c20',
@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  menuButtonText: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 20 : 22, fontWeight: 'normal' },
+  menuButtonText: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 21 : 22 },
   btnBlue: { backgroundColor: '#4A6FA5' },
   btnOrange: { backgroundColor: '#f47c20' },
   btnGreen: { backgroundColor: '#66BB6A' },

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, ScrollView, Image, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import book from '../assets/book.png';
@@ -52,6 +52,21 @@ const Help = () => {
     ]).start();
   }, []);
 
+  // Dil değişimini odakta yakala
+  useFocusEffect(
+    React.useCallback(() => {
+      (async () => {
+        try {
+          const savedSettings = await AsyncStorage.getItem('tabuuSettings');
+          if (savedSettings) {
+            const parsed = JSON.parse(savedSettings);
+            setCurrentLanguage(parsed.language ?? 'tr');
+          }
+        } catch {}
+      })();
+    }, [])
+  );
+
   const translations = {
     tr: {
       helpTitle: 'OYUN KILAVUZU',
@@ -68,15 +83,15 @@ const Help = () => {
       scoringPass: 'Pas Hakkı: Her takımın tur başına sınırlı pas hakkı vardır. Pas geçilen kelime için puan alınmaz.',
       scoringTaboo: 'Tabu Kelime Cezası: Yasaklı kelimelerden biri kullanılırsa, o kelime için ceza puanı uygulanır (varsayılan: -10 puan). Art arda 3 tabu kelime kullanılırsa, ekstra puan cezası uygulanır.',
       gameModes: 'Oyun Modları:',
-      gameModesText: 'Farklı zorluk seviyeleri (Kolay, Orta, Zor, Ultra Zor) ve özel modlar (Sessiz Mod, Kendi Kartların) arasından seçim yapabilirsiniz. Her mod, oyun deneyiminizi değiştiren benzersiz kelime setleri ve kurallar sunar.',
+      gameModesText: 'Farklı zorluk seviyeleri (Kolay, Orta, Zor, Ultra Zor) ve özel modlar (Sessiz Sinema, Kendi Kartların) arasından seçim yapabilirsiniz. Her mod, oyun deneyiminizi değiştiren benzersiz kelime setleri ve kurallar sunar.',
       comboBonus: 'Seri Bonusu:',
       comboBonusText: 'Ayarlarda aktif edilirse, art arda 3 doğru tahmin yapıldığında ekstra puan kazanırsınız.',
-      silentMode: 'Sessiz Mod:',
-      silentModeText: 'Bu mod aktif edildiğinde, oyun sırasında yasaklı kelimeler gösterilmez ve titreşimler kapatılır. Anlatırken sadece ana kelimeye odaklanabilirsiniz.',
+      silentMode: 'Sessiz Sinema:',
+      silentModeText: 'Bu modda yasaklı kelimeler ve Tabu butonu gizlenir; anlatan kişi konuşmadan jest ve mimiklerle ana kelimeyi anlatır.',
       quickStartTitle: 'Hızlı Başlatma Nasıl Çalışır?',
       quickStartText: 'Hızlı Başlat tuşu, oyunun varsayılan ayarlarla (Takım A: A Takımı, Takım B: B Takımı, Süre Limiti: 90 saniye, Pas Hakkı: 3, Tabu Hakkı: 3, Kolay Mod) hemen başlamasını sağlar. Hızlıca oyuna girmek isteyenler için idealdir.',
       settings: 'Ayarlar:',
-      settingsText: 'Oyun Ayarları ekranında süre limitini, pas hakkı sayısını, tabu hakkı sayısını, seri sayısını ve kazanma puanını özelleştirebilirsiniz. Ayrıca ceza puanı, seri bonusu gibi özellikleri açıp kapatabilirsiniz.',
+      settingsText: 'Oyun Ayarları ekranında süre limitini, pas hakkı sayısını, tabu hakkı sayısını, tur sayısını ve kazanma puanını özelleştirebilirsiniz. Ayrıca ceza puanı, seri bonusu gibi özellikleri açıp kapatabilirsiniz.',
     },
     en: {
       helpTitle: 'GAME GUIDE',
@@ -85,6 +100,23 @@ const Help = () => {
       step2: "Enter team names", 
       step3: "Start the game and have fun!",
       understood: "Understood",
+      gameRules: 'GAME RULES',
+      objectOfGame: 'Objective:',
+      objectOfGameText: 'Describe the main word to your teammates without using any forbidden words. The team with the most points wins.',
+      scoring: 'Scoring:',
+      scoringCorrect: 'Correct Guess: +10 points for each correct word.',
+      scoringPass: 'Pass Rights: Limited passes per round. No points for passed words.',
+      scoringTaboo: 'Taboo Penalty: If a forbidden word is used, the penalty points are deducted (default: -20). For 3 consecutive taboos, an additional penalty may apply depending on settings.',
+      gameModes: 'Game Modes:',
+      gameModesText: 'Choose between difficulties (Easy, Medium, Hard, Ultra) and special modes (Charades, My Cards). Each mode offers unique sets and rules.',
+      comboBonus: 'Combo Bonus:',
+      comboBonusText: 'If enabled in settings, you get an extra bonus after 3 correct answers in a row.',
+      silentMode: 'Charades Mode:',
+      silentModeText: 'Forbidden words and the Taboo button are hidden. Describe the main word using only gestures and mimics without speaking.',
+      quickStartTitle: 'How does Quick Start work?',
+      quickStartText: 'Quick Start launches a game immediately with defaults (Team A/B, 90 sec, 3 passes, 3 taboo, Easy). Perfect for jumping right in.',
+      settings: 'Settings:',
+      settingsText: 'On the Settings screen you can customize time limit, number of passes, taboo rights, number of rounds and winning points. You can also toggle penalty points and combo bonuses.',
     },
   };
   const t = translations[currentLanguage];
@@ -192,14 +224,14 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 25, 
-    paddingTop: 80, 
-    paddingBottom: 25, 
+    paddingHorizontal: 25,
+    paddingTop: 60,
+    paddingBottom: 25,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 25, 
+    marginBottom: 15,
   },
   backButton: {
     marginRight: 15,
@@ -226,8 +258,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   title: {
-    fontSize: Platform.OS === 'android' ? 30 : 32, 
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 31 : 32,
     color: '#8B4513',
     marginLeft: 10,
     fontFamily: 'IndieFlower',
@@ -237,12 +268,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   subtitle: {
-    fontSize: Platform.OS === 'android' ? 18 : 20,
+    fontSize: Platform.OS === 'android' ? 19 : 20,
     marginBottom: 20,
     textAlign: 'center',
     color: '#8B4513',
     fontFamily: 'IndieFlower',
-    fontWeight: 'normal',
   },
   steps: {
     marginBottom: 20,
@@ -275,12 +305,11 @@ const styles = StyleSheet.create({
   },
   stepNumberText: {
     color: '#FFF',
-    fontWeight: 'normal',
-    fontSize: Platform.OS === 'android' ? 15 : 16,
+    fontSize: Platform.OS === 'android' ? 16 : 16,
     fontFamily: 'IndieFlower',
   },
   stepText: {
-    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontSize: Platform.OS === 'android' ? 17 : 18,
     color: '#333',
     flex: 1,
     fontFamily: 'IndieFlower',
@@ -299,8 +328,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: '#FFF', 
-    fontSize: Platform.OS === 'android' ? 20 : 22, 
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 21 : 22, 
     fontFamily: 'IndieFlower',
   },
   colosseumDoodle: {
@@ -339,8 +367,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: Platform.OS === 'android' ? 22 : 24,
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 23 : 24,
     color: '#8B4513',
     marginBottom: 15,
     fontFamily: 'IndieFlower',
@@ -359,21 +386,19 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   sectionSubtitle: {
-    fontSize: Platform.OS === 'android' ? 16 : 18,
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 17 : 18,
     color: '#8B4513',
     marginBottom: 10,
     fontFamily: 'IndieFlower',
   },
   sectionText: {
-    fontSize: Platform.OS === 'android' ? 14 : 16,
+    fontSize: Platform.OS === 'android' ? 15 : 16,
     color: '#333',
     lineHeight: 22,
     fontFamily: 'IndieFlower',
   },
   quickStartTitle: {
-    fontSize: Platform.OS === 'android' ? 20 : 22,
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 21 : 22,
     color: '#8B4513',
     marginBottom: 15,
     fontFamily: 'IndieFlower',

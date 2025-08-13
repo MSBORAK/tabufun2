@@ -12,14 +12,13 @@ import pyramids from '../assets/pyramids.png';
 const Settings = ({ navigation }) => {
   const [timeLimit, setTimeLimit] = useState(180);
   const [tabuCount, setTabuCount] = useState(3);
-  const [winPoints, setWinPoints] = useState(250);
   const [passCount, setPassCount] = useState(3);
   const [language, setLanguage] = useState('tr');
   const [maxSets, setMaxSets] = useState(1);
   const [soundEnabled, setSoundEnabled] = useState(true);
   // advanced settings
   const [penaltyEnabled, setPenaltyEnabled] = useState(true);
-  const [penaltyPoints, setPenaltyPoints] = useState(1);
+  const [penaltyPoints, setPenaltyPoints] = useState(20);
   const [comboEnabled, setComboEnabled] = useState(true);
   const [combo3, setCombo3] = useState(5);
   const [combo5, setCombo5] = useState(15); // deprecated
@@ -39,13 +38,12 @@ const Settings = ({ navigation }) => {
           const parsed = JSON.parse(savedSettings);
           setTimeLimit(parsed.timeLimit ?? 180);
           setTabuCount(parsed.tabuCount ?? 3);
-          setWinPoints(parsed.winPoints ?? 250);
           setPassCount(parsed.passCount ?? 3);
           setLanguage(parsed.language ?? 'tr');
           setMaxSets(parsed.maxSets ?? 1);
           setSoundEnabled(parsed.soundEnabled ?? true);
           setPenaltyEnabled(parsed.penaltyEnabled ?? true);
-          setPenaltyPoints(parsed.penaltyPoints ?? 1);
+          setPenaltyPoints(parsed.penaltyPoints ?? 20);
           setComboEnabled(parsed.comboEnabled ?? true);
           setCombo3(parsed.combo3 ?? 5);
           setCombo5(parsed.combo5 ?? 15);
@@ -67,7 +65,7 @@ const Settings = ({ navigation }) => {
 
   const handleSave = async () => {
     try {
-      const settingsData = { timeLimit, tabuCount, winPoints, passCount, language, maxSets, soundEnabled, penaltyEnabled, penaltyPoints, comboEnabled, combo3, combo5, randomTimeEnabled, randomTimeMin, randomTimeMax, themes, surpriseEnabled, surpriseChance, autoRounds };
+      const settingsData = { timeLimit, tabuCount, passCount, language, maxSets, soundEnabled, penaltyEnabled, penaltyPoints, comboEnabled, combo3, combo5, randomTimeEnabled, randomTimeMin, randomTimeMax, themes, surpriseEnabled, surpriseChance, autoRounds };
       await AsyncStorage.setItem('tabuuSettings', JSON.stringify(settingsData));
       console.log('Ayarlar kaydedildi:', settingsData);
     } catch (error) {
@@ -82,8 +80,7 @@ const Settings = ({ navigation }) => {
       time: "Süre:",
       passRights: "Pas Hakkı:",
       tabooCount: "Tabu:",
-      winPoints: "Kazanma Puanı:",
-      maxSets: "Seri Sayısı:",
+      maxSets: "Tur Sayısı:",
       sound: "Ses:",
       on: "Açık",
       off: "Kapalı",
@@ -91,21 +88,28 @@ const Settings = ({ navigation }) => {
       turkish: "Türkçe",
       english: "English",
       saveSettings: "Ayarları Kaydet",
+      penalty: "Ceza",
+      penaltyPoints: "Ceza Puanı",
+      comboBonus: "Seri Bonusu",
+      threeCorrectBonus: "3 doğru bonus",
     },
     en: {
       settingsTitle: "Taboo Settings",
       time: "Time:",
       passRights: "Pass Rights:",
       tabooCount: "Taboo:",
-      winPoints: "Win Points:",
       language: "Language:",
       turkish: "Turkish",
       english: "English",
       saveSettings: "Save Settings",
-      maxSets: "Series:",
+      maxSets: "Rounds:",
       sound: "Sound:",
       on: "On",
       off: "Off",
+      penalty: "Penalty",
+      penaltyPoints: "Penalty Points",
+      comboBonus: "Combo Bonus",
+      threeCorrectBonus: "3 correct bonus",
     },
   }[language];
 
@@ -166,15 +170,7 @@ const Settings = ({ navigation }) => {
           showArrowIcons={true}
         />
 
-        <SettingRow
-          label={t.winPoints}
-          value={winPoints}
-          decrease={() => setWinPoints(Math.max(25, winPoints - 25))}
-          increase={() => setWinPoints(Math.min(300, winPoints + 25))}
-          disableDecrease={winPoints <= 25}
-          disableIncrease={winPoints >= 300}
-          showArrowIcons={true}
-        />
+
 
         <SettingRow
           label={t.maxSets}
@@ -189,34 +185,34 @@ const Settings = ({ navigation }) => {
         {/* Penalty points only */}
         {/* Penalty toggle + points */}
         <View style={styles.settingRow}>
-          <Text style={styles.settingLabel}>Ceza</Text>
+          <Text style={styles.settingLabel}>{t.penalty}</Text>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => setPenaltyEnabled(!penaltyEnabled)}
             style={[styles.toggle, penaltyEnabled ? styles.toggleOn : styles.toggleOff]}
           >
-            <Text style={[styles.toggleText, penaltyEnabled ? styles.toggleTextOn : styles.toggleTextOff]}>{penaltyEnabled ? 'AÇIK' : 'KAPALI'}</Text>
+            <Text style={[styles.toggleText, penaltyEnabled ? styles.toggleTextOn : styles.toggleTextOff]}>{penaltyEnabled ? t.on : t.off}</Text>
             <View style={[styles.toggleKnob, penaltyEnabled ? styles.toggleKnobOn : styles.toggleKnobOff]} />
           </TouchableOpacity>
         </View>
         {penaltyEnabled && (
-          <SettingRow label={"Ceza Puanı"} value={penaltyPoints} decrease={() => setPenaltyPoints(Math.max(1, penaltyPoints - 1))} increase={() => setPenaltyPoints(Math.min(10, penaltyPoints + 1))} disableDecrease={penaltyPoints <= 1} disableIncrease={penaltyPoints >= 10} showArrowIcons={true} />
+          <SettingRow label={t.penaltyPoints} value={penaltyPoints} decrease={() => setPenaltyPoints(Math.max(20, penaltyPoints - 10))} increase={() => setPenaltyPoints(Math.min(50, penaltyPoints + 10))} disableDecrease={penaltyPoints <= 20} disableIncrease={penaltyPoints >= 50} showArrowIcons={true} />
         )}
 
         {/* Combo bonus */}
         <View style={styles.settingRow}>
-          <Text style={styles.settingLabel}>Seri Bonusu</Text>
+          <Text style={styles.settingLabel}>{t.comboBonus}</Text>
           <TouchableOpacity
             activeOpacity={0.9}
             onPress={() => setComboEnabled(!comboEnabled)}
             style={[styles.toggle, comboEnabled ? styles.toggleOn : styles.toggleOff]}
           >
-            <Text style={[styles.toggleText, comboEnabled ? styles.toggleTextOn : styles.toggleTextOff]}>{comboEnabled ? 'AÇIK' : 'KAPALI'}</Text>
+            <Text style={[styles.toggleText, comboEnabled ? styles.toggleTextOn : styles.toggleTextOff]}>{comboEnabled ? t.on : t.off}</Text>
             <View style={[styles.toggleKnob, comboEnabled ? styles.toggleKnobOn : styles.toggleKnobOff]} />
           </TouchableOpacity>
         </View>
         {comboEnabled && (
-          <SettingRow label={"3 doğru bonus"} value={`+${combo3}`} decrease={() => setCombo3(Math.max(1, combo3 - 1))} increase={() => setCombo3(Math.min(25, combo3 + 1))} disableDecrease={combo3 <= 1} disableIncrease={combo3 >= 25} showArrowIcons={true} />
+          <SettingRow label={t.threeCorrectBonus} value={`+${combo3}`} decrease={() => setCombo3(Math.max(1, combo3 - 1))} increase={() => setCombo3(Math.min(25, combo3 + 1))} disableDecrease={combo3 <= 1} disableIncrease={combo3 >= 25} showArrowIcons={true} />
         )}
 
         {/* Random time removed */}
@@ -234,7 +230,7 @@ const Settings = ({ navigation }) => {
             onPress={() => setSoundEnabled(!soundEnabled)}
             style={[styles.toggle, soundEnabled ? styles.toggleOn : styles.toggleOff]}
           >
-            <Text style={[styles.toggleText, soundEnabled ? styles.toggleTextOn : styles.toggleTextOff]}>{soundEnabled ? 'AÇIK' : 'KAPALI'}</Text>
+            <Text style={[styles.toggleText, soundEnabled ? styles.toggleTextOn : styles.toggleTextOff]}>{soundEnabled ? t.on : t.off}</Text>
             <View style={[styles.toggleKnob, soundEnabled ? styles.toggleKnobOn : styles.toggleKnobOff]} />
           </TouchableOpacity>
         </View>
@@ -294,7 +290,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fdf6e3' },
   linedBackground: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, paddingTop: 80 },
   line: { height: 1, backgroundColor: '#e0e0e0', marginVertical: 18, width: '100%' },
-  content: { flexGrow: 1, paddingHorizontal: 10, paddingTop: Platform.OS === 'android' ? 24 : 6, paddingBottom: 20 },
+  content: { flexGrow: 1, paddingHorizontal: 10, paddingTop: Platform.OS === 'android' ? 36 : 18, paddingBottom: 32 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, marginTop: Platform.OS === 'ios' ? 8 : 20, width: '100%' },
   backButton: { 
     position: 'absolute', 
@@ -312,11 +308,11 @@ const styles = StyleSheet.create({
   },
   headerTitleContainer: { flexDirection: 'row', alignItems: 'center', flex: 1, justifyContent: 'center' },
   headerIcon: { marginRight: 8 },
-  title: { fontSize: 20, fontWeight: 'normal', color: '#8B4513', fontFamily: 'IndieFlower' },
+  title: { fontSize: 20, color: '#8B4513', fontFamily: 'IndieFlower' },
   settingRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: Platform.OS === 'android' ? 8 : 6, borderWidth: 2, borderColor: '#8B4513', backgroundColor: '#fff', borderRadius: 10, marginBottom: 6, paddingHorizontal: 6, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2, elevation: 1 },
-  settingLabel: { fontSize: Platform.OS === 'android' ? 16 : 15, color: '#8B4513', fontWeight: 'normal', fontFamily: 'IndieFlower' },
+  settingLabel: { fontSize: Platform.OS === 'android' ? 16 : 15, color: '#8B4513', fontFamily: 'IndieFlower' },
   valueContainer: { flexDirection: 'row', alignItems: 'center' },
-  settingValue: { fontSize: Platform.OS === 'android' ? 16 : 15, fontWeight: 'normal', color: '#4A6FA5', marginHorizontal: 6, minWidth: 40, textAlign: 'center', fontFamily: 'IndieFlower' },
+  settingValue: { fontSize: Platform.OS === 'android' ? 16 : 15, color: '#4A6FA5', marginHorizontal: 6, minWidth: 40, textAlign: 'center', fontFamily: 'IndieFlower' },
   arrowButton: { padding: Platform.OS === 'android' ? 8 : 6, borderRadius: 10 },
   decreaseButton: { backgroundColor: '#a9d5ee', borderWidth: 1, borderColor: '#8B4513' },
   increaseButton: { backgroundColor: '#a9d5ee', borderWidth: 1, borderColor: '#8B4513' },
@@ -324,18 +320,18 @@ const styles = StyleSheet.create({
   arrowIcon: { width: 18, height: 18, tintColor: '#fff' },
   arrowIconDisabled: { tintColor: '#ccc' },
   saveButton: { backgroundColor: '#a9d5ee', padding: 10, borderRadius: 12, alignItems: 'center', marginTop: 12, borderWidth: 2, borderColor: '#8B4513', shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 6 },
-  saveButtonText: { color: '#fff', fontSize: Platform.OS === 'android' ? 16 : 15, fontWeight: 'normal', fontFamily: 'IndieFlower' },
+  saveButtonText: { color: '#fff', fontSize: Platform.OS === 'android' ? 16 : 15, fontFamily: 'IndieFlower' },
   languageSection: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: Platform.OS === 'android' ? 10 : 8, borderWidth: 2, borderColor: '#8B4513', marginTop: 10, backgroundColor: '#fff', borderRadius: 12, paddingHorizontal: 8, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 3, elevation: 2 },
-  languageLabel: { fontSize: Platform.OS === 'android' ? 14 : 13, color: '#333', fontWeight: 'normal', fontFamily: 'IndieFlower' },
+  languageLabel: { fontSize: Platform.OS === 'android' ? 14 : 13, color: '#333', fontFamily: 'IndieFlower' },
   languageButtons: { flexDirection: 'row', borderRadius: 10, overflow: 'hidden', borderWidth: 2, borderColor: '#8B4513' },
   languageButton: { paddingVertical: Platform.OS === 'android' ? 6 : 4, paddingHorizontal: Platform.OS === 'android' ? 10 : 8, backgroundColor: '#a9d5ee' },
-  languageButtonText: { fontSize: Platform.OS === 'android' ? 13 : 12, color: '#8B4513', fontWeight: 'normal', fontFamily: 'IndieFlower' },
+  languageButtonText: { fontSize: Platform.OS === 'android' ? 13 : 12, color: '#8B4513', fontFamily: 'IndieFlower' },
   activeLanguageButton: { backgroundColor: '#8B4513' },
   activeLanguageButtonText: { color: '#fff' },
   toggle: { width: 76, height: 30, borderRadius: 16, borderWidth: 2, borderColor: '#8B4513', justifyContent: 'center', paddingHorizontal: 8 },
   toggleOn: { backgroundColor: '#5b9bd5' },
   toggleOff: { backgroundColor: '#c9c9c9' },
-  toggleText: { position: 'absolute', alignSelf: 'center', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 12 : 11, fontWeight: 'normal' },
+  toggleText: { position: 'absolute', alignSelf: 'center', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 13 : 11 },
   toggleTextOn: { color: '#fff' },
   toggleTextOff: { color: '#fff' },
   toggleKnob: { position: 'absolute', width: 26, height: 26, borderRadius: 13, backgroundColor: '#fff', borderWidth: 2, borderColor: '#8B4513', top: 2 },

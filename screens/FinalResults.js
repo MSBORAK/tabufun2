@@ -38,7 +38,7 @@ export default function FinalResults({ route, navigation }) {
   const {
     teamA, teamB, teamAScore, teamBScore, language = 'tr',
     totalCorrect = 0, totalPass = 0, totalTaboo = 0,
-    timeLimit, passCount, tabooCount, winPoints, gameMode,
+    timeLimit, passCount, tabooCount, gameMode,
     allowContinue = true,
     teamAStats = { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
     teamBStats = { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
@@ -142,7 +142,7 @@ export default function FinalResults({ route, navigation }) {
                   timeLimit,
                   passCount,
                   tabooCount,
-                  winPoints,
+                  // winPoints kaldırıldı,
                   gameMode,
                   language,
                   initialTeamAScore: 0,

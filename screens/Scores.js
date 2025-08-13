@@ -331,14 +331,14 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 25, // Increased horizontal padding
-    paddingTop: 100, // Increased for doodles
-    paddingBottom: 25, // Increased vertical padding
+    paddingHorizontal: 25,
+    paddingTop: 80,
+    paddingBottom: 25,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 25, // Adjusted margin
+    marginBottom: 15,
   },
   backButton: {
     marginRight: 15,
@@ -361,7 +361,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: Platform.OS === 'android' ? 30 : 32,
-    fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
     fontFamily: 'IndieFlower',
@@ -384,8 +383,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   sectionTitle: {
-    fontSize: Platform.OS === 'android' ? 20 : 22,
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 21 : 22,
     color: '#8B4513',
     marginBottom: 15,
     fontFamily: 'IndieFlower',
@@ -410,7 +408,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   statText: {
-    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
+    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
     marginLeft: 12,
     color: '#333',
     fontFamily: 'IndieFlower',
@@ -434,7 +432,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   detailedStatText: {
-    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
+    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
     marginLeft: 12,
     color: '#333',
     fontFamily: 'IndieFlower',
@@ -453,33 +451,31 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   gameItemDate: {
-    fontSize: Platform.OS === 'android' ? 13 : 14, // Adjusted font size
+    fontSize: Platform.OS === 'android' ? 14 : 14, // Adjusted font size
     color: '#888',
     marginBottom: 5,
     fontFamily: 'IndieFlower',
   },
   gameItemDetails: {
-    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
     color: '#333',
     marginBottom: 5,
     fontFamily: 'IndieFlower',
   },
   gameItemScore: {
-    fontSize: Platform.OS === 'android' ? 18 : 20, // Adjusted font size
-    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 19 : 20, // Adjusted font size
     color: '#f47c20',
     fontFamily: 'IndieFlower',
   },
   gameItemMode: {
-    fontSize: Platform.OS === 'android' ? 14 : 16, // Adjusted font size
+    fontSize: Platform.OS === 'android' ? 15 : 16, // Adjusted font size
     color: '#666',
     marginTop: 5,
     fontFamily: 'IndieFlower',
   },
   noScoresText: {
     textAlign: 'center',
-    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
+    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
     color: '#888',
     marginTop: 30,
     fontFamily: 'IndieFlower',
@@ -504,8 +500,7 @@ const styles = StyleSheet.create({
   },
   clearButtonText: {
     color: '#fff',
-    fontWeight: 'normal',
-    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
+    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
     marginTop: 8,
     fontFamily: 'IndieFlower',
   },
@@ -589,15 +584,14 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalTitle: {
-    fontSize: Platform.OS === 'android' ? 18 : 20,
+    fontSize: Platform.OS === 'android' ? 19 : 20,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginVertical: 6,
-    fontWeight: 'normal',
     textAlign: 'center'
   },
   modalMessage: {
-    fontSize: Platform.OS === 'android' ? 15 : 16,
+    fontSize: Platform.OS === 'android' ? 16 : 16,
     color: '#333',
     textAlign: 'center',
     marginBottom: 12,
@@ -615,7 +609,7 @@ const styles = StyleSheet.create({
   },
   modalBtnText: {
     color: '#8B4513',
-    fontSize: Platform.OS === 'android' ? 15 : 16,
+    fontSize: Platform.OS === 'android' ? 16 : 16,
     fontFamily: 'IndieFlower',
   },
 });

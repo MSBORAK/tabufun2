@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Modal, ScrollView, Image, SafeAreaView, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +24,7 @@ const translations = {
     hardMode: 'Zor',
     ultraMode: 'Ultra Zor',
     customMode: 'Kendi Kartların',
-    silentMode: 'Sessiz Mod',
+    silentMode: 'Sessiz Sinema',
     timeLimit: 'Süre Limiti (saniye):',
     passCount: 'Pas Hakkı Sayısı:',
     quickStart: 'Hızlı Başla',
@@ -46,7 +46,7 @@ const translations = {
     hardMode: 'Hard',
     ultraMode: 'Ultra Hard',
     customMode: 'My Cards',
-    silentMode: 'Silent Mode',
+    silentMode: 'Charades Mode',
     timeLimit: 'Time Limit (seconds):',
     passCount: 'Pass Count:',
     quickStart: 'Quick Start',
@@ -69,7 +69,7 @@ export default function NewGame() {
   const [silentMode, setSilentMode] = useState(false);
   const [fontLoaded, setFontLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('tr');
-  const [winPoints, setWinPoints] = useState(250);
+  // winPoints kaldırıldı – sadece tur sayısı ile kazanma
   const [maxSets, setMaxSets] = useState(1);
   const [errorModal, setErrorModal] = useState({ visible: false, title: '', message: '' });
 
@@ -93,7 +93,7 @@ export default function NewGame() {
           if (parsed.timeLimit) setTimeLimit(parsed.timeLimit);
           if (parsed.passCount !== undefined) setPassCount(parsed.passCount);
           if (parsed.tabuCount !== undefined) setTabooCount(parsed.tabuCount);
-          if (parsed.winPoints !== undefined) setWinPoints(parsed.winPoints);
+          // winPoints artık kullanılmıyor
           if (parsed.maxSets !== undefined) setMaxSets(parsed.maxSets);
         }
       } catch (error) {
@@ -121,6 +121,38 @@ export default function NewGame() {
     ]).start();
   }, []);
 
+  // Dil değişince varsayılan takım adlarını yerelleştir (kullanıcı değiştirmediyse)
+  useEffect(() => {
+    const trA = 'A Takımı';
+    const trB = 'B Takımı';
+    const enA = 'Team A';
+    const enB = 'Team B';
+    const isDefaultA = [trA, enA, ''].includes((teamA || '').trim());
+    const isDefaultB = [trB, enB, ''].includes((teamB || '').trim());
+    if (currentLanguage === 'en') {
+      if (isDefaultA && teamA !== enA) setTeamA(enA);
+      if (isDefaultB && teamB !== enB) setTeamB(enB);
+    } else {
+      if (isDefaultA && teamA !== trA) setTeamA(trA);
+      if (isDefaultB && teamB !== trB) setTeamB(trB);
+    }
+  }, [currentLanguage]);
+
+  // Settings'ten dönünce dili tekrar yükle
+  useFocusEffect(
+    React.useCallback(() => {
+      (async () => {
+        try {
+          const savedSettings = await AsyncStorage.getItem('tabuuSettings');
+          if (savedSettings) {
+            const parsed = JSON.parse(savedSettings);
+            setCurrentLanguage(parsed.language ?? 'tr');
+          }
+        } catch {}
+      })();
+    }, [])
+  );
+
   const t = translations[currentLanguage];
 
   const handleStartGame = () => {
@@ -132,11 +164,11 @@ export default function NewGame() {
       setErrorModal({ visible: true, title: t.error, message: t.sameTeamNames });
       return;
     }
-    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount, winPoints, maxSets, silentMode });
+    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount, maxSets, silentMode });
   };
 
   const handleQuickStart = () => {
-    navigation.navigate('Game', { teamA: 'A Takımı', teamB: 'B Takımı', timeLimit: 90, passCount: 3, gameMode: 'easy', language: currentLanguage, tabooCount: 3, winPoints: 300, maxSets, silentMode });
+    navigation.navigate('Game', { teamA: 'A Takımı', teamB: 'B Takımı', timeLimit: 90, passCount: 3, gameMode: 'easy', language: currentLanguage, tabooCount: 3, maxSets, silentMode });
   };
 
   if (!fontLoaded) {
@@ -222,7 +254,7 @@ export default function NewGame() {
               </TouchableOpacity>
               <TouchableOpacity style={[styles.modeButton, { width: '24%', marginHorizontal: '0.5%' }, gameMode === 'ultra' && styles.activeModeButton]} onPress={() => setGameMode('ultra')}>
                 <Ionicons name="skull" size={22} color={gameMode === 'ultra' ? '#fff' : '#8B4513'} style={{ marginBottom: 8 }} />
-                <Text style={[styles.modeButtonText, gameMode === 'ultra' && styles.activeModeButtonText]}>Ultra Zor</Text>
+                <Text style={[styles.modeButtonText, gameMode === 'ultra' && styles.activeModeButtonText]}>{t.ultraMode}</Text>
               </TouchableOpacity>
             </View>
             <View style={[styles.modeButtonsContainer, { marginTop: 0 }]}>
