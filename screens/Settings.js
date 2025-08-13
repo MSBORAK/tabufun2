@@ -20,7 +20,7 @@ const Settings = ({ navigation }) => {
   const [penaltyEnabled, setPenaltyEnabled] = useState(true);
   const [penaltyPoints, setPenaltyPoints] = useState(20);
   const [comboEnabled, setComboEnabled] = useState(true);
-  const [combo3, setCombo3] = useState(5);
+  const [combo3, setCombo3] = useState(20);
   const [combo5, setCombo5] = useState(15); // deprecated
   const [randomTimeEnabled, setRandomTimeEnabled] = useState(false); // removed UI
   const [randomTimeMin, setRandomTimeMin] = useState(45);
@@ -45,7 +45,7 @@ const Settings = ({ navigation }) => {
           setPenaltyEnabled(parsed.penaltyEnabled ?? true);
           setPenaltyPoints(parsed.penaltyPoints ?? 20);
           setComboEnabled(parsed.comboEnabled ?? true);
-          setCombo3(parsed.combo3 ?? 5);
+          setCombo3(parsed.combo3 ?? 20);
           setCombo5(parsed.combo5 ?? 15);
           // keep reading legacy keys to avoid crashes but UI is removed
           setRandomTimeEnabled(parsed.randomTimeEnabled ?? false);
@@ -212,7 +212,7 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         {comboEnabled && (
-          <SettingRow label={t.threeCorrectBonus} value={`+${combo3}`} decrease={() => setCombo3(Math.max(1, combo3 - 1))} increase={() => setCombo3(Math.min(25, combo3 + 1))} disableDecrease={combo3 <= 1} disableIncrease={combo3 >= 25} showArrowIcons={true} />
+          <SettingRow label={t.threeCorrectBonus} value={`+${combo3}`} decrease={() => setCombo3(Math.max(20, combo3 - 10))} increase={() => setCombo3(Math.min(50, combo3 + 10))} disableDecrease={combo3 <= 20} disableIncrease={combo3 >= 50} showArrowIcons={true} />
         )}
 
         {/* Random time removed */}

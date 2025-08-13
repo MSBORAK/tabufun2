@@ -161,7 +161,7 @@ const Game = ({ route, navigation }) => {
         if (saved) {
           const s = JSON.parse(saved);
           setPenaltyEnabled(s.penaltyEnabled ?? true);
-          setPenaltyPoints(Number(s.penaltyPoints ?? 1));
+          setPenaltyPoints(Number(s.penaltyPoints ?? 20)); // Düzeltme burada: ?? 1 yerine ?? 20
           setComboEnabled(s.comboEnabled ?? true);
           setCombo3Bonus(Number(s.combo3 ?? 5));
         }
@@ -273,9 +273,8 @@ const Game = ({ route, navigation }) => {
       setCountdown(prev => {
         if (prev === 1) {
           clearInterval(countdownInterval);
-          // "BAŞLA!" için aynı anim mantığı
+          // "BAŞLA!" için animasyon
           countdownTranslateYAnim.setValue(30);
-          countdownOpacityAnim.setValue(0);
           Animated.sequence([
             Animated.parallel([
               Animated.timing(countdownAnim, { toValue: 1.5, duration: 350, useNativeDriver: true }),
@@ -295,7 +294,6 @@ const Game = ({ route, navigation }) => {
         }
         // 3, 2, 1 için giriş animasyonu (aşağıdan yukarı)
         countdownTranslateYAnim.setValue(30);
-        countdownOpacityAnim.setValue(0);
         Animated.sequence([
           Animated.parallel([
             Animated.timing(countdownAnim, { toValue: 1.2, duration: 260, useNativeDriver: true }),
@@ -325,24 +323,6 @@ const Game = ({ route, navigation }) => {
       setShowTurnModal(false);
     }
   }, [showCountdownModal, availableWords, language, initialTaboo]);
-  
-  useEffect(() => {
-    if (showCountdownModal && typeof countdown === 'number') {
-      Animated.sequence([
-        Animated.timing(numberImageAnim, {
-          toValue: 1,
-          duration: 0, 
-          useNativeDriver: true,
-        }),
-        Animated.timing(numberImageAnim, {
-          toValue: 0,
-          duration: 800, 
-          delay: 200, 
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [countdown, showCountdownModal]);
 
   const startAnimations = () => {
     // Animasyonları sıfırla; küçük değerler daha akıcı
@@ -476,6 +456,11 @@ const Game = ({ route, navigation }) => {
     }
     const randomIndex = Math.floor(Math.random() * wordList.length);
     const nextWordObject = wordList[randomIndex];
+    // Remove the selected word from the available words list to prevent repetition
+    const newAvailableWords = [...wordList];
+    newAvailableWords.splice(randomIndex, 1);
+    setAvailableWords(newAvailableWords);
+
     setCurrentWordObject(nextWordObject);
     setCurrentWord(lang === 'en' ? nextWordObject.english_word : nextWordObject.word);
     const tabooArr = Array.isArray(lang === 'en' ? nextWordObject.english_taboo : nextWordObject.taboo)
@@ -515,6 +500,10 @@ const Game = ({ route, navigation }) => {
     setIsRoundOver(false);
     setGameStats(prev => ({ ...prev, totalRounds: prev.totalRounds + 1 }));
     setTabooLeft(initialTaboo);
+    setTeamStats({
+      A: { correct: teamStats.A.correct, pass: teamStats.A.pass, taboo: teamStats.A.taboo, correctWords: [], passWords: [], tabooWords: [] },
+      B: { correct: teamStats.B.correct, pass: teamStats.B.pass, taboo: teamStats.B.taboo, correctWords: [], passWords: [], tabooWords: [] },
+    });
   };
 
   const saveScore = async () => {
