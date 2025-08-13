@@ -11,6 +11,7 @@ import Settings from './screens/Settings';
 import Game from './screens/Game'; // Game ekranının dosya yolu
 import Scores from './screens/Scores';
 import FinalResults from './screens/FinalResults';
+import MyWords from './screens/MyWords';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,9 +26,9 @@ export default function App() {
         });
         // Set global default font
         Text.defaultProps = Text.defaultProps || {};
-        Text.defaultProps.style = [{ fontFamily: 'IndieFlower', fontWeight: 'normal' }, Text.defaultProps.style].filter(Boolean);
+        Text.defaultProps.style = [{ fontFamily: 'IndieFlower' }, Text.defaultProps.style].filter(Boolean);
         TextInput.defaultProps = TextInput.defaultProps || {};
-        TextInput.defaultProps.style = [{ fontFamily: 'IndieFlower', fontWeight: 'normal' }, TextInput.defaultProps.style].filter(Boolean);
+        TextInput.defaultProps.style = [{ fontFamily: 'IndieFlower' }, TextInput.defaultProps.style].filter(Boolean);
       } finally {
         setFontReady(true);
       }
@@ -45,6 +46,7 @@ export default function App() {
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Game" component={Game} options={{ gestureEnabled: false }} />
         <Stack.Screen name="Scores" component={Scores} />
+        <Stack.Screen name="MyWords" component={MyWords} />
         <Stack.Screen name="FinalResults" component={FinalResults} options={{ gestureEnabled: false }} />
       </Stack.Navigator>
       

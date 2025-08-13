@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar, ScrollView, Platform } from 'react-native';
 import heart from '../assets/heart.png';
 import exclamationMark from '../assets/exclamation-mark.png';
 import paperPlane from '../assets/paper-plane.png';
@@ -30,6 +30,7 @@ const translations = {
     pass: 'Pass',
     taboo: 'Taboo',
     team: 'Team',
+    draw: 'Draw!'
   },
 };
 
@@ -91,7 +92,7 @@ export default function FinalResults({ route, navigation }) {
                   <Text key={`A-p-${idx}`} style={[styles.wordItem, styles.passWord]}>• {w}</Text>
                 ))}
                 {teamAStats.tabooWords?.map((w, idx) => (
-                  <Text key={`A-t-${idx}`} style={[styles.wordItem, styles.tabooWord]}>• {w}</Text>
+                  <Text key={`A-t-${idx}`} style={[styles.wordItem, styles.tabooWordStruck]}>• {w}</Text>
                 ))}
               </View>
             )}
@@ -124,21 +125,39 @@ export default function FinalResults({ route, navigation }) {
                   <Text key={`B-p-${idx}`} style={[styles.wordItem, styles.passWord]}>• {w}</Text>
                 ))}
                 {teamBStats.tabooWords?.map((w, idx) => (
-                  <Text key={`B-t-${idx}`} style={[styles.wordItem, styles.tabooWord]}>• {w}</Text>
+                  <Text key={`B-t-${idx}`} style={[styles.wordItem, styles.tabooWordStruck]}>• {w}</Text>
                 ))}
               </View>
             )}
           </View>
 
-          <Text style={styles.winnerText}>{t.winner} {teamAScore > teamBScore ? teamA : teamB}</Text>
+          <Text style={styles.winnerText}>{teamAScore === teamBScore ? t.draw : `${t.winner} ${teamAScore > teamBScore ? teamA : teamB}`}</Text>
+          <View style={styles.buttonsRow}>
+            <TouchableOpacity
+              style={[styles.button, styles.buttonHalfWidth, styles.primary]}
+              onPress={() =>
+                navigation.replace('Game', {
+                  teamA,
+                  teamB,
+                  timeLimit,
+                  passCount,
+                  tabooCount,
+                  winPoints,
+                  gameMode,
+                  language,
+                  initialTeamAScore: 0,
+                  initialTeamBScore: 0,
+                })
+              }
+            >
+              <Text style={styles.buttonText}>{t.playAgain}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.button, styles.buttonHalfWidth, styles.tertiary]} onPress={() => navigation.reset({ index: 0, routes: [{ name: 'TabuuMenu' }] })}>
+              <Text style={styles.buttonText}>{t.mainMenu}</Text>
+            </TouchableOpacity>
+          </View>
 
-          {/* Devam et butonu devre dışı (allowContinue false) */}
-
-          {/* Tekrar Oyna devre dışı */}
-
-          <TouchableOpacity style={[styles.button, styles.tertiary]} onPress={() => navigation.reset({ index: 0, routes: [{ name: 'TabuuMenu' }] })}>
-            <Text style={styles.buttonText}>{t.mainMenu}</Text>
-          </TouchableOpacity>
+          {/* Devam et / Tekrar Oyna ve Oyunu Bitir butonları yukarıda hizalı şekilde */}
         </ScrollView>
       </View>
     </View>
@@ -146,36 +165,37 @@ export default function FinalResults({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.25)' },
-  card: { width: '95%', backgroundColor: '#fff', borderRadius: 16, borderWidth: 2, borderColor: '#8B4513', padding: 18, alignItems: 'center', overflow: 'hidden' },
-  title: { fontFamily: 'IndieFlower', fontSize: 32, color: '#8B4513', marginBottom: 12, marginTop: 6, fontWeight: 'normal', textAlign: 'center' },
+  container: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'transparent' },
+  card: { width: '90%', maxWidth: 720, backgroundColor: '#fdf6e3', borderRadius: 16, borderWidth: 2, borderColor: '#8B4513', padding: 20, alignItems: 'center', overflow: 'hidden' },
+  title: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 24 : 26, color: '#8B4513', marginBottom: 12, marginTop: 8, fontWeight: 'normal', textAlign: 'center' },
   // notebook background
   linedBackground: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, paddingTop: 60 },
   line: { height: 1, backgroundColor: '#e0e0e0', marginVertical: 18, width: '100%' },
   // doodles
-  colosseumDoodle: { position: 'absolute', top: 6, left: 10, width: 30, height: 30, opacity: 0.12 },
-  londonEyeDoodle: { position: 'absolute', top: 6, right: 12, width: 30, height: 30, opacity: 0.12 },
-  galataTowerDoodle: { position: 'absolute', bottom: 50, left: 16, width: 26, height: 26, opacity: 0.12 },
-  pyramidsDoodle: { position: 'absolute', bottom: 50, right: 16, width: 30, height: 30, opacity: 0.12 },
+  colosseumDoodle: { position: 'absolute', top: 20, left: 20, width: 28, height: 28, opacity: 0.1 },
+  londonEyeDoodle: { position: 'absolute', top: 20, right: 20, width: 28, height: 28, opacity: 0.1 },
+  galataTowerDoodle: { position: 'absolute', bottom: 20, left: 20, width: 24, height: 24, opacity: 0.1 },
+  pyramidsDoodle: { position: 'absolute', bottom: 20, right: 20, width: 28, height: 28, opacity: 0.1 },
   // team blocks
-  teamBlock: { backgroundColor: '#fff', borderWidth: 2, borderColor: '#8B4513', borderRadius: 14, padding: 14, marginVertical: 8, alignSelf: 'stretch', width: '100%' },
-  teamTitle: { fontFamily: 'IndieFlower', fontSize: 20, color: '#8B4513', textAlign: 'center' },
-  scoreText: { fontFamily: 'IndieFlower', fontSize: 28, color: '#4A6FA5', textAlign: 'center', marginVertical: 4 },
-  badgesRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  badge: { flex: 1, flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingVertical: 14, paddingHorizontal: 12, marginHorizontal: 6 },
-  badgeIcon: { width: 22, height: 22, marginRight: 8, resizeMode: 'contain' },
-  badgeText: { color: '#fff', fontFamily: 'IndieFlower', fontSize: 16 },
-  badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: 22, fontWeight: 'bold' },
-  wordsPanel: { marginTop: 8, borderTopWidth: 1, borderColor: '#eee', paddingTop: 10, flexDirection: 'row', flexWrap: 'wrap' },
-  wordItem: { fontFamily: 'IndieFlower', fontSize: 16, color: '#F44336', marginBottom: 8, marginRight: 12, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.03)' },
-  correctWord: { color: '#4CAF50' },
-  passWord: { color: '#FFB74D' },
-  tabooWord: { color: '#EF5350' },
-  winnerText: { fontFamily: 'IndieFlower', fontSize: 22, color: '#8B4513', fontWeight: 'normal', marginVertical: 10, textAlign: 'center' },
-  buttonsRow: { flexDirection: 'row', justifyContent: 'space-between', width: '100%', marginTop: 8, marginBottom: 6 },
-  button: { borderRadius: 16, paddingVertical: 12, paddingHorizontal: 16, borderWidth: 2, borderColor: '#8B4513', alignItems: 'center', width: '100%', marginBottom: 8 },
+  teamBlock: { backgroundColor: '#fff', borderWidth: 2, borderColor: '#8B4513', borderRadius: 12, padding: Platform.OS === 'android' ? 12 : 15, marginVertical: 8, alignSelf: 'stretch', width: '100%' },
+  teamTitle: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 15 : 16, color: '#8B4513', textAlign: 'center', fontWeight: 'normal' },
+  scoreText: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 24 : 26, color: '#4A6FA5', textAlign: 'center', marginVertical: 6, fontWeight: 'normal' },
+   badgesRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 6 },
+   badge: { flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', borderRadius: 10, paddingVertical: Platform.OS === 'android' ? 6 : 8, paddingHorizontal: 8, marginHorizontal: 3 },
+  badgeIcon: { width: 18, height: 18, marginRight: 5, resizeMode: 'contain' },
+  badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 15 : 16, fontWeight: 'normal' },
+  wordsPanel: { marginTop: 4, borderTopWidth: 1, borderColor: '#eee', paddingTop: 6, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
+   wordItem: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 13 : 14, marginBottom: 4, marginRight: 6, paddingHorizontal: 5, paddingVertical: 1, borderRadius: 5, backgroundColor: 'rgba(0,0,0,0.03)' },
+   correctWord: { color: '#4CAF50' },
+   passWord: { color: '#FFB74D' },
+   tabooWordStruck: { color: '#EF5350', textDecorationLine: 'line-through' },
+  winnerText: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 18 : 20, color: '#8B4513', fontWeight: 'normal', marginVertical: 8, textAlign: 'center' },
+  buttonsRow: { flexDirection: 'row', justifyContent: 'space-between', alignSelf: 'stretch', marginTop: 10, marginBottom: 8 },
+  button: { borderRadius: 12, paddingVertical: Platform.OS === 'android' ? 6 : 8, paddingHorizontal: 12, borderWidth: 2, borderColor: '#8B4513', alignItems: 'center', marginBottom: 5 },
+  buttonHalf: { flex: 1, marginHorizontal: 4 },
+  buttonHalfWidth: { width: '49%' },
   primary: { backgroundColor: '#5b9bd5' },
   secondary: { backgroundColor: '#f4a460' },
   tertiary: { backgroundColor: '#8B4513' },
-  buttonText: { color: '#fff', fontFamily: 'IndieFlower', fontWeight: 'normal', fontSize: 18 },
+  buttonText: { color: '#fff', fontFamily: 'IndieFlower', fontWeight: 'normal', fontSize: Platform.OS === 'android' ? 15 : 16 },
 });

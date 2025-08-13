@@ -1,0 +1,6 @@
+[
+  { "word": "GİTAR", "english_word": "GUITAR", "taboo": ["TEL","MÜZİK","ÇALMAK","AKUSTİK","SES"], "english_taboo": ["STRING","MUSIC","PLAY","ACOUSTIC","SOUND"], "mode": "both" },
+  { "word": "UZAY", "english_word": "SPACE", "taboo": ["GEZEGEN","ASTRONOT","YILDIZ","GALAKSİ","ROKET"], "english_taboo": ["PLANET","ASTRONAUT","STAR","GALAXY","ROCKET"], "mode": "both" }
+]
+
+

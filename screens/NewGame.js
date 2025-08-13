@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Modal, ScrollView, Image, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Animated, StatusBar, Modal, ScrollView, Image, SafeAreaView, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import car from '../assets/car.png';
-import family from '../assets/family.png';
 import colosseum from '../assets/colosseum.png';
 import londonEye from '../assets/london-eye.png';
 import galataTower from '../assets/galata-tower.png';
@@ -20,9 +18,13 @@ const translations = {
     teamA: 'A Takımı Adı',
     teamB: 'B Takımı Adı',
     vs: 'VS',
-    gameMode: 'Oyun Modu:', 
-    adultMode: 'Yetişkin Modu',
-    childMode: 'Aile Modu',
+    gameMode: 'Zorluk:', 
+    adultMode: 'Kolay',
+    childMode: 'Orta',
+    hardMode: 'Zor',
+    ultraMode: 'Ultra Zor',
+    customMode: 'Kendi Kartların',
+    silentMode: 'Sessiz Mod',
     timeLimit: 'Süre Limiti (saniye):',
     passCount: 'Pas Hakkı Sayısı:',
     quickStart: 'Hızlı Başla',
@@ -38,9 +40,13 @@ const translations = {
     teamA: 'Team A Name',
     teamB: 'Team B Name',
     vs: 'VS',
-    gameMode: 'Game Mode:',
-    adultMode: 'Adult Mode',
-    childMode: 'Family Mode',
+    gameMode: 'Difficulty:',
+    adultMode: 'Easy',
+    childMode: 'Medium',
+    hardMode: 'Hard',
+    ultraMode: 'Ultra Hard',
+    customMode: 'My Cards',
+    silentMode: 'Silent Mode',
     timeLimit: 'Time Limit (seconds):',
     passCount: 'Pass Count:',
     quickStart: 'Quick Start',
@@ -59,7 +65,8 @@ export default function NewGame() {
   const [timeLimit, setTimeLimit] = useState(60);
   const [passCount, setPassCount] = useState(3);
   const [tabooCount, setTabooCount] = useState(3);
-  const [gameMode, setGameMode] = useState('adult'); // 'adult', 'child' veya 'both'
+  const [gameMode, setGameMode] = useState('easy'); // 'easy' | 'medium' | 'hard' | 'ultra'
+  const [silentMode, setSilentMode] = useState(false);
   const [fontLoaded, setFontLoaded] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState('tr');
   const [winPoints, setWinPoints] = useState(250);
@@ -125,11 +132,11 @@ export default function NewGame() {
       setErrorModal({ visible: true, title: t.error, message: t.sameTeamNames });
       return;
     }
-    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount, winPoints, maxSets });
+    navigation.navigate('Game', { teamA, teamB, timeLimit, passCount, gameMode, language: currentLanguage, tabooCount, winPoints, maxSets, silentMode });
   };
 
   const handleQuickStart = () => {
-    navigation.navigate('Game', { teamA: 'A Takımı', teamB: 'B Takımı', timeLimit: 90, passCount: 3, gameMode: 'adult', language: currentLanguage, tabooCount: 3, winPoints: 300, maxSets });
+    navigation.navigate('Game', { teamA: 'A Takımı', teamB: 'B Takımı', timeLimit: 90, passCount: 3, gameMode: 'easy', language: currentLanguage, tabooCount: 3, winPoints: 300, maxSets, silentMode });
   };
 
   if (!fontLoaded) {
@@ -196,18 +203,36 @@ export default function NewGame() {
             <Text style={styles.settingsTitle}>{t.gameMode}</Text>
             <View style={styles.modeButtonsContainer}>
               <TouchableOpacity
-                style={[styles.modeButton, gameMode === 'adult' && styles.activeModeButton]}
-                onPress={() => setGameMode('adult')}
+                style={[styles.modeButton, { width: '24%', marginHorizontal: '0.5%' }, gameMode === 'easy' && styles.activeModeButton]}
+                onPress={() => setGameMode('easy')}
               >
-                <Image source={car} style={styles.modeIcon} />
-                <Text style={[styles.modeButtonText, gameMode === 'adult' && styles.activeModeButtonText]}>{t.adultMode}</Text>
+                <Ionicons name="leaf" size={24} color={gameMode === 'easy' ? '#fff' : '#8B4513'} style={{ marginBottom: 6 }} />
+                <Text style={[styles.modeButtonText, gameMode === 'easy' && styles.activeModeButtonText]}>{t.adultMode}</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.modeButton, gameMode === 'child' && styles.activeModeButton]}
-                onPress={() => setGameMode('child')}
+                style={[styles.modeButton, { width: '24%', marginHorizontal: '0.5%' }, gameMode === 'medium' && styles.activeModeButton]}
+                onPress={() => setGameMode('medium')}
               >
-                <Image source={family} style={styles.modeIcon} />
-                <Text style={[styles.modeButtonText, gameMode === 'child' && styles.activeModeButtonText]}>{t.childMode}</Text>
+                <Ionicons name="book" size={24} color={gameMode === 'medium' ? '#fff' : '#8B4513'} style={{ marginBottom: 6 }} />
+                <Text style={[styles.modeButtonText, gameMode === 'medium' && styles.activeModeButtonText]}>{t.childMode}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modeButton, { width: '24%', marginHorizontal: '0.5%' }, gameMode === 'hard' && styles.activeModeButton]} onPress={() => setGameMode('hard')}>
+                <Ionicons name="flame" size={24} color={gameMode === 'hard' ? '#fff' : '#8B4513'} style={{ marginBottom: 6 }} />
+                <Text style={[styles.modeButtonText, gameMode === 'hard' && styles.activeModeButtonText]}>{t.hardMode}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modeButton, { width: '24%', marginHorizontal: '0.5%' }, gameMode === 'ultra' && styles.activeModeButton]} onPress={() => setGameMode('ultra')}>
+                <Ionicons name="skull" size={22} color={gameMode === 'ultra' ? '#fff' : '#8B4513'} style={{ marginBottom: 8 }} />
+                <Text style={[styles.modeButtonText, gameMode === 'ultra' && styles.activeModeButtonText]}>Ultra Zor</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={[styles.modeButtonsContainer, { marginTop: 0 }]}>
+              <TouchableOpacity style={[styles.modeButton, { width: '49%', marginHorizontal: '0.5%' }, gameMode === 'custom' && styles.activeModeButton]} onPress={() => setGameMode('custom')}>
+                <Ionicons name="create" size={22} color={gameMode === 'custom' ? '#fff' : '#8B4513'} style={{ marginBottom: 6 }} />
+                <Text style={[styles.modeButtonText, gameMode === 'custom' && styles.activeModeButtonText]}>{t.customMode}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modeButton, { width: '49%', marginHorizontal: '0.5%' }, silentMode && styles.activeModeButton]} onPress={() => setSilentMode(!silentMode)}>
+                <Ionicons name="volume-mute" size={22} color={silentMode ? '#fff' : '#8B4513'} style={{ marginBottom: 6 }} />
+                <Text style={[styles.modeButtonText, silentMode && styles.activeModeButtonText]}>{t.silentMode}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -268,7 +293,7 @@ export default function NewGame() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+    backgroundColor: '#fdf6e3', // iOS ile aynı ton
   },
   linedBackground: {
     position: 'absolute',
@@ -287,8 +312,8 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 48,
-    paddingBottom: 20,
+    paddingTop: 30,
+    paddingBottom: 10,
     justifyContent: 'flex-start',
   },
   doodlesContainer: {
@@ -298,7 +323,7 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   backButton: {
     marginRight: 12,
@@ -320,7 +345,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 28,
+    fontSize: Platform.OS === 'android' ? 22 : 24,
     fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
@@ -332,10 +357,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   section: {
-    marginBottom: 18,
+    marginBottom: 12,
   },
   inputLabel: {
-    fontSize: 18,
+    fontSize: Platform.OS === 'android' ? 16 : 18,
     fontWeight: 'normal',
     color: '#8B4513',
     marginBottom: 8,
@@ -361,32 +386,32 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 18,
+    fontSize: Platform.OS === 'android' ? 16 : 18,
     color: '#333',
     fontFamily: 'IndieFlower',
   },
   vsText: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: Platform.OS === 'android' ? 22 : 24,
+    fontWeight: 'normal',
     color: '#8B4513',
     textAlign: 'center',
     marginVertical: 10,
     fontFamily: 'IndieFlower',
   },
   settingsTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: Platform.OS === 'android' ? 18 : 20,
+    fontWeight: 'normal',
     color: '#8B4513',
     marginBottom: 10,
     fontFamily: 'IndieFlower',
   },
   modeButtonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 14,
+    justifyContent: 'space-between',
+    marginBottom: 10,
     backgroundColor: '#fff',
     borderRadius: 16,
-    padding: 10,
+    padding: 8,
     borderWidth: 2,
     borderColor: '#8B4513',
     shadowColor: '#000',
@@ -396,14 +421,14 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   modeButton: {
-    flex: 1,
-    paddingVertical: 10,
+    width: '23%',
+    paddingVertical: Platform.OS === 'android' ? 6 : 8,
     borderRadius: 12,
     alignItems: 'center',
-    marginHorizontal: 6,
+    marginHorizontal: 2,
   },
   modeButtonText: {
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? 13 : 14,
     fontWeight: 'normal',
     fontFamily: 'IndieFlower',
     color: '#8B4513',
@@ -413,11 +438,6 @@ const styles = StyleSheet.create({
   },
   activeModeButtonText: {
     color: '#fff',
-  },
-  modeIcon: {
-    width: 32,
-    height: 32,
-    marginBottom: 8,
   },
   settingItem: {
     flexDirection: 'row',
@@ -472,12 +492,12 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 16,
+    justifyContent: 'space-between',
+    marginTop: 8,
   },
   quickStartButton: {
-    width: '48%',
-    borderRadius: 25, // More rounded
+    width: '49%',
+    borderRadius: 20,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
@@ -486,8 +506,8 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   startButton: {
-    width: '48%',
-    borderRadius: 25, // More rounded
+    width: '49%',
+    borderRadius: 20,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
@@ -530,14 +550,14 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: Platform.OS === 'android' ? 18 : 20,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginBottom: 6,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
   },
   modalMessage: {
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? 15 : 16,
     color: '#333',
     textAlign: 'center',
     marginBottom: 12,
@@ -547,25 +567,25 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     paddingVertical: 10,
     paddingHorizontal: 18,
-    width: '60%',
+    width: '85%',
   },
   modalButtonText: {
     color: '#8B4513',
-    fontSize: 18,
+    fontSize: Platform.OS === 'android' ? 16 : 18,
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
   quickStartText: {
     color: '#8B4513', // Brown text
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontWeight: 'normal',
+    fontSize: Platform.OS === 'android' ? 13 : 14,
     marginTop: 6,
     fontFamily: 'IndieFlower',
   },
   settingsShortcutText: {
     color: '#8B4513',
     fontWeight: 'normal',
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? 15 : 16,
     marginTop: 6,
     fontFamily: 'IndieFlower',
   },
@@ -582,7 +602,7 @@ const styles = StyleSheet.create({
   startButtonText: {
     color: '#fff',
     fontWeight: 'normal',
-    fontSize: 18,
+    fontSize: Platform.OS === 'android' ? 16 : 18,
     marginTop: 6,
     fontFamily: 'IndieFlower',
   },

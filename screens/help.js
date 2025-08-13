@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, ScrollView, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, StatusBar, ScrollView, Image, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as Font from 'expo-font';
@@ -60,6 +60,23 @@ const Help = () => {
       step2: "Takımların isimlerini yaz", 
       step3: "Oyuna başla ve eğlen!",
       understood: "Anladım",
+      gameRules: 'OYUN KURALLARI',
+      objectOfGame: 'Oyunun Amacı:',
+      objectOfGameText: 'Oyuncuların ana kelimeyi, yasaklı kelimeleri kullanmadan kendi takım arkadaşlarına anlatmasıdır. En çok puanı toplayan takım kazanır.',
+      scoring: 'Puanlama:',
+      scoringCorrect: 'Doğru Tahmin: Her doğru anlatılan kelime için 10 puan kazanılır.',
+      scoringPass: 'Pas Hakkı: Her takımın tur başına sınırlı pas hakkı vardır. Pas geçilen kelime için puan alınmaz.',
+      scoringTaboo: 'Tabu Kelime Cezası: Yasaklı kelimelerden biri kullanılırsa, o kelime için ceza puanı uygulanır (varsayılan: -10 puan). Art arda 3 tabu kelime kullanılırsa, ekstra puan cezası uygulanır.',
+      gameModes: 'Oyun Modları:',
+      gameModesText: 'Farklı zorluk seviyeleri (Kolay, Orta, Zor, Ultra Zor) ve özel modlar (Sessiz Mod, Kendi Kartların) arasından seçim yapabilirsiniz. Her mod, oyun deneyiminizi değiştiren benzersiz kelime setleri ve kurallar sunar.',
+      comboBonus: 'Seri Bonusu:',
+      comboBonusText: 'Ayarlarda aktif edilirse, art arda 3 doğru tahmin yapıldığında ekstra puan kazanırsınız.',
+      silentMode: 'Sessiz Mod:',
+      silentModeText: 'Bu mod aktif edildiğinde, oyun sırasında yasaklı kelimeler gösterilmez ve titreşimler kapatılır. Anlatırken sadece ana kelimeye odaklanabilirsiniz.',
+      quickStartTitle: 'Hızlı Başlatma Nasıl Çalışır?',
+      quickStartText: 'Hızlı Başlat tuşu, oyunun varsayılan ayarlarla (Takım A: A Takımı, Takım B: B Takımı, Süre Limiti: 90 saniye, Pas Hakkı: 3, Tabu Hakkı: 3, Kolay Mod) hemen başlamasını sağlar. Hızlıca oyuna girmek isteyenler için idealdir.',
+      settings: 'Ayarlar:',
+      settingsText: 'Oyun Ayarları ekranında süre limitini, pas hakkı sayısını, tabu hakkı sayısını, seri sayısını ve kazanma puanını özelleştirebilirsiniz. Ayrıca ceza puanı, seri bonusu gibi özellikleri açıp kapatabilirsiniz.',
     },
     en: {
       helpTitle: 'GAME GUIDE',
@@ -102,17 +119,44 @@ const Help = () => {
         </View>
         
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <Text style={styles.subtitle}>{t.setupSubtitle}</Text>
-          
-          <View style={styles.steps}>
-            {[t.step1, t.step2, t.step3].map((step, index) => (
-              <View key={index} style={styles.stepContainer}>
-                <View style={styles.stepNumber}>
-                  <Text style={styles.stepNumberText}>{index + 1}</Text>
-                </View>
-                <Text style={styles.stepText}>{step}</Text>
-              </View>
-            ))}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>{t.gameRules}</Text>
+            <View style={styles.card}>
+              <Text style={styles.sectionSubtitle}>{t.objectOfGame}</Text>
+              <Text style={styles.sectionText}>{t.objectOfGameText}</Text>
+            </View>
+            
+            <View style={styles.card}>
+              <Text style={styles.sectionSubtitle}>{t.scoring}</Text>
+              <Text style={styles.sectionText}>{t.scoringCorrect}</Text>
+              <Text style={styles.sectionText}>{t.scoringPass}</Text>
+              <Text style={styles.sectionText}>{t.scoringTaboo}</Text>
+            </View>
+
+            <View style={styles.card}>
+              <Text style={styles.sectionSubtitle}>{t.gameModes}</Text>
+              <Text style={styles.sectionText}>{t.gameModesText}</Text>
+            </View>
+
+            <View style={styles.card}>
+              <Text style={styles.sectionSubtitle}>{t.comboBonus}</Text>
+              <Text style={styles.sectionText}>{t.comboBonusText}</Text>
+            </View>
+
+            <View style={styles.card}>
+              <Text style={styles.sectionSubtitle}>{t.silentMode}</Text>
+              <Text style={styles.sectionText}>{t.silentModeText}</Text>
+            </View>
+
+            <View style={styles.card}>
+              <Text style={styles.sectionSubtitle}>{t.settings}</Text>
+              <Text style={styles.sectionText}>{t.settingsText}</Text>
+            </View>
+          </View>
+
+          <Text style={styles.quickStartTitle}>{t.quickStartTitle}</Text>
+          <View style={styles.card}>
+            <Text style={styles.sectionText}>{t.quickStartText}</Text>
           </View>
           
           <TouchableOpacity 
@@ -130,7 +174,7 @@ const Help = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+    backgroundColor: '#fdf6e3', // iOS ile aynı ton
   },
   linedBackground: {
     position: 'absolute',
@@ -182,7 +226,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   title: {
-    fontSize: 32, 
+    fontSize: Platform.OS === 'android' ? 30 : 32, 
     fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
@@ -193,11 +237,12 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: Platform.OS === 'android' ? 18 : 20,
     marginBottom: 20,
     textAlign: 'center',
     color: '#8B4513',
     fontFamily: 'IndieFlower',
+    fontWeight: 'normal',
   },
   steps: {
     marginBottom: 20,
@@ -207,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     borderRadius: 15,
-    padding: 15,
+    padding: Platform.OS === 'android' ? 12 : 15,
     marginBottom: 12,
     borderWidth: 2,
     borderColor: '#a9d5ee',
@@ -231,18 +276,18 @@ const styles = StyleSheet.create({
   stepNumberText: {
     color: '#FFF',
     fontWeight: 'normal',
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? 15 : 16,
     fontFamily: 'IndieFlower',
   },
   stepText: {
-    fontSize: 18,
+    fontSize: Platform.OS === 'android' ? 16 : 18,
     color: '#333',
     flex: 1,
     fontFamily: 'IndieFlower',
   },
   closeButton: {
     backgroundColor: '#5b9bd5', // Soft blue
-    paddingVertical: 18, // Increased padding
+    paddingVertical: Platform.OS === 'android' ? 15 : 18, // Adjusted padding
     borderRadius: 15,
     alignItems: 'center', 
     marginTop: 20, 
@@ -254,7 +299,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: '#FFF', 
-    fontSize: 22, 
+    fontSize: Platform.OS === 'android' ? 20 : 22, 
     fontWeight: 'normal',
     fontFamily: 'IndieFlower',
   },
@@ -289,6 +334,49 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     opacity: 0.15,
+  },
+  section: {
+    marginBottom: 20,
+  },
+  sectionTitle: {
+    fontSize: Platform.OS === 'android' ? 22 : 24,
+    fontWeight: 'normal',
+    color: '#8B4513',
+    marginBottom: 15,
+    fontFamily: 'IndieFlower',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    padding: Platform.OS === 'android' ? 15 : 20,
+    marginBottom: 15,
+    borderWidth: 2,
+    borderColor: '#a9d5ee',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  sectionSubtitle: {
+    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontWeight: 'normal',
+    color: '#8B4513',
+    marginBottom: 10,
+    fontFamily: 'IndieFlower',
+  },
+  sectionText: {
+    fontSize: Platform.OS === 'android' ? 14 : 16,
+    color: '#333',
+    lineHeight: 22,
+    fontFamily: 'IndieFlower',
+  },
+  quickStartTitle: {
+    fontSize: Platform.OS === 'android' ? 20 : 22,
+    fontWeight: 'normal',
+    color: '#8B4513',
+    marginBottom: 15,
+    fontFamily: 'IndieFlower',
   },
 });
 

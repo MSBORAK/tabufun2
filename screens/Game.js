@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Image, Modal, SafeAreaView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import words from '../data/words.json';
+import wordsEasy from '../data/words_easy.json';
+import wordsMedium from '../data/words_medium.json';
+import wordsHard from '../data/words_hard.json';
 import * as Font from 'expo-font';
 import { BlurView } from 'expo-blur';
 import heart from '../assets/heart.png';
@@ -18,6 +20,7 @@ import pyramids from '../assets/pyramids.png';
 
 
 const { width, height } = Dimensions.get('window');
+const PAPER_BG = '#fdf6e3';
 
 const translations = {
   tr: {
@@ -48,7 +51,8 @@ const translations = {
     paused: 'Durduruldu',
     resume: 'Devam Et',
     turn: 'Sıra:',
-    draw: 'Berabere!'
+    draw: 'Berabere!',
+    threeTabooPenalty: '3 Tabu Cezası!'
   },
   en: {
     gameOver: 'Game Over!',
@@ -79,7 +83,8 @@ const translations = {
     paused: 'Paused',
     resume: 'Resume',
     turn: 'Turn:',
-    draw: 'Draw!'
+    draw: 'Draw!',
+    threeTabooPenalty: '3 Tabu Cezası!'
   },
 };
 
@@ -96,6 +101,8 @@ const Game = ({ route, navigation }) => {
   const [correctCount, setCorrectCount] = useState(0);
   const [passUsedCount, setPassUsedCount] = useState(0);
   const [tabooWordsUsed, setTabooWordsUsed] = useState([]);
+  const [roundCorrectWords, setRoundCorrectWords] = useState([]);
+  const [roundPassWords, setRoundPassWords] = useState([]);
   const [tabooLeft, setTabooLeft] = useState(initialTaboo);
   const [isPaused, setIsPaused] = useState(false);
   const [showTurnModal, setShowTurnModal] = useState(false);
@@ -118,6 +125,14 @@ const Game = ({ route, navigation }) => {
   const [showFinalScoreModal, setShowFinalScoreModal] = useState(false);
   const [winningScore, setWinningScore] = useState(route.params?.winPoints ?? 300); // Kazanma puanı
   const [errorModal, setErrorModal] = useState({ visible: false, title: '', message: '' });
+  // Settings-driven gameplay tweaks
+  const [penaltyEnabled, setPenaltyEnabled] = useState(true);
+  const [penaltyPoints, setPenaltyPoints] = useState(1);
+  const [comboEnabled, setComboEnabled] = useState(true);
+  const [combo3Bonus, setCombo3Bonus] = useState(5);
+  const [consecutiveCorrect, setConsecutiveCorrect] = useState(0);
+  const [silentMode, setSilentMode] = useState(route.params?.silentMode ?? false);
+  const [consecutiveTaboos, setConsecutiveTaboos] = useState(0);
 
   // Animasyon değerleri
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -136,6 +151,19 @@ const Game = ({ route, navigation }) => {
         'IndieFlower': require('../assets/IndieFlower-Regular.ttf'),
       });
       setFontLoaded(true);
+      // Load advanced settings
+      try {
+        const saved = await AsyncStorage.getItem('tabuuSettings');
+        if (saved) {
+          const s = JSON.parse(saved);
+          setPenaltyEnabled(s.penaltyEnabled ?? true);
+          setPenaltyPoints(Number(s.penaltyPoints ?? 1));
+          setComboEnabled(s.comboEnabled ?? true);
+          setCombo3Bonus(Number(s.combo3 ?? 5));
+        }
+      } catch (e) {
+        // noop
+      }
     })();
     
     // Component unmount olduğunda isMounted değerini false yap
@@ -143,24 +171,48 @@ const Game = ({ route, navigation }) => {
   }, []);
 
   useEffect(() => {
-    let filteredWords;
-    if (gameMode === 'child') {
-      filteredWords = words.filter(word => word.mode === 'child' || word.mode === 'both');
-    } else {
-      filteredWords = words.filter(word => word.mode === 'adult' || word.mode === 'both');
-    }
-    setAvailableWords(filteredWords);
+    let active = true;
+    (async () => {
+      let baseWords;
+      // Difficulty-based source selection
+      if (gameMode === 'custom') {
+        baseWords = [];
+      } else if (gameMode === 'easy') baseWords = wordsEasy;
+      else if (gameMode === 'medium') baseWords = wordsMedium;
+      else if (gameMode === 'hard' || gameMode === 'ultra') baseWords = wordsHard;
+      else baseWords = words;
 
-    if (filteredWords.length === 0) {
-      setErrorModal({ visible: true, title: translations[language].error, message: translations[language].noWordsFound });
-      return;
-    }
+      // Include user words only for custom mode
+      if (gameMode === 'custom') {
+        try {
+          const raw = await AsyncStorage.getItem('userWords');
+          if (raw) {
+            const user = JSON.parse(raw);
+            const mapped = (Array.isArray(user) ? user : []).map(u => ({
+              word: u.word,
+              english_word: u.english_word ?? u.word,
+              taboo: Array.isArray(u.taboo) ? u.taboo : [],
+              english_taboo: Array.isArray(u.english_taboo) ? u.english_taboo : (Array.isArray(u.taboo) ? u.taboo : []),
+              mode: 'both',
+            }));
+            baseWords = mapped;
+          }
+        } catch (_) {}
+      }
 
-    if (!showCountdownModal && isMounted.current) {
-      getNextWord(filteredWords, language);
-      startAnimations();
-      setTabooLeft(initialTaboo);
-    }
+      if (!active) return;
+      setAvailableWords(baseWords);
+      if (baseWords.length === 0) {
+        setErrorModal({ visible: true, title: translations[language].error, message: translations[language].noWordsFound });
+        return;
+      }
+      if (!showCountdownModal && isMounted.current) {
+        getNextWord(baseWords, language);
+        startAnimations();
+        setTabooLeft(initialTaboo);
+      }
+    })();
+    return () => { active = false; };
   }, [gameMode, language, showCountdownModal]);
 
   useEffect(() => {
@@ -229,13 +281,8 @@ const Game = ({ route, navigation }) => {
               Animated.timing(countdownTranslateYAnim, { toValue: -10, duration: 300, useNativeDriver: true }),
             ]),
           ]).start(() => {
-            // Animasyon bittiğinde modalı kapat ve oyunu başlat
+            // Animasyon bittiğinde yalnızca modalı kapat; kelimeyi ayrı effect alacak
             setShowCountdownModal(false);
-            if (isMounted.current) { // Component hala mounted ise
-                getNextWord(availableWords, language);
-                startAnimations();
-                setTabooLeft(initialTaboo);
-            }
           });
           return translations[language].start; 
         }
@@ -260,6 +307,17 @@ const Game = ({ route, navigation }) => {
 
     return () => clearInterval(countdownInterval);
   }, [showCountdownModal, language, availableWords]);
+
+  // When countdown closes, fetch next word and start animations
+  useEffect(() => {
+    if (!showCountdownModal && isMounted.current) {
+      getNextWord(availableWords, language);
+      startAnimations();
+      setTabooLeft(initialTaboo);
+      setIsPaused(false);
+      setShowTurnModal(false);
+    }
+  }, [showCountdownModal, availableWords, language, initialTaboo]);
   
   useEffect(() => {
     if (showCountdownModal && typeof countdown === 'number') {
@@ -310,11 +368,19 @@ const Game = ({ route, navigation }) => {
   };
 
   const handleCorrect = () => {
-    Vibration.vibrate(100);
-    if (currentTeam === 'A') setTeamAScore(prev => prev + 10);
-    else setTeamBScore(prev => prev + 10);
+    if (!silentMode) Vibration.vibrate(100);
+    let added = 10;
+    const newStreak = consecutiveCorrect + 1;
+    if (comboEnabled && newStreak % 3 === 0) {
+      added += combo3Bonus;
+    }
+    if (currentTeam === 'A') setTeamAScore(prev => prev + added);
+    else setTeamBScore(prev => prev + added);
     setCorrectCount(prev => prev + 1);
+    setConsecutiveCorrect(newStreak);
     setGameStats(prev => ({ ...prev, totalCorrect: prev.totalCorrect + 1 }));
+    setConsecutiveTaboos(0);
+    setRoundCorrectWords(prev => [...prev, currentWord]);
     setTeamStats(prev => ({
       ...prev,
       [currentTeam]: {
@@ -324,7 +390,8 @@ const Game = ({ route, navigation }) => {
       }
     }));
     animateWord();
-    if (teamAScore + 10 >= winningScore || teamBScore + 10 >= winningScore) {
+    const projected = currentTeam === 'A' ? (teamAScore + added) : (teamBScore + added);
+    if (projected >= winningScore) {
         handleTimeUp(); // Puan limitine ulaşılırsa turu bitir
         return;
     }
@@ -333,10 +400,13 @@ const Game = ({ route, navigation }) => {
 
   const handlePass = () => {
     if (passCount > 0) {
-      Vibration.vibrate(50);
+      if (!silentMode) Vibration.vibrate(50);
       setPassCount(prev => prev - 1);
       setPassUsedCount(prev => prev + 1);
+      setConsecutiveCorrect(0);
       setGameStats(prev => ({ ...prev, totalPass: prev.totalPass + 1 }));
+      setConsecutiveTaboos(0);
+      setRoundPassWords(prev => [...prev, currentWord]);
       setTeamStats(prev => ({
         ...prev,
         [currentTeam]: {
@@ -357,11 +427,23 @@ const Game = ({ route, navigation }) => {
     if (tabooWordsUsed.length >= initialTaboo || tabooLeft <= 0) {
       return;
     }
-    Vibration.vibrate([100, 50, 100]);
-    if (currentTeam === 'A') setTeamAScore(prev => Math.max(0, prev - 5));
-    else setTeamBScore(prev => Math.max(0, prev - 5));
+    if (!silentMode) Vibration.vibrate([100, 50, 100]);
+    const penalty = penaltyEnabled ? Math.max(0, Number(penaltyPoints) || 0) : 0;
+    if (currentTeam === 'A') setTeamAScore(prev => Math.max(0, prev - penalty));
+    else setTeamBScore(prev => Math.max(0, prev - penalty));
     setTabooWordsUsed(prev => [...prev, currentWord]);
     setGameStats(prev => ({ ...prev, totalTaboo: prev.totalTaboo + 1 }));
+    const newTabooStreak = consecutiveTaboos + 1;
+    if (penaltyEnabled && newTabooStreak % 3 === 0) {
+      const additionalPenalty = Number(penaltyPoints) * 3; // 3 tabu için ek ceza
+      if (currentTeam === 'A') setTeamAScore(prev => Math.max(0, prev - additionalPenalty));
+      else setTeamBScore(prev => Math.max(0, prev - additionalPenalty));
+      setErrorModal({ visible: true, title: translations[language].threeTabooPenalty, message: translations[language].threeTabooPenalty });
+      setConsecutiveTaboos(0); // Ceza uygulandıktan sonra sıfırla
+    } else {
+      setConsecutiveTaboos(newTabooStreak);
+    }
+    setConsecutiveCorrect(0);
     setTeamStats(prev => ({
       ...prev,
       [currentTeam]: {
@@ -385,7 +467,8 @@ const Game = ({ route, navigation }) => {
     }
     setIsRoundOver(true);
     setIsPaused(true);
-    setShowTurnModal(true);
+    // Only show round summary; do not stack the turn modal on top
+    setShowTurnModal(false);
   };
 
   const getNextWord = (wordList, lang) => {
@@ -405,6 +488,8 @@ const Game = ({ route, navigation }) => {
       endGame();
       return;
     }
+    // Ensure content won’t flash any previous word while countdown shows
+    setCurrentWord('');
     setCountdown(3); // Geri sayımı sıfırla
     setShowCountdownModal(true); // Yeni tur başlamadan önce geri sayımı göster
     setCurrentTeam(prev => (prev === 'A' ? 'B' : 'A'));
@@ -413,6 +498,8 @@ const Game = ({ route, navigation }) => {
     setCorrectCount(0);
     setPassUsedCount(0);
     setTabooWordsUsed([]);
+    setRoundCorrectWords([]);
+    setRoundPassWords([]);
     setIsRoundOver(false);
     setGameStats(prev => ({ ...prev, totalRounds: prev.totalRounds + 1 }));
     setTabooLeft(initialTaboo);
@@ -484,6 +571,8 @@ const Game = ({ route, navigation }) => {
     setCorrectCount(0);
     setPassUsedCount(0);
     setTabooWordsUsed([]);
+    setRoundCorrectWords([]);
+    setRoundPassWords([]);
     setIsRoundOver(false);
     setGameStats(prev => ({ ...prev, totalRounds: 1, totalCorrect: 0, totalPass: 0, totalTaboo: 0 })); // Reset round stats
     setTabooLeft(initialTaboo);
@@ -504,6 +593,8 @@ const Game = ({ route, navigation }) => {
     setCorrectCount(0);
     setPassUsedCount(0);
     setTabooWordsUsed([]);
+    setRoundCorrectWords([]);
+    setRoundPassWords([]);
     setIsRoundOver(false);
     setGameStats({ totalRounds: 1, totalCorrect: 0, totalPass: 0, totalTaboo: 0 });
     setTabooLeft(initialTaboo);
@@ -518,8 +609,8 @@ const Game = ({ route, navigation }) => {
   };
 
   const currentTabooWords = (
-    words.find(w => w.word === currentWord) || 
-    words.find(w => w.english_word === currentWord)
+    availableWords.find(w => w.word === currentWord) || 
+    availableWords.find(w => w.english_word === currentWord)
   );
   const displayTabooWords = language === 'en' 
     ? (currentTabooWords?.english_taboo || []) 
@@ -530,7 +621,7 @@ const Game = ({ route, navigation }) => {
   }
 
   const otherTeamName = currentTeam === 'A' ? teamB : teamA;
-  const turnMessage = language === 'en' ? `It's ${otherTeamName}'s turn!` : `Sıra ${otherTeamName} takımında!`;
+  const turnMessage = language === 'en' ? `It's ${otherTeamName}'s turn!` : `Sıra: ${otherTeamName}`;
 
   const getNumberImage = (num) => {
     switch (num) {
@@ -554,6 +645,7 @@ const Game = ({ route, navigation }) => {
         ))}
       </View>
       
+      {!showCountdownModal && (
       <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ scale: scaleAnim }] }]}>
         {/* Doodles (behind content) */}
         <View style={styles.doodlesContainer} pointerEvents="none">
@@ -564,7 +656,6 @@ const Game = ({ route, navigation }) => {
         </View>
         {isRoundOver ? (
           <View style={styles.summaryContainer}>
-            <View style={styles.summaryBackdrop} />
             <View style={styles.notebookPage}>
               <Text style={styles.summaryTitle}>{translations[language].roundOver}</Text>
               <View style={styles.badgesRow}>
@@ -582,30 +673,48 @@ const Game = ({ route, navigation }) => {
                 </View>
               </View>
               
-              {tabooWordsUsed.length > 0 && (
+              {(roundCorrectWords.length > 0 || roundPassWords.length > 0 || tabooWordsUsed.length > 0) && (
                 <View style={styles.tabooList}>
-                  <Text style={styles.tabooListTitle}>{translations[language].tabooedWords}</Text>
-                  <View style={styles.wordsPanel}>
-                    {tabooWordsUsed.map((word, index) => (
-                      <Text key={index} style={[styles.wordItem, styles.tabooWord]}>• {word}</Text>
-                    ))}
-                  </View>
+                  {roundCorrectWords.length > 0 && (
+                    <>
+                      <Text style={[styles.tabooListTitle, { color: '#66BB6A' }]}>{translations[language].correct}</Text>
+                      <View style={styles.wordsPanel}>
+                        {roundCorrectWords.map((word, index) => (
+                          <Text key={`c-${index}`} style={[styles.wordItem, { color: '#66BB6A' }]}>• {word}</Text>
+                        ))}
+                      </View>
+                    </>
+                  )}
+                  {roundPassWords.length > 0 && (
+                    <>
+                      <Text style={[styles.tabooListTitle, { color: '#FFB74D' }]}>{translations[language].pass}</Text>
+                      <View style={styles.wordsPanel}>
+                        {roundPassWords.map((word, index) => (
+                          <Text key={`p-${index}`} style={[styles.wordItem, { color: '#FFB74D' }]}>• {word}</Text>
+                        ))}
+                      </View>
+                    </>
+                  )}
+                  {tabooWordsUsed.length > 0 && (
+                    <>
+                      <Text style={[styles.tabooListTitle, { color: '#EF5350' }]}>{translations[language].taboo}</Text>
+                      <View style={styles.wordsPanel}>
+                        {tabooWordsUsed.map((word, index) => (
+                          <Text key={`t-${index}`} style={[styles.wordItem, styles.tabooWordSummary]}>• {word}</Text>
+                        ))}
+                      </View>
+                    </>
+                  )}
                 </View>
               )}
               
-              <View style={styles.summaryButtons}>
-                <TouchableOpacity style={styles.nextButton} onPress={startNextRound}>
-                  <View style={styles.buttonContent}>
-                    <Text style={styles.buttonText}>{translations[language].nextRound}</Text>
-                  </View>
-                </TouchableOpacity>
-                
-                <TouchableOpacity style={styles.endButton} onPress={endGame}>
-                  <View style={styles.buttonContent}>
-                    <Text style={styles.buttonText}>{translations[language].endGame}</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.summaryButtons}>
+              <TouchableOpacity style={[styles.nextButton, { width: '80%' }]} onPress={startNextRound} activeOpacity={0.85}>
+                <View style={[styles.buttonContent, styles.nextButtonColor]}>
+                  <Text style={styles.buttonText}>{translations[language].nextRound}</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
             </View>
           </View>
         ) : (
@@ -660,16 +769,18 @@ const Game = ({ route, navigation }) => {
             </Animated.View>
 
             {/* Taboo Words */}
-            <View style={styles.tabooWordsContainer}>
-              <View style={styles.tabooCard}>
-                <Text style={styles.tabooTitle}>{translations[language].tabooTitle}</Text>
-                <View style={styles.tabooWordsList}>
-                  {displayTabooWords.map((word, index) => (
-                    <Text key={index} style={styles.tabooWord}>{word}</Text>
-                  ))}
+            {!silentMode && (
+              <View style={styles.tabooWordsContainer}>
+                <View style={styles.tabooCard}>
+                  <Text style={styles.tabooTitle}>{translations[language].tabooTitle}</Text>
+                  <View style={styles.tabooWordsList}>
+                    {displayTabooWords.map((word, index) => (
+                      <Text key={index} style={styles.tabooWord}>{word}</Text>
+                    ))}
+                  </View>
                 </View>
               </View>
-            </View>
+            )}
 
             {/* Teams */}
             <View style={styles.teamsContainer}>
@@ -712,12 +823,14 @@ const Game = ({ route, navigation }) => {
                 </View>
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.actionButton} onPress={handleTaboo} activeOpacity={0.8}>
-                <View style={[styles.buttonContent, styles.tabooButton]}>
-                  <Image source={exclamationMark} style={styles.actionIcon} />
-                  <Text style={styles.buttonText}>{translations[language].taboo}</Text>
-                </View>
-              </TouchableOpacity>
+              {!silentMode && (
+                <TouchableOpacity style={styles.actionButton} onPress={handleTaboo} activeOpacity={0.8}>
+                  <View style={[styles.buttonContent, styles.tabooButton]}>
+                    <Image source={exclamationMark} style={styles.actionIcon} />
+                    <Text style={styles.buttonText}>{translations[language].taboo}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
             </View>
 
             {/* Pause/Resume */}
@@ -739,6 +852,7 @@ const Game = ({ route, navigation }) => {
           </View>
         )}
       </Animated.View>
+      )}
 
       {isPaused && !isRoundOver && (
         <View style={styles.blurOverlay}>
@@ -769,14 +883,14 @@ const Game = ({ route, navigation }) => {
         </View>
       )}
 
-      {/* Turn modal */}
+      {/* Turn modal (kept but hidden by default) */}
       <Modal transparent visible={showTurnModal} animationType="fade">
         <View style={{ flex:1, justifyContent:'flex-end', alignItems:'center', backgroundColor:'rgba(0,0,0,0.25)' }}>
-          <View style={{ backgroundColor:'#fff', borderRadius:16, padding:24, borderWidth:2, borderColor:'#8B4513', width:'80%', alignItems:'center', marginBottom: 40 }}>
-            <Text style={{ fontFamily:'IndieFlower', fontSize:24, color:'#8B4513', textAlign:'center' }}>
+          <View style={{ backgroundColor:'#fff', borderRadius:16, padding:20, borderWidth:2, borderColor:'#8B4513', width:'85%', alignItems:'center', marginBottom: 28 }}>
+            <Text style={{ fontFamily:'IndieFlower', fontSize:22, color:'#8B4513', textAlign:'center' }}>
               {turnMessage}
             </Text>
-            <TouchableOpacity onPress={() => { setShowTurnModal(false); setIsPaused(false); startNextRound(); }} style={{ marginTop:12, alignSelf:'center', backgroundColor:'#7fb7ff', paddingVertical:10, paddingHorizontal:16, borderRadius:12, borderWidth:2, borderColor:'#8B4513' }}>
+            <TouchableOpacity onPress={() => { setShowTurnModal(false); setIsPaused(false); startNextRound(); }} style={{ marginTop:10, alignSelf:'center', backgroundColor:'#7fb7ff', paddingVertical:10, paddingHorizontal:16, borderRadius:12, borderWidth:2, borderColor:'#8B4513' }}>
               <Text style={{ color:'#fff', fontFamily:'IndieFlower', fontSize:18, fontWeight:'normal' }}>{translations[language].continueGame}</Text>
             </TouchableOpacity>
           </View>
@@ -885,7 +999,7 @@ const Game = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+    backgroundColor: PAPER_BG, // Defter kağıdı rengi
   },
   linedBackground: {
     position: 'absolute',
@@ -904,7 +1018,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 16,
-    paddingTop: 28,
+    paddingTop: 48,
     // paddingBottom removed as flex will handle it
   },
   scrollContent: {
@@ -1036,22 +1150,30 @@ const styles = StyleSheet.create({
     borderColor: '#F44336', // Red border for taboo
   },
   tabooTitle: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#9C27B0',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily: 'IndieFlower',
+    letterSpacing: 1,
   },
   tabooWordsList: {
     alignItems: 'center',
   },
   tabooWord: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#F44336',
     marginBottom: 6,
     fontFamily: 'IndieFlower',
     textDecorationLine: 'line-through',
+    textTransform: 'uppercase',
+  },
+  tabooWordSummary: {
+    color: '#EF5350',
+    textDecorationLine: 'line-through',
+    fontFamily: 'IndieFlower',
+    fontSize: 18,
   },
   teamsContainer: {
     flexDirection: 'row',
@@ -1216,6 +1338,9 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 8,
   },
+  nextButtonColor: {
+    backgroundColor: '#5b9bd5',
+  },
   endButton: {
     width: '48%',
     borderRadius: 20,
@@ -1230,7 +1355,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fdf6e3',
+    backgroundColor: PAPER_BG,
   },
   countdownCircle: {
     width: Dimensions.get('window').width * 0.5,
@@ -1311,8 +1436,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   summaryBackdrop: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.18)'
+    // Removed dark overlay to keep background clean and cheerful
+    height: 0,
+    width: 0,
   },
   pauseCard: {
     backgroundColor: 'rgba(255,255,255,0.9)',

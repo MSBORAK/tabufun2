@@ -1,0 +1,6 @@
+[
+  { "word": "FİLOZOF", "english_word": "PHILOSOPHER", "taboo": ["DÜŞÜNCE","ARİSTO","SOFİST","ETİK","MANTIK"], "english_taboo": ["THOUGHT","ARISTOTLE","SOPHIST","ETHICS","LOGIC"], "mode": "both" },
+  { "word": "ALGORİTMA", "english_word": "ALGORITHM", "taboo": ["BİLGİSAYAR","KOD","ADIM","YAPAY ZEKÂ","ÇÖZÜM"], "english_taboo": ["COMPUTER","CODE","STEP","AI","SOLUTION"], "mode": "both" }
+]
+
+

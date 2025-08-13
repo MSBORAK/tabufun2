@@ -1,0 +1,204 @@
+[
+  { "word": "ELMA", "english_word": "APPLE", "taboo": ["MEYVE","KIRMIZI","AĞAÇ","YEŞİL","YEMEK"], "english_taboo": ["FRUIT","RED","TREE","GREEN","EAT"], "mode": "both" },
+  { "word": "ARABA", "english_word": "CAR", "taboo": ["TEKERLEK","SÜRMEK","YOL","MOTOR","HIZ"], "english_taboo": ["WHEEL","DRIVE","ROAD","ENGINE","SPEED"], "mode": "both" },
+    // GÜNLÜK HAYAT
+    { "word": "TELEFON", "taboo": ["ARAMA", "MESAJ", "KONUŞMAK", "İLETİŞİM", "CİHAZ"], "mode": "adult", "english_word": "PHONE", "english_taboo": ["CALL", "MESSAGE", "TALK", "COMMUNICATION", "DEVICE"] },
+    { "word": "BİLGİSAYAR", "taboo": ["TEKNOLOJİ", "EKRAN", "KLAVYE", "İNTERNET", "OYUN"], "mode": "adult", "english_word": "COMPUTER", "english_taboo": ["TECHNOLOGY", "SCREEN", "KEYBOARD", "INTERNET", "GAME"] },
+    { "word": "ARABA", "taboo": ["TAŞIT", "YOL", "HIZ", "MOTOR", "GİTMEK"], "mode": "adult", "english_word": "CAR", "english_taboo": ["VEHICLE", "ROAD", "SPEED", "ENGINE", "DRIVE"] },
+    { "word": "EV", "taboo": ["KONUT", "ODA", "MESKEN", "YERLEŞİM", "AİLE"], "mode": "adult", "english_word": "HOUSE", "english_taboo": ["HOME", "ROOM", "RESIDENCE", "SETTLEMENT", "FAMILY"] },
+    { "word": "OKUL", "taboo": ["EĞİTİM", "ÖĞRENCİ", "ÖĞRETMEN", "DERS", "SINIF"], "mode": "adult", "english_word": "SCHOOL", "english_taboo": ["EDUCATION", "STUDENT", "TEACHER", "LESSON", "CLASS"] },
+    
+    // YEMEK & İÇECEK
+    { "word": "PİZZA", "taboo": ["HAMUR", "PEYNİR", "DOMATES", "İTALYAN", "YEMEK"], "mode": "adult", "english_word": "PIZZA", "english_taboo": ["DOUGH", "CHEESE", "TOMATO", "ITALIAN", "FOOD"] },
+    { "word": "KAHVE", "taboo": ["İÇECEK", "SICAK", "KAFEİN", "SABAH", "FİNCAN"], "mode": "adult", "english_word": "COFFEE", "english_taboo": ["DRINK", "HOT", "CAFFEINE", "MORNING", "CUP"] },
+    { "word": "ÇİKOLATA", "taboo": ["TATLI", "KAKAO", "ŞEKER", "ÇİKOLATA", "LEZZET"], "mode": "adult", "english_word": "CHOCOLATE", "english_taboo": ["SWEET", "COCOA", "SUGAR", "CANDY", "TASTE"] },
+    { "word": "DONDURMA", "taboo": ["SOĞUK", "TATLI", "SÜT", "YAZ", "KÜLAH"], "mode": "adult", "english_word": "ICE CREAM", "english_taboo": ["COLD", "SWEET", "MILK", "SUMMER", "CONE"] },
+    { "word": "HAMBURGER", "taboo": ["ET", "EKMEK", "FASTFOOD", "AMERİKAN", "YEMEK"], "mode": "adult", "english_word": "HAMBURGER", "english_taboo": ["MEAT", "BREAD", "FAST FOOD", "AMERICAN", "MEAL"] },
+    
+    // SPOR & AKTİVİTE
+    { "word": "FUTBOL", "taboo": ["TOP", "SAHA", "GOL", "TAKIM", "OYUN"], "mode": "adult", "english_word": "FOOTBALL", "english_taboo": ["BALL", "FIELD", "GOAL", "TEAM", "GAME"] },
+    { "word": "BASKETBOL", "taboo": ["SEPET", "TOP", "SAHA", "POT", "OYUN"], "mode": "adult", "english_word": "BASKETBALL", "english_taboo": ["HOOP", "BALL", "COURT", "NET", "PLAY"] },
+    { "word": "YÜZME", "taboo": ["SU", "HAVUZ", "DENİZ", "SPOR", "YÜZMEK"], "mode": "adult", "english_word": "SWIMMING", "english_taboo": ["WATER", "POOL", "SEA", "SPORT", "SWIM"] },
+    { "word": "KOŞU", "taboo": ["HIZ", "YOL", "SPOR", "EGZERSİZ", "YARIŞ"], "mode": "adult", "english_word": "RUNNING", "english_taboo": ["SPEED", "ROAD", "SPORT", "EXERCISE", "RACE"] },
+    { "word": "BİSİKLET", "taboo": ["PEDAL", "TEKER", "YOL", "ULAŞIM", "SPOR"], "mode": "adult", "english_word": "BICYCLE", "english_taboo": ["PEDAL", "WHEEL", "ROAD", "TRANSPORT", "SPORT"] },
+    
+    // DOĞA & ÇEVRE
+    { "word": "GÜNEŞ", "taboo": ["GÜN", "ISILIK", "IŞIK", "GÖKYÜZÜ", "YILDIZ"], "mode": "adult", "english_word": "SUN", "english_taboo": ["DAY", "HEAT", "LIGHT", "SKY", "STAR"] },
+    { "word": "AY", "taboo": ["GECE", "GÖKYÜZÜ", "FAZLAR", "YILDIZLAR", "DOLUNAY"], "mode": "adult", "english_word": "MOON", "english_taboo": ["NIGHT", "SKY", "PHASES", "STARS", "FULL MOON"] },
+    { "word": "DENİZ", "taboo": ["SU", "OKYANUS", "KUM", "BALIK", "YÜZMEK"], "mode": "adult", "english_word": "SEA", "english_taboo": ["WATER", "OCEAN", "SAND", "FISH", "SWIM"] },
+    { "word": "DAĞ", "taboo": ["YÜKSEK", "TEPE", "NATÜREL", "YÜRÜYÜŞ", "KAR"], "mode": "adult", "english_word": "MOUNTAIN", "english_taboo": ["HIGH", "PEAK", "NATURE", "HIKE", "SNOW"] },
+    { "word": "ORMAN", "taboo": ["AĞAÇ", "YEŞİL", "DOĞA", "YAPRAK", "HAYVAN"], "mode": "adult", "english_word": "FOREST", "english_taboo": ["TREE", "GREEN", "NATURE", "LEAF", "ANIMAL"] },
+    
+    // HAYVANLAR
+    { "word": "KEDİ", "taboo": ["HAYVAN", "PATI", "MİYAV", "EV", "KUŞ"], "mode": "adult", "english_word": "CAT", "english_taboo": ["ANIMAL", "PAW", "MEOW", "HOUSE", "BIRD"] },
+    { "word": "KÖPEK", "taboo": ["HAYVAN", "PATI", "HAVLAMAK", "EV", "KUŞ"], "mode": "adult", "english_word": "DOG", "english_taboo": ["ANIMAL", "PAW", "BARK", "HOUSE", "BIRD"] },
+    { "word": "ASLAN", "taboo": ["HAYVAN", "ORMAN", "KRAL", "YIRTICI", "KAFTAN"], "mode": "adult", "english_word": "LION", "english_taboo": ["ANIMAL", "JUNGLE", "KING", "PREDATOR", "MANE"] },
+    { "word": "FİL", "taboo": ["HAYVAN", "HORTUM", "BÜYÜK", "AFRİKA", "GRİ"], "mode": "adult", "english_word": "ELEPHANT", "english_taboo": ["ANIMAL", "TRUNK", "BIG", "AFRICA", "GREY"] },
+    { "word": "KAPLAN", "taboo": ["HAYVAN", "ÇİZGİ", "YIRTICI", "ORMAN", "TURUNCU"], "mode": "adult", "english_word": "TIGER", "english_taboo": ["ANIMAL", "STRIPES", "PREDATOR", "JUNGLE", "ORANGE"] },
+    
+    // MESLEKLER
+    { "word": "DOKTOR", "taboo": ["HASTANE", "SAĞLIK", "MUAYENE", "İLAÇ", "HEKİM"], "mode": "adult", "english_word": "DOCTOR", "english_taboo": ["HOSPITAL", "HEALTH", "EXAMINE", "MEDICINE", "PHYSICIAN"] },
+    { "word": "ÖĞRETMEN", "taboo": ["OKUL", "EĞİTİM", "DERS", "ÖĞRENCİ", "SINIF"], "mode": "adult", "english_word": "TEACHER", "english_taboo": ["SCHOOL", "EDUCATION", "LESSON", "STUDENT", "CLASSROOM"] },
+    { "word": "MÜHENDİS", "taboo": ["TEKNİK", "PROJE", "İNŞAAT", "HESAP", "TASARIM"], "mode": "adult", "english_word": "ENGINEER", "english_taboo": ["TECHNICAL", "PROJECT", "CONSTRUCTION", "CALCULATE", "DESIGN"] },
+    { "word": "AVUKAT", "taboo": ["MAHKEME", "HUKUK", "DAVA", "ADALET", "KANUN"], "mode": "adult", "english_word": "LAWYER", "english_taboo": ["COURT", "LAW", "CASE", "JUSTICE", "CODE"] },
+    { "word": "POLİS", "taboo": ["GÜVENLİK", "KANUN", "MEMUR", "ARABA", "GÖREV"], "mode": "adult", "english_word": "POLICE", "english_taboo": ["SECURITY", "LAW", "OFFICER", "CAR", "DUTY"] },
+    
+    // EĞLENCE & MEDYA
+    { "word": "FİLM", "taboo": ["SİNEMA", "OYUNCU", "HİKAYE", "EKRAN", "EĞLENCE"], "mode": "adult", "english_word": "MOVIE", "english_taboo": ["CINEMA", "ACTOR", "STORY", "SCREEN", "ENTERTAINMENT"] },
+    { "word": "MÜZİK", "taboo": ["SES", "NOTA", "ENSTRÜMAN", "ŞARKI", "RİTM"], "mode": "adult", "english_word": "MUSIC", "english_taboo": ["SOUND", "NOTE", "INSTRUMENT", "SONG", "RHYTHM"] },
+    { "word": "KİTAP", "taboo": ["OKUMAK", "YAZAR", "KÜTÜPHANE", "BİLGİ", "HİKAYE"], "mode": "adult", "english_word": "BOOK", "english_taboo": ["READ", "AUTHOR", "LIBRARY", "KNOWLEDGE", "STORY"] },
+    { "word": "OYUN", "taboo": ["EĞLENCE", "KAZANMAK", "KAYBETMEK", "REKABET", "TAKIM"], "mode": "adult", "english_word": "GAME", "english_taboo": ["ENTERTAINMENT", "WIN", "LOSE", "COMPETITION", "TEAM"] },
+    { "word": "PARTİ", "taboo": ["EĞLENCE", "ARKADAŞ", "DOĞUMGÜNÜ", "KUTLAMA", "MÜZİK"], "mode": "adult", "english_word": "PARTY", "english_taboo": ["ENTERTAINMENT", "FRIEND", "BIRTHDAY", "CELEBRATION", "MUSIC"] },
+    
+    // TEKNOLOJİ
+    { "word": "İNTERNET", "taboo": ["AĞ", "ONLİNE", "WEB", "BAĞLANTI", "TEKNOLOJİ"], "mode": "adult", "english_word": "INTERNET", "english_taboo": ["NETWORK", "ONLINE", "WEB", "CONNECTION", "TECHNOLOGY"] },
+    { "word": "SOSYAL MEDYA", "taboo": ["FACEBOOK", "İNSTAGRAM", "PAYLAŞIM", "ARKADAŞ", "İNTERNET"], "mode": "adult", "english_word": "SOCIAL MEDIA", "english_taboo": ["FACEBOOK", "INSTAGRAM", "SHARE", "FRIEND", "ONLINE"] },
+    { "word": "UYGULAMA", "taboo": ["TELEFON", "İNDİRMEK", "PROGRAM", "YAZILIM", "CİHAZ"], "mode": "adult", "english_word": "APPLICATION", "english_taboo": ["PHONE", "DOWNLOAD", "PROGRAM", "SOFTWARE", "DEVICE"] },
+    { "word": "KAMERA", "taboo": ["FOTOĞRAF", "ÇEKMEK", "GÖRÜNTÜ", "TEKNOLOJİ", "RESİM"], "mode": "adult", "english_word": "CAMERA", "english_taboo": ["PHOTO", "TAKE", "IMAGE", "TECHNOLOGY", "PICTURE"] },
+    { "word": "WİFİ", "taboo": ["İNTERNET", "BAĞLANTI", "KABLOSUZ", "AĞ", "SİNYAL"], "mode": "adult", "english_word": "WIFI", "english_taboo": ["INTERNET", "CONNECTION", "WIRELESS", "NETWORK", "SIGNAL"] },
+    
+    // SEYAHAT & ULAŞIM
+    { "word": "UÇAK", "taboo": ["HAVA", "YOLCULUK", "PİLOT", "GÖKYÜZÜ", "SEYAHAT"], "mode": "adult", "english_word": "PLANE", "english_taboo": ["AIR", "TRAVEL", "PILOT", "SKY", "TRIP"] },
+    { "word": "TREN", "taboo": ["RAY", "YOLCULUK", "İSTASYON", "ULAŞIM", "SEYAHAT"], "mode": "adult", "english_word": "TRAIN", "english_taboo": ["RAIL", "JOURNEY", "STATION", "TRANSPORT", "TRAVEL"] },
+    { "word": "GEMİ", "taboo": ["DENİZ", "YOLCULUK", "KAPTAN", "OKYANUS", "SEYAHAT"], "mode": "adult", "english_word": "SHIP", "english_taboo": ["SEA", "VOYAGE", "CAPTAIN", "OCEAN", "TRAVEL"] },
+    { "word": "OTOBÜS", "taboo": ["YOLCULUK", "DURAK", "YOLCU", "ULAŞIM", "SEYAHAT"], "mode": "adult", "english_word": "BUS", "english_taboo": ["JOURNEY", "STOP", "PASSENGER", "TRANSPORT", "TRAVEL"] },
+    { "word": "TAKSİ", "taboo": ["TAKSİ", "ŞOFÖR", "YOLCULUK", "ULAŞIM", "ARABA"], "mode": "adult", "english_word": "TAXI", "english_taboo": ["CAB", "DRIVER", "RIDE", "TRANSPORT", "CAR"] },
+    
+    // ALIŞVERİŞ & TİCARET
+    { "word": "MARKET", "taboo": ["ALIŞVERİŞ", "ÜRÜN", "PARA", "MAĞAZA", "YEMEK"], "mode": "adult", "english_word": "MARKET", "english_taboo": ["SHOPPING", "PRODUCT", "MONEY", "STORE", "FOOD"] },
+    { "word": "AVM", "taboo": ["ALIŞVERİŞ", "MAĞAZA", "EĞLENCE", "BÜYÜK", "TİCARET"], "mode": "adult", "english_word": "MALL", "english_taboo": ["SHOPPING", "STORE", "ENTERTAINMENT", "BIG", "COMMERCE"] },
+    { "word": "BANKA", "taboo": ["ÇEK", "MÜŞTERİ", "HESAP", "PARA", "KREDİ KARTI"], "mode": "adult", "english_word": "BANK", "english_taboo": ["CHECK", "CUSTOMER", "ACCOUNT", "MONEY", "CREDIT CARD"] },
+    { "word": "ATM", "taboo": ["PARA", "ÇEKMEK", "BANKA", "KART", "Nakit"], "mode": "adult", "english_word": "ATM", "english_taboo": ["MONEY", "WITHDRAW", "BANK", "CARD", "CASH"] },
+    { "word": "PAZAR", "taboo": ["ALIŞVERİŞ", "SEBZE", "MEYVE", "TEZGAH", "SATIŞ"], "mode": "adult", "english_word": "BAZAAR", "english_taboo": ["SHOPPING", "VEGETABLE", "FRUIT", "STALL", "SALE"] },
+    
+    // SAĞLIK & VÜCUT
+    { "word": "KALP", "taboo": ["ORGAN", "KAN", "ATMAK", "SAĞLIK", "VÜCUT"], "mode": "adult", "english_word": "HEART", "english_taboo": ["ORGAN", "BLOOD", "BEAT", "HEALTH", "BODY"] },
+    { "word": "GÖZ", "taboo": ["GÖRMEK", "ORGAN", "YÜZ", "SAĞLIK", "VÜCUT"], "mode": "adult", "english_word": "EYE", "english_taboo": ["SEE", "ORGAN", "FACE", "HEALTH", "BODY"] },
+    { "word": "BURUN", "taboo": ["KOKU", "ORGAN", "YÜZ", "SAĞLIK", "VÜCUT"], "mode": "adult", "english_word": "NOSE", "english_taboo": ["SMELL", "ORGAN", "FACE", "HEALTH", "BODY"] },
+    { "word": "AĞIZ", "taboo": ["KONUŞMAK", "YEMEK", "YÜZ", "SAĞLIK", "VÜCUT"], "mode": "adult", "english_word": "MOUTH", "english_taboo": ["TALK", "EAT", "FACE", "HEALTH", "BODY"] },
+    { "word": "KULAK", "taboo": ["DUYMAK", "ORGAN", "YÜZ", "SAĞLIK", "VÜCUT"], "mode": "adult", "english_word": "EAR", "english_taboo": ["HEAR", "ORGAN", "FACE", "HEALTH", "BODY"] },
+    
+    // RENKLER & SANAT
+    { "word": "KIRMIZI", "taboo": ["RENK", "KAN", "ATEŞ", "SICAK", "GÖZ"], "mode": "adult", "english_word": "RED", "english_taboo": ["COLOR", "BLOOD", "FIRE", "HOT", "EYE"] },
+    { "word": "MAVİ", "taboo": ["RENK", "GÖKYÜZÜ", "DENİZ", "SOĞUK", "GÖZ"], "mode": "adult", "english_word": "BLUE", "english_taboo": ["COLOR", "SKY", "SEA", "COLD", "EYE"] },
+    { "word": "YEŞİL", "taboo": ["RENK", "DOĞA", "AĞAÇ", "ÇİMEN", "GÖZ"], "mode": "adult", "english_word": "GREEN", "english_taboo": ["COLOR", "NATURE", "TREE", "GRASS", "EYE"] },
+    { "word": "SARI", "taboo": ["RENK", "GÜNEŞ", "ALTIN", "SICAK", "GÖZ"], "mode": "adult", "english_word": "YELLOW", "english_taboo": ["COLOR", "SUN", "GOLD", "HOT", "EYE"] },
+    { "word": "MOR", "taboo": ["RENK", "KRALİYET", "ÜZÜM", "GÖZ", "LÜKS"], "mode": "adult", "english_word": "PURPLE", "english_taboo": ["COLOR", "ROYALTY", "GRAPE", "EYE", "LUXURY"] },
+    
+    // DUYGULAR & KİŞİLİK
+    { "word": "MUTLU", "taboo": ["SEVİNÇ", "GÜLMEK", "DUYGU", "POZİTİF", "HİS"], "mode": "adult", "english_word": "HAPPY", "english_taboo": ["JOY", "LAUGH", "EMOTION", "POSITIVE", "FEELING"] },
+    { "word": "ÜZGÜN", "taboo": ["AĞLAMAK", "DUYGU", "NEGATİF", "HİS", "KEDER"], "mode": "adult", "english_word": "SAD", "english_taboo": ["CRY", "EMOTION", "NEGATIVE", "FEELING", "SORROW"] },
+    { "word": "KORKU", "taboo": ["DUYGU", "KORKMAK", "NEGATİF", "HİS", "ENDİŞE"], "mode": "adult", "english_word": "FEAR", "english_taboo": ["EMOTION", "SCARE", "NEGATIVE", "FEELING", "ANXIETY"] },
+    { "word": "ÖFKE", "taboo": ["DUYGU", "SİNİR", "NEGATİF", "HİS", "KIZMAK"], "mode": "adult", "english_word": "ANGER", "english_taboo": ["EMOTION", "NERVOUS", "NEGATIVE", "FEELING", "MAD"] },
+    { "word": "AŞK", "taboo": ["DUYGU", "SEVMEK", "POZİTİF", "HİS", "ROMANTİK"], "mode": "adult", "english_word": "LOVE", "english_taboo": ["EMOTION", "LIKE", "POSITIVE", "FEELING", "ROMANTIC"] },
+    
+    // ZAMAN & TARİH
+    { "word": "SABAH", "taboo": ["GÜN", "ERKEN", "KAHVALTI", "ZAMAN", "UYANMAK"], "mode": "adult", "english_word": "MORNING", "english_taboo": ["DAY", "EARLY", "BREAKFAST", "TIME", "WAKE UP"] },
+    { "word": "AKŞAM", "taboo": ["GÜN", "GEÇ", "AKŞAM YEMEĞİ", "ZAMAN", "UYUMAK"], "mode": "adult", "english_word": "EVENING", "english_taboo": ["DAY", "LATE", "DINNER", "TIME", "SLEEP"] },
+    { "word": "HAFTA", "taboo": ["GÜN", "7", "ZAMAN", "ÇALIŞMA", "TATİL"], "mode": "adult", "english_word": "WEEK", "english_taboo": ["DAY", "7", "TIME", "WORK", "HOLIDAY"] },
+    { "word": "AY", "taboo": ["ZAMAN", "30", "TAKVİM", "YIL", "MEVSİM"], "mode": "adult", "english_word": "MONTH", "english_taboo": ["TIME", "30", "CALENDAR", "YEAR", "SEASON"] },
+    { "word": "YIL", "taboo": ["ZAMAN", "365", "TAKVİM", "DOĞUMGÜNÜ", "MEVSİM"], "mode": "adult", "english_word": "YEAR", "english_taboo": ["TIME", "365", "CALENDAR", "BIRTHDAY", "SEASON"] },
+    
+    // MEVSİMLER & HAVA
+    { "word": "YAZ", "taboo": ["SICAK", "GÜNEŞ", "TATİL", "MEVSİM", "DENİZ"], "mode": "adult", "english_word": "SUMMER", "english_taboo": ["HOT", "SUN", "HOLIDAY", "SEASON", "SEA"] },
+    { "word": "KIŞ", "taboo": ["SOĞUK", "KAR", "MEVSİM", "KALIN", "BERE"], "mode": "adult", "english_word": "WINTER", "english_taboo": ["COLD", "SNOW", "SEASON", "THICK", "BEANIE"] },
+    { "word": "İLKBAHAR", "taboo": ["ÇİÇEK", "MEVSİM", "YENİ", "YEŞİL", "HAVA"], "mode": "adult", "english_word": "SPRING", "english_taboo": ["FLOWER", "SEASON", "NEW", "GREEN", "WEATHER"] },
+    { "word": "SONBAHAR", "taboo": ["YAPRAK", "MEVSİM", "DÖKÜLMEK", "SARI", "HAVA"], "mode": "adult", "english_word": "AUTUMN", "english_taboo": ["LEAF", "SEASON", "FALL", "YELLOW", "WEATHER"] },
+    { "word": "YAĞMUR", "taboo": ["SU", "HAVA", "BULUT", "ŞEMSİYE", "ISLAK"], "mode": "adult", "english_word": "RAIN", "english_taboo": ["WATER", "WEATHER", "CLOUD", "UMBRELLA", "WET"] },
+    
+    // EV & MOBİLYA
+    { "word": "MASA", "taboo": ["MOBİLYA", "SANDALYE", "YEMEK", "ÇALIŞMA", "EV"], "mode": "adult", "english_word": "TABLE", "english_taboo": ["FURNITURE", "CHAIR", "EAT", "WORK", "HOUSE"] },
+    { "word": "KOLTUK", "taboo": ["OTURMAK", "MOBİLYA", "RAHAT", "EV", "SALON"], "mode": "adult", "english_word": "SOFA", "english_taboo": ["SIT", "FURNITURE", "COMFORTABLE", "HOUSE", "LIVING ROOM"] },
+    { "word": "YATAK", "taboo": ["UYUMAK", "MOBİLYA", "YATMAK", "ODA", "EV"], "mode": "adult", "english_word": "BED", "english_taboo": ["SLEEP", "FURNITURE", "LIE DOWN", "ROOM", "HOUSE"] },
+    { "word": "DOLAP", "taboo": ["EŞYA", "MOBİLYA", "GİYSİ", "SAKLAMAK", "EV"], "mode": "adult", "english_word": "CUPBOARD", "english_taboo": ["ITEM", "FURNITURE", "CLOTHES", "STORE", "HOUSE"] },
+    { "word": "MUTFAK", "taboo": ["YEMEK", "PİŞİRMEK", "ODA", "EV", "OCAK"], "mode": "adult", "english_word": "KITCHEN", "english_taboo": ["FOOD", "COOK", "ROOM", "HOUSE", "STOVE"] },
+    
+    // GİYSİ & MODA
+    { "word": "ELBİSE", "taboo": ["GİYSİ", "KADIN", "MODA", "GÜZEL", "GİYMEK"], "mode": "adult", "english_word": "DRESS", "english_taboo": ["CLOTHES", "WOMAN", "FASHION", "BEAUTIFUL", "WEAR"] },
+    { "word": "PANTOLON", "taboo": ["GİYSİ", "BACAK", "MODA", "GİYMEK", "KOT"], "mode": "adult", "english_word": "PANTS", "english_taboo": ["CLOTHES", "LEG", "FASHION", "WEAR", "JEANS"] },
+    { "word": "AYAKKABI", "taboo": ["GİYSİ", "AYAK", "YÜRÜMEK", "GİYMEK", "TABAN"], "mode": "adult", "english_word": "SHOES", "english_taboo": ["CLOTHES", "FOOT", "WALK", "WEAR", "SOLE"] },
+    { "word": "ŞAPKA", "taboo": ["GİYSİ", "BAŞ", "GÜNEŞ", "GİYMEK", "KORUMA"], "mode": "adult", "english_word": "HAT", "english_taboo": ["CLOTHES", "HEAD", "SUN", "WEAR", "PROTECTION"] },
+    { "word": "ÇANTA", "taboo": ["EŞYA", "TAŞIMAK", "KADIN", "MODA", "İÇİNE"], "mode": "adult", "english_word": "BAG", "english_taboo": ["ITEM", "CARRY", "WOMAN", "FASHION", "INSIDE"] },
+    
+    // OYUNCAK & EĞLENCE (Bu kategoriyi çocuk moduna uygun hale getireceğim)
+    { "word": "OYUNCAK", "taboo": ["ÇOCUK", "EĞLENCE", "OYNAMAK", "EŞYA", "HEDİYE"], "mode": "child", "english_word": "TOY", "english_taboo": ["CHILD", "FUN", "PLAY", "OBJECT", "GIFT"] },
+    { "word": "PUZZLE", "taboo": ["PARÇA", "BİRLEŞTİRMEK", "OYUN", "ZOR", "RESİM"], "mode": "child", "english_word": "PUZZLE", "english_taboo": ["PIECE", "ASSEMBLE", "GAME", "DIFFICULT", "PICTURE"] },
+    { "word": "LEGO", "taboo": ["PARÇA", "BİRLEŞTİRMEK", "OYUNCAK", "ÇOCUK", "İNŞAAT"], "mode": "child", "english_word": "LEGO", "english_taboo": ["PIECE", "BUILD", "TOY", "CHILD", "CONSTRUCTION"] },
+    { "word": "BEBEK", "taboo": ["ÇOCUK", "OYUNCAK", "KIZ", "OYNAMAK", "HEDİYE"], "mode": "child", "english_word": "DOLL", "english_taboo": ["CHILD", "TOY", "GIRL", "PLAY", "GIFT"] },
+    { "word": "ARABA OYUNCAĞI", "taboo": ["OYUNCAK", "ÇOCUK", "TEKER", "OYNAMAK", "HEDİYE"], "mode": "child", "english_word": "TOY CAR", "english_taboo": ["TOY", "CHILD", "WHEEL", "PLAY", "GIFT"] },
+    
+    // MÜZİK & ENSTRÜMAN
+    { "word": "GİTAR", "taboo": ["ENSTRÜMAN", "TEL", "MÜZİK", "ÇALMAK", "SES"], "mode": "adult", "english_word": "GUITAR", "english_taboo": ["INSTRUMENT", "STRING", "MUSIC", "PLAY", "SOUND"] },
+    { "word": "PİYANO", "taboo": ["ENSTRÜMAN", "TUŞ", "MÜZİK", "ÇALMAK", "SES"], "mode": "adult", "english_word": "PIANO", "english_taboo": ["INSTRUMENT", "KEY", "MUSIC", "PLAY", "SOUND"] },
+    { "word": "DAVUL", "taboo": ["ENSTRÜMAN", "VURMAK", "MÜZİK", "ÇALMAK", "SES"], "mode": "adult", "english_word": "DRUM", "english_taboo": ["INSTRUMENT", "HIT", "MUSIC", "PLAY", "SOUND"] },
+    { "word": "KEMAN", "taboo": ["ENSTRÜMAN", "TEL", "MÜZİK", "ÇALMAK", "SES"], "mode": "adult", "english_word": "VIOLIN", "english_taboo": ["INSTRUMENT", "STRING", "MUSIC", "PLAY", "SOUND"] },
+    { "word": "FLÜT", "taboo": ["ENSTRÜMAN", "ÜFLEMEK", "MÜZİK", "ÇALMAK", "SES"], "mode": "adult", "english_word": "FLUTE", "english_taboo": ["INSTRUMENT", "BLOW", "MUSIC", "PLAY", "SOUND"] },
+    
+    // BİLGİSAYAR OYUNLARI (Bu kategoriyi de çocuk moduna uygun hale getireceğim)
+    { "word": "MARIO", "taboo": ["OYUN", "KARAKTER", "NİNTENDO", "PLATFORM", "ÇOCUK"], "mode": "child", "english_word": "MARIO", "english_taboo": ["GAME", "CHARACTER", "NINTENDO", "PLATFORM", "CHILD"] },
+    { "word": "MİNECRAFT", "taboo": ["OYUN", "BLOK", "İNŞAAT", "ÇOCUK", "SANAL"], "mode": "child", "english_word": "MINECRAFT", "english_taboo": ["GAME", "BLOCK", "BUILD", "CHILD", "VIRTUAL"] },
+    { "word": "FORTNITE", "taboo": ["OYUN", "SAVAŞ", "BATTLE ROYALE", "ÇOCUK", "SANAL"], "mode": "child", "english_word": "FORTNITE", "english_taboo": ["GAME", "WAR", "BATTLE ROYALE", "CHILD", "VIRTUAL"] },
+    { "word": "POKEMON", "taboo": ["OYUN", "HAYVAN", "YAKALAMAK", "ÇOCUK", "SANAL"], "mode": "child", "english_word": "POKEMON", "english_taboo": ["GAME", "ANIMAL", "CATCH", "CHILD", "VIRTUAL"] },
+    { "word": "ANGRY BİRDS", "taboo": ["OYUN", "KUŞ", "DOMUZ", "ATMAK", "ÇOCUK"], "mode": "child", "english_word": "ANGRY BIRDS", "english_taboo": ["GAME", "BIRD", "PIG", "THROW", "CHILD"] },
+    
+    // YEMEK TARİFLERİ
+    { "word": "KEBAP", "taboo": ["ET", "TÜRK", "YEMEK", "PİŞİRMEK", "LEZZET"], "mode": "adult", "english_word": "KEBAB", "english_taboo": ["MEAT", "TURKISH", "FOOD", "COOK", "TASTY"] },
+    { "word": "LAHMACUN", "taboo": ["HAMUR", "ET", "TÜRK", "YEMEK", "PİŞİRMEK"], "mode": "adult", "english_word": "LAHMACUN", "english_taboo": ["DOUGH", "MEAT", "TURKISH", "FOOD", "COOK"] },
+    { "word": "MANTI", "taboo": ["HAMUR", "ET", "TÜRK", "YEMEK", "PİŞİRMEK"], "mode": "adult", "english_word": "MANTI", "english_taboo": ["DOUGH", "MEAT", "TURKISH", "FOOD", "COOK"] },
+    { "word": "DÖNER", "taboo": ["ET", "TÜRK", "YEMEK", "PİŞİRMEK", "LEZZET"], "mode": "adult", "english_word": "DONER", "english_taboo": ["MEAT", "TURKISH", "FOOD", "COOK", "TASTY"] },
+    { "word": "BAKLAVA", "taboo": ["TATLI", "HAMUR", "TÜRK", "ŞERBET", "LEZZET"], "mode": "adult", "english_word": "BAKLAVA", "english_taboo": ["SWEET", "DOUGH", "TURKISH", "SYRUP", "TASTE"] },
+    
+    // İÇECEKLER
+    { "word": "ÇAY", "taboo": ["İÇECEK", "SICAK", "TÜRK", "DEMLEMEK", "FİNCAN"], "mode": "adult", "english_word": "TEA", "english_taboo": ["DRINK", "HOT", "TURKISH", "BREW", "CUP"] },
+    { "word": "SU", "taboo": ["İÇMEK", "SIVI", "HIDRATASYON", "NEHİR", "OKYANUS"], "mode": "adult", "english_word": "WATER", "english_taboo": ["DRINK", "LIQUID", "HYDRATION", "RIVER", "OCEAN"] },
+    { "word": "MEYVE SUYU", "taboo": ["İÇECEK", "MEYVE", "SAĞLIKLI", "VİTAMİN", "LEZZET"], "mode": "adult", "english_word": "FRUIT JUICE", "english_taboo": ["DRINK", "FRUIT", "HEALTHY", "VITAMIN", "TASTE"] },
+    { "word": "SÜT", "taboo": ["İÇECEK", "BEYAZ", "SAĞLIKLI", "İNEK", "BEBEK"], "mode": "adult", "english_word": "MILK", "english_taboo": ["DRINK", "WHITE", "HEALTHY", "COW", "BABY"] },
+    { "word": "LİMONATA", "taboo": ["İÇECEK", "LİMON", "ASİT", "YAZ", "LEZZET"], "mode": "adult", "english_word": "LEMONADE", "english_taboo": ["DRINK", "LEMON", "ACID", "SUMMER", "TASTE"] },
+    
+    // SPOR TAKIMLARI
+    { "word": "GALATASARAY", "taboo": ["FUTBOL", "TAKIM", "SARI", "KIRMIZI", "İSTANBUL"], "mode": "adult", "english_word": "GALATASARAY", "english_taboo": ["FOOTBALL", "TEAM", "YELLOW", "RED", "ISTANBUL"] },
+    { "word": "FENERBAHÇE", "taboo": ["FUTBOL", "TAKIM", "SARI", "LACİVERT", "İSTANBUL"], "mode": "adult", "english_word": "FENERBAHCE", "english_taboo": ["FOOTBALL", "TEAM", "YELLOW", "NAVY BLUE", "ISTANBUL"] },
+    { "word": "BEŞİKTAŞ", "taboo": ["FUTBOL", "TAKIM", "SİYAH", "BEYAZ", "İSTANBUL"], "mode": "adult", "english_word": "BESIKTAS", "english_taboo": ["FOOTBALL", "TEAM", "BLACK", "WHITE", "ISTANBUL"] },
+    { "word": "TRABZONSPOR", "taboo": ["FUTBOL", "TAKIM", "BORDO", "MAVİ", "TRABZON"], "mode": "adult", "english_word": "TRABZONSPOR", "english_taboo": ["FOOTBALL", "TEAM", "MAROON", "BLUE", "TRABZON"] },
+    { "word": "BAŞAKŞEHİR", "taboo": ["FUTBOL", "TAKIM", "TURUNCU", "MAVİ", "İSTANBUL"], "mode": "adult", "english_word": "BASAKSEHIR", "english_taboo": ["FOOTBALL", "TEAM", "ORANGE", "BLUE", "ISTANBUL"] },
+    
+    // ŞEHİRLER
+    { "word": "İSTANBUL", "taboo": ["ŞEHİR", "BOĞAZ", "TÜRKİYE", "BÜYÜK", "NÜFUS"], "mode": "adult", "english_word": "ISTANBUL", "english_taboo": ["CITY", "BOSPHORUS", "TURKEY", "LARGE", "POPULATION"] },
+    { "word": "ANKARA", "taboo": ["ŞEHİR", "BAŞKENT", "TÜRKİYE", "KALE", "NÜFUS"], "mode": "adult", "english_word": "ANKARA", "english_taboo": ["CITY", "CAPITAL", "TURKEY", "CASTLE", "POPULATION"] },
+    { "word": "İZMİR", "taboo": ["ŞEHİR", "EGE", "TÜRKİYE", "DENİZ", "NÜFUS"], "mode": "adult", "english_word": "IZMIR", "english_taboo": ["CITY", "AEGEAN", "TURKEY", "SEA", "POPULATION"] },
+    { "word": "ANTALYA", "taboo": ["ŞEHİR", "AKDENİZ", "TÜRKİYE", "TURİZM", "NÜFUS"], "mode": "adult", "english_word": "ANTALYA", "english_taboo": ["CITY", "MEDITERRANEAN", "TURKEY", "TOURISM", "POPULATION"] },
+    { "word": "BURSA", "taboo": ["ŞEHİR", "MARMARA", "TÜRKİYE", "OSMANLI", "NÜFUS"], "mode": "adult", "english_word": "BURSA", "english_taboo": ["CITY", "MARMARA", "TURKEY", "OTTOMAN", "POPULATION"] },
+    
+    // ÜLKELER
+    { "word": "TÜRKİYE", "taboo": ["ÜLKE", "TÜRK", "BAŞKENT", "NÜFUS", "VATAN"], "mode": "adult", "english_word": "TURKEY", "english_taboo": ["COUNTRY", "TURKISH", "CAPITAL", "POPULATION", "HOMELAND"] },
+    { "word": "ALMANYA", "taboo": ["ÜLKE", "ALMAN", "BERLİN", "AVRUPA", "NÜFUS"], "mode": "adult", "english_word": "GERMANY", "english_taboo": ["COUNTRY", "GERMAN", "BERLIN", "EUROPE", "POPULATION"] },
+    { "word": "FRANSA", "taboo": ["ÜLKE", "FRANSIZ", "PARİS", "AVRUPA", "NÜFUS"], "mode": "adult", "english_word": "FRANCE", "english_taboo": ["COUNTRY", "FRENCH", "PARIS", "EUROPE", "POPULATION"] },
+    { "word": "İTALYA", "taboo": ["ÜLKE", "İTALYAN", "ROMA", "AVRUPA", "NÜFUS"], "mode": "adult", "english_word": "ITALY", "english_taboo": ["COUNTRY", "ITALIAN", "ROME", "EUROPE", "POPULATION"] },
+    { "word": "İSPANYA", "taboo": ["ÜLKE", "İSPANYOL", "MADRİD", "AVRUPA", "NÜFUS"], "mode": "adult", "english_word": "SPAIN", "english_taboo": ["COUNTRY", "SPANISH", "MADRID", "EUROPE", "POPULATION"] },
+    
+    // TABU OYUNU KELİMELERİ
+    { "word": "TABU", "taboo": ["KELİME", "YASAK", "OYNAMA", "PAS", "KAZANMA"], "mode": "adult", "english_word": "TABOO", "english_taboo": ["WORD", "FORBIDDEN", "PLAY", "PASS", "WIN"] },
+    { "word": "DOĞRU", "taboo": ["YANLIŞ", "GERÇEK", "TABU", "PAS", "YANIT"], "mode": "adult", "english_word": "CORRECT", "english_taboo": ["WRONG", "TRUE", "TABOO", "PASS", "ANSWER"] },
+    { "word": "ELMA", "taboo": ["MEYVE", "KIRMIZI", "AĞAÇ", "YEŞİL", "YEMEK"], "mode": "adult", "english_word": "APPLE", "english_taboo": ["FRUIT", "RED", "TREE", "GREEN", "EAT"] },
+  
+    // Çocuk Modu Özel Kelimeler (Eklenenler)
+    { "word": "OYUN PARKI", "taboo": ["ÇOCUK", "EĞLENMEK", "SALINCAK", "KAYDIRAK", "DIŞARI"], "mode": "child", "english_word": "PLAYGROUND", "english_taboo": ["CHILD", "FUN", "SWING", "SLIDE", "OUTSIDE"] },
+    { "word": "PELUŞ AYI", "taboo": ["OYUNCAK", "YUMUŞAK", "AYI", "SARILMAK", "UYKU"], "mode": "child", "english_word": "TEDDY BEAR", "english_taboo": ["TOY", "SOFT", "BEAR", "HUG", "SLEEP"] },
+    { "word": "KİTAP KURDU", "taboo": ["OKUMAK", "ÇOCUK", "KİTAP", "ÇOK", "SEVMEK"], "mode": "child", "english_word": "BOOKWORM", "english_taboo": ["READ", "CHILD", "BOOK", "LOT", "LOVE"] },
+    { "word": "BOYA KALEMİ", "taboo": ["ÇİZER", "RENK", "KAĞIT", "OKUL", "RESİM"], "mode": "child", "english_word": "CRAYON", "english_taboo": ["DRAW", "COLOR", "PAPER", "SCHOOL", "PICTURE"] },
+    { "word": "ÇİZGİ FİLM", "taboo": ["İZLEMEK", "TELEVİZYON", "ÇOCUK", "KARAKTER", "EĞLENCE"], "mode": "child", "english_word": "CARTOON", "english_taboo": ["WATCH", "TELEVISION", "CHILD", "CHARACTER", "ENTERTAINMENT"] },
+    { "word": "PARMAK BOYASI", "taboo": ["BOYAMAK", "EL", "RENK", "EĞLENCE", "ÇOCUK"], "mode": "child", "english_word": "FINGER PAINT", "english_taboo": ["PAINT", "HAND", "COLOR", "FUN", "CHILD"] },
+    { "word": "BALON", "taboo": ["ŞİŞMEK", "HAVADA", "UÇMAK", "RENKLİ", "PARTİ"], "mode": "child", "english_word": "BALLOON", "english_taboo": ["INFLATE", "AIR", "FLY", "COLORFUL", "PARTY"] },
+    { "word": "TOPAÇ", "taboo": ["OYUNCAK", "DÖNMEK", "İP", "HIZLI", "ÇOCUK"], "mode": "child", "english_word": "SPINNING TOP", "english_taboo": ["TOY", "SPIN", "STRING", "FAST", "CHILD"] },
+    { "word": "UZAY GEMİSİ", "taboo": ["UZAY", "GÖKYÜZÜ", "YILDIZ", "ROKET", "MİKROFON"], "mode": "child", "english_word": "SPACESHIP", "english_taboo": ["SPACE", "SKY", "STAR", "ROCKET", "MICROPHONE"] },
+    { "word": "SİHİRLİ DEĞNEK", "taboo": ["SİHİR", "PERİ", "BÜYÜ", "DÖNÜŞTÜRMEK", "GÖRSEL"], "mode": "child", "english_word": "MAGIC WAND", "english_taboo": ["MAGIC", "FAIRY", "SPELL", "TRANSFORM", "VISUAL"] },
+  
+    // Her iki mod için uygun kelimeler
+    { "word": "ARABA", "taboo": ["TEKER", "YOL", "SÜRMEK", "GİTMEK", "TAŞIT"], "mode": "both", "english_word": "CAR", "english_taboo": ["WHEEL", "ROAD", "DRIVE", "GO", "VEHICLE"] },
+    { "word": "KÖPEK", "taboo": ["HAYVAN", "HAV HAV", "KUYRUK", "EVCİL", "SEVMEK"], "mode": "both", "english_word": "DOG", "english_taboo": ["ANIMAL", "WOOF", "TAIL", "PET", "LOVE"] },
+    { "word": "EV", "taboo": ["YAŞAMAK", "ODA", "KAPI", "PENCERE", "BİNA"], "mode": "both", "english_word": "HOUSE", "english_taboo": ["LIVE", "ROOM", "DOOR", "WINDOW", "BUILDING"] },
+    { "word": "SU", "taboo": ["İÇMEK", "SIVI", "AKMAK", "DAMLA", "ŞİŞE"], "mode": "both", "english_word": "WATER", "english_taboo": ["DRINK", "LIQUID", "FLOW", "DROP", "BOTTLE"] },
+    { "word": "AĞAÇ", "taboo": ["YAPRAK", "GÖVDE", "ORMAN", "BÜYÜK", "YEŞİL"], "mode": "both", "english_word": "TREE", "english_taboo": ["LEAF", "TRUNK", "FOREST", "BIG", "GREEN"] }
+]
+
+

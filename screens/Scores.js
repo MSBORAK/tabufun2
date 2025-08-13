@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, StatusBar, Image, SafeAreaView, Modal } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Animated, StatusBar, Image, SafeAreaView, Modal, Platform } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -131,6 +131,19 @@ export default function Scores() {
     setConfirmModal({ visible: true });
   };
 
+  const formatDate = (isoString) => {
+    try {
+      const d = new Date(isoString);
+      if (isNaN(d.getTime())) return '';
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}.${month}.${year}`;
+    } catch (_) {
+      return '';
+    }
+  };
+
   const totalGames = scores.length;
   const bestScore = scores.length > 0 ? Math.max(...scores.map(s => s.score)) : 0;
   const averageScore = scores.length > 0 ? (scores.reduce((sum, s) => sum + s.score, 0) / scores.length).toFixed(1) : 0;
@@ -224,7 +237,7 @@ export default function Scores() {
             ) : (
               scores.map((game, index) => (
                 <View key={index} style={styles.gameItem}>
-                  <Text style={styles.gameItemDate}>{new Date(game.date).toLocaleDateString()}</Text>
+                  <Text style={styles.gameItemDate}>{formatDate(game.date)}</Text>
                   <Text style={styles.gameItemDetails}>{game.winner} {t.won} ({game.teamAScore} - {game.teamBScore})</Text>
                   <Text style={styles.gameItemScore}>{t.score} {game.score}</Text>
                   {game.gameMode && (
@@ -300,7 +313,7 @@ export default function Scores() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+    backgroundColor: '#fdf6e3', // iOS ile aynı ton
   },
   linedBackground: {
     position: 'absolute',
@@ -347,7 +360,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 32, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 30 : 32,
     fontWeight: 'normal',
     color: '#8B4513',
     marginLeft: 10,
@@ -371,7 +384,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   sectionTitle: {
-    fontSize: 22, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 20 : 22,
     fontWeight: 'normal',
     color: '#8B4513',
     marginBottom: 15,
@@ -381,7 +394,7 @@ const styles = StyleSheet.create({
   statCard: {
     backgroundColor: '#fff',
     borderRadius: 20, // More rounded
-    padding: 25, // Increased padding
+    padding: Platform.OS === 'android' ? 20 : 25, // Adjusted padding
     marginBottom: 25, // Increased margin bottom
     borderWidth: 2,
     borderColor: '#8B4513',
@@ -397,7 +410,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   statText: {
-    fontSize: 18, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
     marginLeft: 12,
     color: '#333',
     fontFamily: 'IndieFlower',
@@ -405,7 +418,7 @@ const styles = StyleSheet.create({
   detailedStatsCard: {
     backgroundColor: '#fff',
     borderRadius: 20, // More rounded
-    padding: 25, // Increased padding
+    padding: Platform.OS === 'android' ? 20 : 25, // Adjusted padding
     marginBottom: 25, // Increased margin bottom
     borderWidth: 2,
     borderColor: '#8B4513',
@@ -421,7 +434,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   detailedStatText: {
-    fontSize: 18, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
     marginLeft: 12,
     color: '#333',
     fontFamily: 'IndieFlower',
@@ -429,7 +442,7 @@ const styles = StyleSheet.create({
   gameItem: {
     backgroundColor: '#fff',
     borderRadius: 15, // More rounded
-    padding: 20, // Increased padding
+    padding: Platform.OS === 'android' ? 15 : 20, // Adjusted padding
     marginBottom: 15, // Increased margin bottom
     borderWidth: 2,
     borderColor: '#8B4513',
@@ -440,33 +453,33 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   gameItemDate: {
-    fontSize: 14, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 13 : 14, // Adjusted font size
     color: '#888',
     marginBottom: 5,
     fontFamily: 'IndieFlower',
   },
   gameItemDetails: {
-    fontSize: 18, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
     fontWeight: 'normal',
     color: '#333',
     marginBottom: 5,
     fontFamily: 'IndieFlower',
   },
   gameItemScore: {
-    fontSize: 20, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 18 : 20, // Adjusted font size
     fontWeight: 'normal',
     color: '#f47c20',
     fontFamily: 'IndieFlower',
   },
   gameItemMode: {
-    fontSize: 16, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 14 : 16, // Adjusted font size
     color: '#666',
     marginTop: 5,
     fontFamily: 'IndieFlower',
   },
   noScoresText: {
     textAlign: 'center',
-    fontSize: 18, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
     color: '#888',
     marginTop: 30,
     fontFamily: 'IndieFlower',
@@ -484,15 +497,15 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   buttonContent: {
-    paddingVertical: 18, // Increased padding
-    paddingHorizontal: 15, // Increased padding
+    paddingVertical: Platform.OS === 'android' ? 15 : 18, // Adjusted padding
+    paddingHorizontal: Platform.OS === 'android' ? 12 : 15, // Adjusted padding
     alignItems: 'center',
     backgroundColor: '#EF5350', // Softer red for clear button
   },
   clearButtonText: {
     color: '#fff',
     fontWeight: 'normal',
-    fontSize: 18, // Slightly larger
+    fontSize: Platform.OS === 'android' ? 16 : 18, // Adjusted font size
     marginTop: 8,
     fontFamily: 'IndieFlower',
   },
@@ -576,15 +589,15 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: Platform.OS === 'android' ? 18 : 20,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginVertical: 6,
-    fontWeight: 'bold',
+    fontWeight: 'normal',
     textAlign: 'center'
   },
   modalMessage: {
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? 15 : 16,
     color: '#333',
     textAlign: 'center',
     marginBottom: 12,
@@ -594,15 +607,15 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 6,
     borderRadius: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
+    paddingVertical: Platform.OS === 'android' ? 8 : 10,
+    paddingHorizontal: Platform.OS === 'android' ? 15 : 18,
     borderWidth: 2,
     borderColor: '#8B4513',
     alignItems: 'center',
   },
   modalBtnText: {
     color: '#8B4513',
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? 15 : 16,
     fontFamily: 'IndieFlower',
   },
 });

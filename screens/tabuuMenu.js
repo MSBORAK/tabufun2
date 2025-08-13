@@ -5,17 +5,11 @@ import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import book from '../assets/book.png';
-import gameIcon from '../assets/game.png';
 import heart from '../assets/heart.png';
 import starfish from '../assets/starfish.png';
 import pinwheel from '../assets/pinwheel.png';
 import camera from '../assets/photo-camera.png';
 import paperPlane from '../assets/paper-plane.png';
-import number1 from '../assets/number-1.png';
-import number2 from '../assets/number-2.png';
-import number3 from '../assets/numbre-3.png';
-import rightArrowOutline from '../assets/right-arrow-outline.png';
-import notebook from '../assets/notebook.png';
 import exclamationMark from '../assets/exclamation-mark.png';
 import car from '../assets/car.png';
 import eiffelTower from '../assets/eiffel-tower.png';
@@ -29,7 +23,7 @@ const translations = {
   tr: {
     title: 'Tabu',
     startGame: 'Oyuna Başla',
-    rules: 'Klavuz',
+    rules: 'Kılavuz',
     settings: 'Ayarlar',
     scores: 'Skorlar',
   },
@@ -92,32 +86,6 @@ export default function TabuuMenu() {
     </View>
   );
 
-  const LabelChip = ({ icon, label, onPress, pastelColor }) => {
-    const scale = React.useRef(new Animated.Value(1)).current;
-    const [pressed, setPressed] = React.useState(false);
-    const handleIn = () => {
-      setPressed(true);
-      Animated.spring(scale, { toValue: 1.05, useNativeDriver: true, friction: 6 }).start();
-    };
-    const handleOut = () => {
-      Animated.spring(scale, { toValue: 1, useNativeDriver: true, friction: 6 }).start(() => setPressed(false));
-    };
-    return (
-      <Animated.View style={[styles.chip, { transform: [{ scale }] , backgroundColor: pressed ? pastelColor : '#fffaf0' }] }>
-        <TouchableOpacity
-          activeOpacity={0.8}
-          onPressIn={handleIn}
-          onPressOut={handleOut}
-          onPress={onPress}
-          style={styles.chipInner}
-        >
-          <Ionicons name={icon} size={20} color="#2b2b2b" style={{ marginRight: 6 }} />
-          <Text style={styles.settingsLabelText}>{label}</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.linedBackground}>
@@ -131,11 +99,6 @@ export default function TabuuMenu() {
       <Image source={camera} style={styles.cameraDoodle} />
       <Image source={paperPlane} style={styles.paperPlaneDoodle} />
       <Image source={starfish} style={styles.starfishDoodle} />
-      <Image source={number1} style={styles.numberOneDoodle} />
-      <Image source={number2} style={styles.numberTwoDoodle} />
-      <Image source={number3} style={styles.numberThreeDoodle} />
-      <Image source={rightArrowOutline} style={styles.rightArrowDoodle} />
-      <Image source={notebook} style={styles.notebookDoodle} />
       <Image source={exclamationMark} style={styles.exclamationDoodle} />
       <Image source={car} style={styles.carDoodle} />
       <Image source={eiffelTower} style={styles.eiffelDoodle} />
@@ -151,30 +114,26 @@ export default function TabuuMenu() {
         </View>
 
         {/* Menü Butonları */}
-        <TouchableOpacity style={[styles.button, styles.orange]} onPress={() => navigation.navigate('NewGame')} activeOpacity={0.85}>
-          <Image source={gameIcon} style={styles.bookIcon} />
-          <Text style={styles.buttonText}>{t.startGame}</Text>
+        <TouchableOpacity style={[styles.menuButton, styles.btnBlue]} onPress={() => navigation.navigate('NewGame')} activeOpacity={0.85}>
+          <Ionicons name="game-controller" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{t.startGame}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.blue]} onPress={() => navigation.navigate('Help')} activeOpacity={0.85}>
-          <Image source={book} style={styles.bookIcon} />
-          <Text style={styles.buttonText}>{t.rules}</Text>
+        <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => navigation.navigate('Help')} activeOpacity={0.85}>
+          <Ionicons name="help-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{t.rules}</Text>
         </TouchableOpacity>
-        
-        {/* Ayarlar & Skorlar Sticker Chip'leri (yan yana) */}
-        <View style={styles.chipsRow}>
-          <LabelChip
-            icon="settings-outline"
-            label={t.settings}
-            onPress={() => navigation.navigate('Settings')}
-            pastelColor="#fdebd0" // açık turuncu
-          />
-          <LabelChip
-            icon="trophy-outline"
-            label={t.scores}
-            onPress={() => navigation.navigate('Scores')}
-            pastelColor="#fff9cc" // açık sarı
-          />
-        </View>
+        <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => navigation.navigate('Settings')} activeOpacity={0.85}>
+          <Ionicons name="settings" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{t.settings}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.menuButton, styles.btnGreen]} onPress={() => navigation.navigate('Scores')} activeOpacity={0.85}>
+          <Ionicons name="trophy" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{t.scores}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.menuButton, styles.btnCyan]} onPress={() => navigation.navigate('MyWords')} activeOpacity={0.85}>
+          <Ionicons name="create" size={20} color="#fff" style={{ marginRight: 8 }} />
+          <Text style={styles.menuButtonText}>{currentLanguage === 'tr' ? 'Kendi Kartların' : 'My Cards'}</Text>
+        </TouchableOpacity>
 
       </View>
     </View>
@@ -184,7 +143,7 @@ export default function TabuuMenu() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fdf6e3', // Defter kağıdı rengi
+    backgroundColor: '#fdf6e3', // iOS ile aynı ton
   },
   linedBackground: {
     position: 'absolute',
@@ -204,13 +163,13 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: Platform.OS === 'ios' ? 80 : 100,
+    paddingTop: 60,
   },
   header: {
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 20,
+    marginTop: 40,
     position: 'relative',
-    marginTop: Platform.OS === 'ios' ? 60 : 80,
   },
   clockDoodle: {
     position: 'absolute',
@@ -223,10 +182,11 @@ const styles = StyleSheet.create({
   },
   titleBase: {
     fontFamily: 'IndieFlower',
-    fontSize: 80,
+    fontSize: Platform.OS === 'android' ? 60 : 70,
     letterSpacing: 2,
     position: 'absolute',
     textTransform: 'uppercase',
+    fontWeight: 'normal', // Ensure normal weight for IndieFlower
   },
   titleFill: {
     color: '#f47c20',
@@ -261,83 +221,33 @@ const styles = StyleSheet.create({
     color: '#fff',
     letterSpacing: 1,
   },
-  settingsLabelRow: {
+  menuButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 8,
-  },
-  settingsLabelText: {
-    fontFamily: 'IndieFlower',
-    fontSize: 22,
-    color: '#2b2b2b',
-  },
-  chipsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
-    marginTop: 8,
-  },
-  chip: {
-    flex: 1,
-    marginHorizontal: 6,
+    justifyContent: 'center',
+    width: '85%',
+    paddingVertical: 16,
+    borderRadius: 15,
     borderWidth: 2,
     borderColor: '#8B4513',
-    borderRadius: 14,
+    marginBottom: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 6,
   },
-  chipInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  heartDoodle: {
-    position: 'absolute',
-    top: 160,
-    left: 10,
-    width: 40,
-    height: 40,
-    opacity: 0.28,
-  },
-  starfishDoodle: {
-    position: 'absolute',
-    bottom: 10,
-    right: 10,
-    width: 50,
-    height: 50,
-    opacity: 0.28,
-  },
-  pinwheelDoodle: {
-    position: 'absolute',
-    top: 220,
-    left: '82%',
-    width: 44,
-    height: 44,
-    opacity: 0.23,
-    transform: [{ rotate: '45deg' }],
-  },
-  cameraDoodle: {
-    position: 'absolute',
-    top: 140,
-    right: 10,
-    width: 40,
-    height: 40,
-    opacity: 0.25,
-  },
-  paperPlaneDoodle: {
-    position: 'absolute',
-    bottom: 10,
-    left: 10,
-    width: 50,
-    height: 50,
-    opacity: 0.25,
-    transform: [{ rotate: '-10deg' }],
-  },
+  menuButtonText: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 20 : 22, fontWeight: 'normal' },
+  btnBlue: { backgroundColor: '#4A6FA5' },
+  btnOrange: { backgroundColor: '#f47c20' },
+  btnGreen: { backgroundColor: '#66BB6A' },
+  btnPurple: { backgroundColor: '#9C27B0' },
+  btnCyan: { backgroundColor: '#5b9bd5' },
+  heartDoodle: { position: 'absolute', top: 180, left: 10, width: 32, height: 32, opacity: 0.15 },
+  starfishDoodle: { position: 'absolute', bottom: 20, right: 10, width: 40, height: 40, opacity: 0.15 },
+  pinwheelDoodle: { position: 'absolute', top: 250, left: '85%', width: 36, height: 36, opacity: 0.15, transform: [{ rotate: '30deg' }]},
+  cameraDoodle: { position: 'absolute', top: 150, right: 20, width: 32, height: 32, opacity: 0.15 },
+  paperPlaneDoodle: { position: 'absolute', bottom: 40, left: 15, width: 40, height: 40, opacity: 0.15, transform: [{ rotate: '-20deg' }]},
   numberOneDoodle: {
     position: 'absolute',
     top: 330,
@@ -378,70 +288,14 @@ const styles = StyleSheet.create({
     height: 34,
     opacity: 0.2,
   },
-  exclamationDoodle: {
-    position: 'absolute',
-    top: 250,
-    left: 90,
-    width: 20,
-    height: 20,
-    opacity: 0.2,
-  },
-  carDoodle: {
-    position: 'absolute',
-    bottom: 40,
-    left: '38%',
-    width: 46,
-    height: 46,
-    opacity: 0.22,
-  },
-  eiffelDoodle: {
-    position: 'absolute',
-    top: 210,
-    left: 140,
-    width: 34,
-    height: 34,
-    opacity: 0.22,
-  },
-  snorkelDoodle: {
-    position: 'absolute',
-    bottom: 150,
-    right: 120,
-    width: 34,
-    height: 34,
-    opacity: 0.22,
-  },
-  colosseumDoodle: {
-    position: 'absolute',
-    top: 50,
-    left: '40%',
-    width: 38,
-    height: 38,
-    opacity: 0.2,
-  },
-  londonEyeDoodle: {
-    position: 'absolute',
-    bottom: 200,
-    left: 20,
-    width: 42,
-    height: 42,
-    opacity: 0.2,
-  },
-  galataTowerDoodle: {
-    position: 'absolute',
-    top: 100,
-    right: 30,
-    width: 36,
-    height: 36,
-    opacity: 0.2,
-  },
-  pyramidsDoodle: {
-    position: 'absolute',
-    bottom: 80,
-    right: '45%',
-    width: 40,
-    height: 40,
-    opacity: 0.2,
-  },
+  exclamationDoodle: { position: 'absolute', top: 200, left: 70, width: 24, height: 24, opacity: 0.15 },
+  carDoodle: { position: 'absolute', bottom: 60, left: '30%', width: 38, height: 38, opacity: 0.15 },
+  eiffelDoodle: { position: 'absolute', top: 230, left: 150, width: 28, height: 28, opacity: 0.15 },
+  snorkelDoodle: { position: 'absolute', bottom: 180, right: 100, width: 28, height: 28, opacity: 0.15 },
+  colosseumDoodle: { position: 'absolute', top: 80, left: '45%', width: 32, height: 32, opacity: 0.15 },
+  londonEyeDoodle: { position: 'absolute', bottom: 220, left: 30, width: 36, height: 36, opacity: 0.15 },
+  galataTowerDoodle: { position: 'absolute', top: 120, right: 40, width: 30, height: 30, opacity: 0.15 },
+  pyramidsDoodle: { position: 'absolute', bottom: 100, right: '40%', width: 34, height: 34, opacity: 0.15 },
   bookIcon: {
     width: 24,
     height: 24,
