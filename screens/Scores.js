@@ -36,8 +36,13 @@ const translations = {
     won: 'kazandı!',
     score: 'Skor:',
     mode: 'Mod:',
-    adult: 'Yetişkin',
-    child: 'Çocuk',
+    easy: 'Kolay',
+    medium: 'Orta',
+    hard: 'Zor',
+    ultra: 'Ultra',
+    custom: 'Kendi Kartların',
+    charades: 'Sessiz Sinema',
+    ok: 'Tamam',
     failedToLoadScores: 'Skorlar yüklenemedi:',
   },
   en: {
@@ -63,8 +68,13 @@ const translations = {
     won: 'won!',
     score: 'Score:',
     mode: 'Mode:',
-    adult: 'Adult',
-    child: 'Child',
+    easy: 'Easy',
+    medium: 'Medium',
+    hard: 'Hard',
+    ultra: 'Ultra',
+    custom: 'My Cards',
+    charades: 'Charades',
+    ok: 'OK',
     failedToLoadScores: 'Failed to load scores:',
   },
 };
@@ -115,6 +125,17 @@ export default function Scores() {
   }, []);
 
   const t = translations[currentLanguage];
+  const modeLabel = (gm, isSilent) => {
+    if (isSilent) return t.charades;
+    switch (gm) {
+      case 'easy': return t.easy;
+      case 'medium': return t.medium;
+      case 'hard': return t.hard;
+      case 'ultra': return t.ultra;
+      case 'custom': return t.custom;
+      default: return gm ? String(gm) : '-';
+    }
+  };
 
   const loadScores = async () => {
     try {
@@ -241,7 +262,7 @@ export default function Scores() {
                   <Text style={styles.gameItemDetails}>{game.winner} {t.won} ({game.teamAScore} - {game.teamBScore})</Text>
                   <Text style={styles.gameItemScore}>{t.score} {game.score}</Text>
                   {game.gameMode && (
-                    <Text style={styles.gameItemMode}>{t.mode}: {game.gameMode === 'adult' ? t.adult : t.child}</Text>
+                    <Text style={styles.gameItemMode}>{t.mode}: {modeLabel(game.gameMode, game.silentMode)}</Text>
                   )}
                 </View>
               ))
@@ -300,8 +321,13 @@ export default function Scores() {
             <Ionicons name="information-circle" size={36} color="#8B4513" />
             <Text style={styles.modalTitle}>{infoModal.title}</Text>
             <Text style={styles.modalMessage}>{infoModal.message}</Text>
-            <TouchableOpacity style={[styles.modalBtn, { backgroundColor: '#a9d5ee', alignSelf: 'center' }]} onPress={() => setInfoModal({ visible: false, title: '', message: '' })}>
-              <Text style={styles.modalBtnText}>OK</Text>
+            <TouchableOpacity
+              accessibilityRole="button"
+              accessibilityLabel={t.ok || 'Tamam'}
+              style={[styles.modalBtn, { backgroundColor: '#a9d5ee', alignSelf: 'center', minWidth: 140, justifyContent: 'center', flex: 0, height: 42 }]}
+              onPress={() => setInfoModal({ visible: false, title: '', message: '' })}
+            >
+              <Text style={styles.modalBtnText}>{t.ok || 'Tamam'}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -601,15 +627,26 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 6,
     borderRadius: 14,
-    paddingVertical: Platform.OS === 'android' ? 8 : 10,
-    paddingHorizontal: Platform.OS === 'android' ? 15 : 18,
+    paddingVertical: 10,
+    paddingHorizontal: 18,
     borderWidth: 2,
     borderColor: '#8B4513',
     alignItems: 'center',
   },
   modalBtnText: {
     color: '#8B4513',
+    fontSize: 18,
+    fontFamily: Platform.OS === 'android' ? undefined : 'IndieFlower',
+    fontWeight: Platform.OS === 'android' ? 'bold' : 'normal',
+    textAlign: 'center'
+  },
+  modalBtnTextPrimary: {
+    color: '#8B4513',
     fontSize: Platform.OS === 'android' ? 16 : 16,
     fontFamily: 'IndieFlower',
+    fontWeight: Platform.OS === 'ios' ? 'bold' : 'normal',
+    textAlign: 'center',
+    includeFontPadding: false,
+    textAlignVertical: 'center'
   },
 });

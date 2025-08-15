@@ -22,14 +22,14 @@ import pyramids from '../assets/pyramids.png';
 
 const translations = {
   tr: {
-    title: 'Tabu',
+    title: 'TabuFun',
     startGame: 'Oyuna Başla',
     rules: 'Kılavuz',
     settings: 'Ayarlar',
     scores: 'Skorlar',
   },
   en: {
-    title: 'Taboo',
+    title: 'TabooFun',
     startGame: 'Start Game',
     rules: 'Guide',
     settings: 'Settings',
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 60,
+    paddingTop: 120,
   },
   header: {
     alignItems: 'center',

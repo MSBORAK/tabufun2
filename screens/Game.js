@@ -5,7 +5,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import wordsEasy from '../data/words_easy.json';
 import wordsMedium from '../data/words_medium.json';
 import wordsHard from '../data/words_hard.json';
-import wordsCharades from '../data/words_charades.json';
+import wordsCharadesEasy from '../data/words_charades_easy.json';
+import wordsCharadesMedium from '../data/words_charades_medium.json';
+import wordsCharadesHard from '../data/words_charades_hard.json';
+import wordsCharadesUltra from '../data/words_charades_ultra.json';
+import wordsCharadesBase from '../data/words_charades.json';
 import * as Font from 'expo-font';
 import { BlurView } from 'expo-blur';
 import heart from '../assets/heart.png';
@@ -44,7 +48,9 @@ const translations = {
     tabooGame: 'TABU',
     error: 'Hata',
     noWordsFound: 'Seçilen oyun modu için kelime bulunamadı. Lütfen Yeni Oyun ekranına dönün.',
-    noMoreWords: 'BİTEBİLİR',
+    noMoreWords: 'KELİME KALMADI',
+    noMoreUserWords: 'Kendi kartlarınız bitti. Lütfen yeni kelime ekleyin veya Yeni Oyun\'a dönün.',
+    noMoreWordsGeneric: 'Bu tur için kelime kalmadı.',
     countdown: 'Geri Sayım',
     start: 'BAŞLA!',
     continueGame: 'Oyuna Devam Et',
@@ -77,6 +83,8 @@ const translations = {
     error: 'Error',
     noWordsFound: 'No words found for the selected game mode. Please return to the New Game screen.',
     noMoreWords: 'NO MORE WORDS',
+    noMoreUserWords: 'No more custom cards. Please add new words or return to New Game.',
+    noMoreWordsGeneric: 'No more words for this round.',
     countdown: 'Countdown',
     start: 'START!',
     continueGame: 'Continue Game',
@@ -187,10 +195,44 @@ const Game = ({ route, navigation }) => {
     (async () => {
       // Kaynağı seç
       let baseWords = [];
-      if (silentMode) {
-        baseWords = wordsCharades;
-      } else if (gameMode === 'custom') {
-        // Kullanıcı kartları
+      const buildCharadesPool = (mode) => {
+        const primary = mode === 'easy'
+          ? wordsCharadesEasy
+          : mode === 'medium'
+            ? wordsCharadesMedium
+            : mode === 'hard'
+              ? wordsCharadesHard
+              : wordsCharadesUltra;
+        // Tüm charades setlerini bir araya getir ve benzersizleştir
+        const merged = [
+          ...primary,
+          ...wordsCharadesBase,
+          ...wordsCharadesEasy,
+          ...wordsCharadesMedium,
+          ...wordsCharadesHard,
+          ...wordsCharadesUltra,
+        ];
+        const seen = new Set();
+        const unique = [];
+        for (const w of merged) {
+          const key = `${w.word}|${w.english_word}`;
+          if (!seen.has(key)) {
+            seen.add(key);
+            unique.push(w);
+          }
+        }
+        // En az 50 kelime olsun; yetmezse döngüsel tekrarlarla doldur
+        if (unique.length >= 50) return unique.slice(0, unique.length);
+        const filled = [...unique];
+        let idx = 0;
+        while (filled.length < 50 && unique.length > 0) {
+          filled.push(unique[idx % unique.length]);
+          idx += 1;
+        }
+        return filled;
+      };
+      if (gameMode === 'custom') {
+        // Kullanıcı kartları (Sessiz Sinema açık olsa bile öncelik ver)
         try {
           const raw = await AsyncStorage.getItem('userWords');
           if (raw) {
@@ -204,6 +246,13 @@ const Game = ({ route, navigation }) => {
             }));
           }
         } catch (_) {}
+        // Sessiz sinema + custom seçiliyken kullanıcı kartı yoksa charades'a düş
+        if (silentMode && baseWords.length === 0) {
+          baseWords = buildCharadesPool(gameMode);
+        }
+      } else if (silentMode) {
+        // Sessiz Sinema modu: zorluğa göre dahili listeler ve en az 50 kelime garantisi
+        baseWords = buildCharadesPool(gameMode);
       } else {
         // Dahili json'lardan sadece gerekli alanları kopyala (hafıza ve GC için daha hafif)
         const source = gameMode === 'easy' ? wordsEasy : gameMode === 'medium' ? wordsMedium : wordsHard;
@@ -462,9 +511,18 @@ const Game = ({ route, navigation }) => {
 
   const getNextWord = (wordList, lang) => {
     if (wordList.length === 0) {
-      setCurrentWord(translations[lang].noMoreWords);
+      // Kelime bittiğinde uyarı ver ve oyunu duraklat; kelime alanına metin basma
+      setCurrentWord('');
       setCurrentWordObject(null);
       setDisplayTabooWords([]);
+      setIsPaused(true);
+      setShowTurnModal(false);
+      setShowCountdownModal(false);
+      const isCustom = gameMode === 'custom';
+      const message = isCustom
+        ? translations[language].noMoreUserWords
+        : translations[language].noMoreWordsGeneric;
+      setErrorModal({ visible: true, title: translations[language].error, message, shouldGoBack: true });
       return;
     }
     const randomIndex = Math.floor(Math.random() * wordList.length);
@@ -530,8 +588,9 @@ const Game = ({ route, navigation }) => {
         teamBScore,
         gameMode,
         language,
-        teamAStats,
-        teamBStats,
+        silentMode,
+        teamAStats: teamStats.A,
+        teamBStats: teamStats.B,
       };
 
       const existingScores = await AsyncStorage.getItem('tabuuScores');
@@ -563,6 +622,7 @@ const Game = ({ route, navigation }) => {
       tabooCount: initialTaboo,
       // winPoints kaldırıldı
       gameMode,
+      silentMode,
       allowContinue: false,
     });
   };
@@ -1085,7 +1145,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   teamTurnText: {
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 18,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginBottom: 8,
@@ -1119,13 +1179,13 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   passLabel: {
-    fontSize: Platform.OS === 'android' ? 14 : 14,
+    fontSize: 14,
     color: '#8B4513',
     marginLeft: 6,
     fontFamily: 'IndieFlower',
   },
   passCount: {
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 18,
     color: '#8B4513',
     marginLeft: 6,
     fontFamily: 'IndieFlower',
@@ -1147,10 +1207,15 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   currentWord: {
-    fontSize: Platform.OS === 'android' ? 38 : 40,
+    fontSize: 40,
     color: '#4A6FA5',
     textAlign: 'center',
     fontFamily: 'IndieFlower',
+    fontWeight: Platform.OS === 'ios' ? 'bold' : 'normal',
+    // iOS/Android aynı görünüm için hafif gölge
+    textShadowColor: '#4A6FA5',
+    textShadowOffset: { width: 0.6, height: 0.6 },
+    textShadowRadius: 0.8,
   },
   tabooWordsContainer: {
     marginBottom: 14,
@@ -1168,23 +1233,31 @@ const styles = StyleSheet.create({
     borderColor: '#F44336', // Red border for taboo
   },
   tabooTitle: {
-    fontSize: Platform.OS === 'android' ? 19 : 20,
+    fontSize: 22,
     color: '#9C27B0',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily: 'IndieFlower',
     letterSpacing: 1,
+    fontWeight: Platform.OS === 'ios' ? 'bold' : 'normal',
+    textShadowColor: '#9C27B0',
+    textShadowOffset: { width: 0.6, height: 0.6 },
+    textShadowRadius: 0.8,
   },
   tabooWordsList: {
     alignItems: 'center',
   },
   tabooWord: {
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 21,
     color: '#F44336',
     marginBottom: 6,
     fontFamily: 'IndieFlower',
     textDecorationLine: 'line-through',
     textTransform: 'uppercase',
+    fontWeight: Platform.OS === 'ios' ? 'bold' : 'normal',
+    textShadowColor: '#F44336',
+    textShadowOffset: { width: 0.6, height: 0.6 },
+    textShadowRadius: 0.8,
   },
   tabooWordSummary: {
     color: '#EF5350',
@@ -1214,13 +1287,13 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   teamName: {
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 18,
     marginBottom: 8,
     color: '#333',
     fontFamily: 'IndieFlower',
   },
   teamScore: {
-    fontSize: Platform.OS === 'android' ? 23 : 24,
+    fontSize: 24,
     color: '#333',
     fontFamily: 'IndieFlower',
   },
@@ -1260,7 +1333,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: Platform.OS === 'android' ? 15 : 16,
+    fontSize: 16,
     marginTop: 6,
     fontFamily: 'IndieFlower',
   },
@@ -1307,7 +1380,7 @@ const styles = StyleSheet.create({
   badgeIcon: { width: 20, height: 20, marginRight: 8, resizeMode: 'contain' },
   badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 19 : 20 },
   statText: {
-    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
+    fontSize: 18, // Unify platform sizes
     color: '#8B4513',
     marginTop: 8,
     fontFamily: 'IndieFlower',
@@ -1317,14 +1390,15 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   tabooListTitle: {
-    fontSize: Platform.OS === 'android' ? 17 : 18, // Adjusted font size
+    fontSize: 18, // Unify platform sizes
     color: '#F44336',
     marginBottom: 12,
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
   wordsPanel: { marginTop: 4, flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' },
-  wordItem: { fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 15 : 16, marginBottom: 6, marginRight: 10, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.03)' },
+  wordItem: { fontFamily: 'IndieFlower', fontSize: 16, marginBottom: 6, marginRight: 10, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: 'rgba(0,0,0,0.03)' },
+  
   tabooWord: { color: '#EF5350' },
   tabooItem: {
     fontSize: Platform.OS === 'android' ? 15 : 16, // Adjusted font size
@@ -1379,7 +1453,7 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
   },
   countdownText: {
-    fontSize: Platform.OS === 'android' ? 58 : 60,
+    fontSize: 60,
     color: '#fff',
     fontFamily: 'IndieFlower',
     textAlign: 'center',

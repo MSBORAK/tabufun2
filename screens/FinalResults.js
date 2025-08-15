@@ -42,6 +42,7 @@ export default function FinalResults({ route, navigation }) {
     allowContinue = true,
     teamAStats = { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
     teamBStats = { correct: 0, pass: 0, taboo: 0, correctWords: [], passWords: [], tabooWords: [] },
+    silentMode = false,
   } = route.params || {};
   const t = translations[language];
 
@@ -145,6 +146,7 @@ export default function FinalResults({ route, navigation }) {
                   // winPoints kaldırıldı,
                   gameMode,
                   language,
+                  silentMode,
                   initialTeamAScore: 0,
                   initialTeamBScore: 0,
                 })
