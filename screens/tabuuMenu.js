@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Animated, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, Animated, Platform, Dimensions } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SoundManager from '../utils/sounds';
+import AdManager from '../utils/ads';
+
+const { width } = Dimensions.get('window');
+const isTabletDevice = width >= 768;
 import book from '../assets/book.png';
 import heart from '../assets/heart.png';
 import starfish from '../assets/starfish.png';
@@ -115,28 +119,35 @@ export default function TabuuMenu() {
           <OutlinedTitle text={t.title} />
         </View>
 
-        {/* Menü Butonları */}
-        <TouchableOpacity style={[styles.menuButton, styles.btnBlue]} onPress={() => { SoundManager.playPage(); navigation.navigate('NewGame'); }} activeOpacity={0.85}>
-          <Ionicons name="game-controller" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{t.startGame}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnGreen]} onPress={() => { SoundManager.playPage(); navigation.navigate('Scores'); }} activeOpacity={0.85}>
-          <Ionicons name="trophy" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{t.scores}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnCyan]} onPress={() => { SoundManager.playPage(); navigation.navigate('MyWords'); }} activeOpacity={0.85}>
-          <Ionicons name="create" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{currentLanguage === 'tr' ? 'Kendi Kartların' : 'My Cards'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => { SoundManager.playPage(); navigation.navigate('Settings'); }} activeOpacity={0.85}>
-          <Ionicons name="settings" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{t.settings}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => { SoundManager.playPage(); navigation.navigate('Help'); }} activeOpacity={0.85}>
-          <Ionicons name="help-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
-          <Text style={styles.menuButtonText}>{t.rules}</Text>
-        </TouchableOpacity>
+        {/* Menü Butonları - iPad için iki sütun layout */}
+        <View style={styles.menuContainer}>
+          <TouchableOpacity style={[styles.menuButton, styles.btnBlue]} onPress={() => { SoundManager.playPage(); navigation.navigate('NewGame'); }} activeOpacity={0.85}>
+            <Ionicons name="game-controller" size={isTabletDevice ? 28 : 20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.menuButtonText}>{t.startGame}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.menuButton, styles.btnGreen]} onPress={() => { SoundManager.playPage(); navigation.navigate('Scores'); }} activeOpacity={0.85}>
+            <Ionicons name="trophy" size={isTabletDevice ? 28 : 20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.menuButtonText}>{t.scores}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.menuButton, styles.btnCyan]} onPress={() => { SoundManager.playPage(); navigation.navigate('MyWords'); }} activeOpacity={0.85}>
+            <Ionicons name="create" size={isTabletDevice ? 28 : 20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.menuButtonText}>{currentLanguage === 'tr' ? 'Kendi Kartların' : 'My Cards'}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.menuButton, styles.btnOrange]} onPress={() => { SoundManager.playPage(); navigation.navigate('Settings'); }} activeOpacity={0.85}>
+            <Ionicons name="settings" size={isTabletDevice ? 28 : 20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.menuButtonText}>{t.settings}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.menuButton, styles.btnPurple]} onPress={() => { SoundManager.playPage(); navigation.navigate('Help'); }} activeOpacity={0.85}>
+            <Ionicons name="help-circle" size={isTabletDevice ? 28 : 20} color="#fff" style={{ marginRight: 8 }} />
+            <Text style={styles.menuButtonText}>{t.rules}</Text>
+          </TouchableOpacity>
+        </View>
 
+      </View>
+      
+      {/* Banner Reklam */}
+      <View style={styles.bannerAdContainer}>
+        <AdManager.BannerAd style={styles.bannerAd} />
       </View>
     </View>
   );
@@ -164,14 +175,23 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 120,
+    paddingHorizontal: isTabletDevice ? 40 : 20,
+    paddingTop: isTabletDevice ? 80 : 120,
+    maxWidth: isTabletDevice ? 800 : '100%',
+    alignSelf: 'center',
+    width: '100%',
   },
   header: {
     alignItems: 'center',
     marginBottom: 20,
     marginTop: 40,
     position: 'relative',
+  },
+  menuContainer: {
+    width: '100%',
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   clockDoodle: {
     position: 'absolute',
@@ -184,7 +204,7 @@ const styles = StyleSheet.create({
   },
   titleBase: {
     fontFamily: 'IndieFlower',
-    fontSize: Platform.OS === 'android' ? 60 : 70,
+    fontSize: isTabletDevice ? 90 : (Platform.OS === 'android' ? 60 : 70),
     letterSpacing: 2,
     position: 'absolute',
     textTransform: 'uppercase',
@@ -227,19 +247,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    width: '85%',
-    paddingVertical: 16,
+    width: isTabletDevice ? '70%' : '85%',
+    paddingVertical: isTabletDevice ? 20 : 16,
     borderRadius: 15,
     borderWidth: 2,
     borderColor: '#8B4513',
     marginBottom: 10,
+    marginHorizontal: 0,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 8,
     elevation: 6,
   },
-  menuButtonText: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 21 : 22 },
+  menuButtonText: { 
+    color: '#fff', 
+    fontFamily: 'IndieFlower', 
+    fontSize: isTabletDevice ? 26 : (Platform.OS === 'android' ? 21 : 22),
+    textAlign: 'center',
+  },
   btnBlue: { backgroundColor: '#4A6FA5' },
   btnOrange: { backgroundColor: '#f47c20' },
   btnGreen: { backgroundColor: '#66BB6A' },
@@ -302,6 +328,19 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     marginRight: 8,
+  },
+  bannerAdContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#f0f0f0',
+    alignItems: 'center',
+    paddingVertical: 5,
+  },
+  bannerAd: {
+    width: '100%',
+    height: 50,
   },
 });
 

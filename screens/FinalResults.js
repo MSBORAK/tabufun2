@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar, ScrollView, Platform } from 'react-native';
+import AdManager from '../utils/ads';
 import heart from '../assets/heart.png';
 import exclamationMark from '../assets/exclamation-mark.png';
 import paperPlane from '../assets/paper-plane.png';
@@ -45,6 +46,16 @@ export default function FinalResults({ route, navigation }) {
     silentMode = false,
   } = route.params || {};
   const t = translations[language];
+
+  // Oyun bitince interstitial reklam göster
+  useEffect(() => {
+    AdManager.incrementGameCount();
+    if (AdManager.shouldShowInterstitial()) {
+      setTimeout(() => {
+        AdManager.showInterstitial();
+      }, 2000); // 2 saniye bekle, sonuçları göster
+    }
+  }, []);
 
   return (
     <View style={styles.container}>

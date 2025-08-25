@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text, TextInput } from 'react-native';
 import * as Font from 'expo-font';
 import SoundManager from './utils/sounds';
+import AdManager from './utils/ads';
 
 import TabuuMenu from './screens/tabuuMenu'; // TabuuMenu bileşenin dosya yoluna göre değiştir
 import Help from './screens/help';      // Help ekranının dosya yolu
@@ -26,6 +27,7 @@ export default function App() {
           IndieFlower: require('./assets/IndieFlower-Regular.ttf'),
         });
         await SoundManager.init();
+        await AdManager.init();
         // düşük volümlü arka plan müziği başlat
         SoundManager.startBGM(0.08);
         // Set global default font
@@ -57,3 +59,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+

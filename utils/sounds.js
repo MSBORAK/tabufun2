@@ -31,8 +31,8 @@ class SoundManagerImpl {
     await this._ensureLoaded('correct', require('../assets/dogru.mp3'));
     await this._ensureLoaded('pass', require('../assets/pas.mp3'));
     await this._ensureLoaded('taboo', require('../assets/Tabu.mp3'));
-    await this._ensureLoaded('page', require('../assets/sayfa atlama.mp3'));
-    await this._ensureLoaded('bgm', require('../assets/oyun müsic.mp3'));
+    await this._ensureLoaded('page', require('../assets/at.mp3'));
+    await this._ensureLoaded('bgm', require('../assets/game.mp3'));
     this.initialized = true;
   }
 

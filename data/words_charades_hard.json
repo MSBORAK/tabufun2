@@ -1,55 +1,952 @@
 [
-  { "word": "İPLİK YUMAĞI SARMAK", "english_word": "WIND YARN", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAĞIT UÇAK KATLAMAK", "english_word": "FOLD PAPER PLANE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KÜREK ÇEKMEK", "english_word": "ROW BOAT", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KUMANDA PİLİ DEĞİŞTİRMEK", "english_word": "CHANGE REMOTE BATTERY", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "GÖZLÜK BUĞUSUNU SİLMEK", "english_word": "WIPE GLASSES FOG", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "HALI KENARI DÜZELTMEK", "english_word": "STRAIGHTEN RUG EDGE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KALORİFERİ HAVALANDIRMAK", "english_word": "BLEED RADIATOR", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "AYAKKABI BOYAMAK", "english_word": "POLISH SHOES", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KARTON KESMEK", "english_word": "CUT CARDBOARD", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KURŞUN KALEM AÇMAK", "english_word": "SHARPEN PENCIL", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SAATİN PİLİNİ DEĞİŞTİRMEK", "english_word": "CHANGE WATCH BATTERY", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ÇORAP DELİĞİ DİKMEK", "english_word": "SEW SOCK HOLE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BARDAK ALTLIĞI KOYMAK", "english_word": "PLACE COASTER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "USB TAKIP ÇIKARMAK", "english_word": "PLUG UNPLUG USB", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPI MENTEŞESİNİ YAĞLAMAK", "english_word": "OIL DOOR HINGE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAR KAZIMAK", "english_word": "SCRAPE ICE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ZIMBAYLA ZIMBALAMAK", "english_word": "USE STAPLER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ZIMBA SÖKMEK", "english_word": "REMOVE STAPLE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PENSEYLE SIKMAK", "english_word": "TIGHTEN WITH PLIERS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "CIVATA SIKMAK", "english_word": "TIGHTEN BOLT", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "CIVATA GEVŞETMEK", "english_word": "LOOSEN BOLT", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KABLO DÜZENLEMEK", "english_word": "ORGANIZE CABLES", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KABLO BAĞI TAKMAK", "english_word": "ZIP TIE CABLE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SİNEKLİK TAKMAK", "english_word": "INSTALL SCREEN", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PERÇİN SIKMAK", "english_word": "RIVET", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SİLİKON ÇEKMEK", "english_word": "APPLY SILICONE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BOYA BANDI ÇEKMEK", "english_word": "APPLY MASKING TAPE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ZIMPARA YAPMAK", "english_word": "SAND SURFACE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPLAMAYI SÖKMEK", "english_word": "PEEL OFF COATING", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PARK METRESİNE PARA ATMAK", "english_word": "FEED PARKING METER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPI KOLU TAKMAK", "english_word": "INSTALL DOOR HANDLE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TIKANIKLIK AÇMAK", "english_word": "UNCLOG DRAIN", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SIFON ÇEKMEK", "english_word": "FLUSH TOILET", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "FAR AYARI YAPMAK", "english_word": "ADJUST HEADLIGHTS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "LASTİK BASINCI ÖLÇMEK", "english_word": "CHECK TIRE PRESSURE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SİLECEK DEĞİŞTİRMEK", "english_word": "CHANGE WIPERS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "YAKIT KAPAĞINI AÇMAK", "english_word": "OPEN FUEL CAP", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "HARİTA KATLAMAK", "english_word": "FOLD MAP", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TRİPOD KURMAK", "english_word": "SET UP TRIPOD", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "OBJEKTİF DEĞİŞTİRMEK", "english_word": "CHANGE LENS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "RENK KALİBRASYONU YAPMAK", "english_word": "COLOR CALIBRATION", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KARTVİZİT VERMEK", "english_word": "GIVE BUSINESS CARD", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KİMLİK GÖSTERMEK", "english_word": "SHOW ID", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BARKOD OKUTMAK", "english_word": "SCAN BARCODE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PİZZA DİLİMLEMEK", "english_word": "SLICE PIZZA", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TERAZİDE TARTMAK", "english_word": "WEIGH ON SCALE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SÜZGEÇLE SÜZMEK", "english_word": "STRAIN WITH SIEVE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "RENDeyle YÜZEY DÜZELTMEK", "english_word": "PLANE WOOD", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SİLİKON ARTIKLARINI KAZIMAK", "english_word": "SCRAPE SILICONE RESIDUE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BORUYA TEFLON SARMAK", "english_word": "WRAP TEFLON TAPE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "DÜBEL ÇAKMAK", "english_word": "INSERT WALL PLUG", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "LAZER DÜZEY AYARI YAPMAK", "english_word": "USE LASER LEVEL", "taboo": [], "english_taboo": [], "mode": "charades" }
+  {
+    "word": "TERMOS AÇMAK",
+    "english_word": "OPEN THERMOS",
+    "taboo": [
+      "SICAK",
+      "İÇMEK",
+      "KAPAK",
+      "ÇEVİRMEK",
+      "METAL"
+    ],
+    "english_taboo": [
+      "HOT",
+      "DRINK",
+      "LID",
+      "TURN",
+      "METAL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GÖZLÜK ÇERÇEVE TAMIR",
+    "english_word": "REPAIR GLASSES FRAME",
+    "taboo": [
+      "KIRIK",
+      "GÖRMEK",
+      "VİDA",
+      "İNCE",
+      "ŞEFFAF"
+    ],
+    "english_taboo": [
+      "BROKEN",
+      "SEE",
+      "SCREW",
+      "THIN",
+      "CLEAR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KARPUZ ÇEKİRDEK ÇIKARMAK",
+    "english_word": "REMOVE WATERMELON SEEDS",
+    "taboo": [
+      "YAZ",
+      "KIRMIZI",
+      "TÜKÜR",
+      "KÜÇÜK",
+      "SİYAH"
+    ],
+    "english_taboo": [
+      "SUMMER",
+      "RED",
+      "SPIT",
+      "SMALL",
+      "BLACK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "AMPLIFIKATÖR BAĞLAMAK",
+    "english_word": "CONNECT AMPLIFIER",
+    "taboo": [
+      "SES",
+      "YÜKSEK",
+      "MÜZİK",
+      "HOPARLÖR",
+      "KABLO"
+    ],
+    "english_taboo": [
+      "SOUND",
+      "LOUD",
+      "MUSIC",
+      "SPEAKER",
+      "CABLE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "LENS SOLÜSYONU DAMLATMAK",
+    "english_word": "PUT LENS SOLUTION",
+    "taboo": [
+      "GÖZ",
+      "ŞEFFAF",
+      "KONTAK",
+      "DAMLA",
+      "TEMİZ"
+    ],
+    "english_taboo": [
+      "EYE",
+      "CLEAR",
+      "CONTACT",
+      "DROP",
+      "CLEAN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MIKRODALGA PROGRAMLAMAK",
+    "english_word": "PROGRAM MICROWAVE",
+    "taboo": [
+      "ISI",
+      "SÜRe",
+      "DÜĞME",
+      "ELEKTRONIK",
+      "HIZLI"
+    ],
+    "english_taboo": [
+      "HEAT",
+      "TIME",
+      "BUTTON",
+      "ELECTRONIC",
+      "FAST"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HALKA TAKMA",
+    "english_word": "PUT ON RING",
+    "taboo": [
+      "PARMAK",
+      "ALTIN",
+      "EVLİLİK",
+      "YUVARLAK",
+      "PARLAK"
+    ],
+    "english_taboo": [
+      "FINGER",
+      "GOLD",
+      "MARRIAGE",
+      "ROUND",
+      "SHINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "TERAZI KALIBRASYON",
+    "english_word": "CALIBRATE SCALE",
+    "taboo": [
+      "AĞIRLIK",
+      "KİLO",
+      "AYARLAMA",
+      "HASSAS",
+      "ÖLÇMEK"
+    ],
+    "english_taboo": [
+      "WEIGHT",
+      "KILO",
+      "ADJUST",
+      "PRECISE",
+      "MEASURE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "VİNTAJ PLAK ÇALMAK",
+    "english_word": "PLAY VINTAGE RECORD",
+    "taboo": [
+      "ESKİ",
+      "MÜZİK",
+      "YUVARLAK",
+      "İĞNE",
+      "DÖNER"
+    ],
+    "english_taboo": [
+      "OLD",
+      "MUSIC",
+      "ROUND",
+      "NEEDLE",
+      "SPIN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FAKS KAĞIDI TAKMAK",
+    "english_word": "LOAD FAX PAPER",
+    "taboo": [
+      "ESKI",
+      "GÖNDER",
+      "KAĞIT",
+      "TELEFON",
+      "İŞ"
+    ],
+    "english_taboo": [
+      "OLD",
+      "SEND",
+      "PAPER",
+      "PHONE",
+      "OFFICE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KALORIFER VANA AÇMAK",
+    "english_word": "OPEN RADIATOR VALVE",
+    "taboo": [
+      "SICAK",
+      "KIŞ",
+      "METAL",
+      "ÇEVİRMEK",
+      "ISI"
+    ],
+    "english_taboo": [
+      "HOT",
+      "WINTER",
+      "METAL",
+      "TURN",
+      "HEAT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PASTA KREMI SÜSLEMEK",
+    "english_word": "DECORATE CAKE CREAM",
+    "taboo": [
+      "TATLI",
+      "BEYAZ",
+      "PÜSKÜRT",
+      "GÜZEL",
+      "DOĞUMGÜNÜ"
+    ],
+    "english_taboo": [
+      "SWEET",
+      "WHITE",
+      "SQUEEZE",
+      "BEAUTIFUL",
+      "BIRTHDAY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KLİP BORUSU TAKMA",
+    "english_word": "ATTACH CLIP PIPE",
+    "taboo": [
+      "METAL",
+      "BASKI",
+      "TUTMA",
+      "KÜÇÜK",
+      "SIKMA"
+    ],
+    "english_taboo": [
+      "METAL",
+      "PRESSURE",
+      "HOLD",
+      "SMALL",
+      "SQUEEZE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SERUM TAKMA",
+    "english_word": "ATTACH IV DRIP",
+    "taboo": [
+      "HASTANE",
+      "DAMAR",
+      "İĞNE",
+      "SIVı",
+      "DOKTOR"
+    ],
+    "english_taboo": [
+      "HOSPITAL",
+      "VEIN",
+      "NEEDLE",
+      "LIQUID",
+      "DOCTOR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇIÇEK BUKETI YAPMA",
+    "english_word": "MAKE FLOWER BOUQUET",
+    "taboo": [
+      "RENKLİ",
+      "KOKU",
+      "GÜZEL",
+      "KURDELE",
+      "EVLİLİK"
+    ],
+    "english_taboo": [
+      "COLORFUL",
+      "SMELL",
+      "BEAUTIFUL",
+      "RIBBON",
+      "WEDDING"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "METRONOM AYARLA",
+    "english_word": "SET METRONOME",
+    "taboo": [
+      "MÜZİK",
+      "RİTİM",
+      "TEMPO",
+      "TİK",
+      "DÜZENLI"
+    ],
+    "english_taboo": [
+      "MUSIC",
+      "RHYTHM",
+      "TEMPO",
+      "TICK",
+      "REGULAR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SAÇ FIRÇASI TEMİZLEME",
+    "english_word": "CLEAN HAIR BRUSH",
+    "taboo": [
+      "TARAK",
+      "SAÇ",
+      "TEL",
+      "KIRINTI",
+      "YIKMEK"
+    ],
+    "english_taboo": [
+      "COMB",
+      "HAIR",
+      "WIRE",
+      "DEBRIS",
+      "WASH"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "DİKİŞ MAKİNESİ İPLEME",
+    "english_word": "THREAD SEWING MACHINE",
+    "taboo": [
+      "DİKMEK",
+      "İGNE",
+      "KUMAŞ",
+      "İNCE",
+      "MAKINE"
+    ],
+    "english_taboo": [
+      "SEW",
+      "NEEDLE",
+      "FABRIC",
+      "THIN",
+      "MACHINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BAROMETRE OKUMA",
+    "english_word": "READ BAROMETER",
+    "taboo": [
+      "HAVA",
+      "BASINÇ",
+      "ÖLÇMEK",
+      "CAM",
+      "SİVER"
+    ],
+    "english_taboo": [
+      "WEATHER",
+      "PRESSURE",
+      "MEASURE",
+      "GLASS",
+      "SILVER"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GRAMOFON KURMAK",
+    "english_word": "WIND GRAMOPHONE",
+    "taboo": [
+      "ESKİ",
+      "MÜZİK",
+      "ANAHTARH",
+      "YAYLRN",
+      "ÇEVRIME"
+    ],
+    "english_taboo": [
+      "OLD",
+      "MUSIC",
+      "KEY",
+      "SPRING",
+      "TURN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FOTOĞRAF FİLMİ BANYO ETMEK",
+    "english_word": "DEVELOP PHOTO FILM",
+    "taboo": [
+      "KARANLIK",
+      "KIMSYASALł",
+      "SIVı",
+      "ESKİ",
+      "SİYAH"
+    ],
+    "english_taboo": [
+      "DARK",
+      "CHEMICAL",
+      "LIQUID",
+      "OLD",
+      "BLACK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "YATAK ÇEVİRMEK",
+    "english_word": "FLIP MATTRESS",
+    "taboo": [
+      "UYUMAK",
+      "AĞIR",
+      "BÜYÜK",
+      "YUMUŞAKν",
+      "DIG-KART"
+    ],
+    "english_taboo": [
+      "SLEEP",
+      "HEAVY",
+      "BIG",
+      "SOFT",
+      "FLIP"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GÜVERCIN BESLEMEK",
+    "english_word": "FEED PIGEONS",
+    "taboo": [
+      "KUŞN",
+      "EKMEKTι",
+      "PARK",
+      "GRİV",
+      "UÇMAK"
+    ],
+    "english_taboo": [
+      "BIRD",
+      "BREAD",
+      "PARK",
+      "GRAY",
+      "FLY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "AKORDEON ÇALMAK",
+    "english_word": "PLAY ACCORDION",
+    "taboo": [
+      "MÜZİKK",
+      "KATLA",
+      "HAVA",
+      "TUŞLAR",
+      "UZUN"
+    ],
+    "english_taboo": [
+      "MUSIC",
+      "FOLD",
+      "AIR",
+      "KEYS",
+      "LONG"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "TERMOMETRE SİLKELEMEK",
+    "english_word": "SHAKE THERMOMETER",
+    "taboo": [
+      "ISIν",
+      "ÖLÇYƏK",
+      "CAM",
+      "SIVß",
+      "AŞAĞI"
+    ],
+    "english_taboo": [
+      "TEMPERATURE",
+      "MEASURE",
+      "GLASS",
+      "LIQUID",
+      "DOWN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MUM FİTİLİ KESMEK",
+    "english_word": "TRIM CANDLE WICK",
+    "taboo": [
+      "ATEŞ",
+      "ALEV",
+      "KESMEKγ",
+      "SICAK",
+      "MAKASŽ"
+    ],
+    "english_taboo": [
+      "FIRE",
+      "FLAME",
+      "CUT",
+      "HOT",
+      "SCISSORS"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "NABIZ ÖLÇMEK",
+    "english_word": "TAKE PULSE",
+    "taboo": [
+      "KALP",
+      "ATIM",
+      "BİLEK",
+      "SAYMAK",
+      "SAĞLIK"
+    ],
+    "english_taboo": [
+      "HEART",
+      "BEAT",
+      "WRIST",
+      "COUNT",
+      "HEALTH"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KOMPAS YÖN BULMA",
+    "english_word": "FIND DIRECTION COMPASS",
+    "taboo": [
+      "KUZEY",
+      "İGNE",
+      "YÖNE",
+      "HARITA",
+      "KAYBOLMQ"
+    ],
+    "english_taboo": [
+      "NORTH",
+      "NEEDLE",
+      "DIRECTION",
+      "MAP",
+      "LOST"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ASANSÖR DÜĞME BASMAK",
+    "english_word": "PRESS ELEVATOR BUTTON",
+    "taboo": [
+      "YUKSEK",
+      "KAT",
+      "ASANSOR",
+      "METAL",
+      "YUKARI"
+    ],
+    "english_taboo": [
+      "HIGH",
+      "FLOOR",
+      "ELEVATOR",
+      "METAL",
+      "UP"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "CAM KESMEK",
+    "english_word": "CUT GLASS",
+    "taboo": [
+      "ŞEFFAF",
+      "KIRILMAQ",
+      "KESKINμ",
+      "ELMASγ",
+      "İNCE"
+    ],
+    "english_taboo": [
+      "TRANSPARENT",
+      "BREAK",
+      "SHARP",
+      "DIAMOND",
+      "THIN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KUMANDA PİL DEĞİŞTİRMEK",
+    "english_word": "CHANGE REMOTE BATTERIES",
+    "taboo": [
+      "TELEVIZYONR",
+      "ENERJİζ",
+      "KAPAK",
+      "ELEKTRIKη",
+      "KÜÇÜK"
+    ],
+    "english_taboo": [
+      "TV",
+      "ENERGY",
+      "COVER",
+      "ELECTRIC",
+      "SMALL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HALAT ÖRMEK",
+    "english_word": "BRAID ROPE",
+    "taboo": [
+      "ÜÇGEN",
+      "TUTMAK",
+      "GEMI",
+      "KALINY",
+      "ÇEVIR"
+    ],
+    "english_taboo": [
+      "THREE",
+      "HOLD",
+      "SHIP",
+      "THICK",
+      "TWIST"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SÖZLÜK SAYFASI ÇEVİRMEK",
+    "english_word": "TURN DICTIONARY PAGE",
+    "taboo": [
+      "KELIME",
+      "KITAPe",
+      "ANLAMF",
+      "İNCEn",
+      "BULM"
+    ],
+    "english_taboo": [
+      "WORD",
+      "BOOK",
+      "MEANING",
+      "THIN",
+      "FIND"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "VİTES DEĞİŞTİRMEK",
+    "english_word": "SHIFT GEAR",
+    "taboo": [
+      "ARABA",
+      "HIZ",
+      "EVLINMEKβ",
+      "ÇUBUK",
+      "DEĞIŞDOİR"
+    ],
+    "english_taboo": [
+      "CAR",
+      "SPEED",
+      "CHANGE",
+      "STICK",
+      "SHIFT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "TENCERE DİZMEK",
+    "english_word": "ARRANGE POT PAN",
+    "taboo": [
+      "MUTFAK",
+      "PİŞІР",
+      "DÜ Zexe",
+      "METAL",
+      "USTUNE"
+    ],
+    "english_taboo": [
+      "KITCHEN",
+      "COOK",
+      "ORDER",
+      "METAL",
+      "STACK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PUSULA AYARLAMAK",
+    "english_word": "SET COMPASS",
+    "taboo": [
+      "YÖN",
+      "KUZEY",
+      "İGNE",
+      "HARİTA",
+      "BULMAK"
+    ],
+    "english_taboo": [
+      "DIRECTION",
+      "NORTH",
+      "NEEDLE",
+      "MAP",
+      "FIND"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FREN KONTROLÜ",
+    "english_word": "CHECK BRAKE PADS",
+    "taboo": [
+      "ARABA",
+      "DURМАКL",
+      "TEKERLι",
+      "GÜVENLEDİK",
+      "AŞINM"
+    ],
+    "english_taboo": [
+      "CAR",
+      "STOP",
+      "WHEEL",
+      "SAFETY",
+      "WEAR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "OBJEKTIF ÇEVİRMEK",
+    "english_word": "ROTATE CAMERA LENS",
+    "taboo": [
+      "FOTOĞRAF",
+      "ZOOM",
+      "YAKLAŞTIR",
+      "ÇEVIR",
+      "CAMERA"
+    ],
+    "english_taboo": [
+      "PHOTO",
+      "ZOOM",
+      "CLOSE",
+      "TURN",
+      "CAMERA"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "RENDE KULLANMAK",
+    "english_word": "USE WOOD PLANE",
+    "taboo": [
+      "TAHTA",
+      "DÜZ",
+      "ALET",
+      "YONGA",
+      "MARANGOZβ"
+    ],
+    "english_taboo": [
+      "WOOD",
+      "SMOOTH",
+      "TOOL",
+      "SHAVING",
+      "CARPENTER"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "UZAKTAN KUMANDA KULLANMAK",
+    "english_word": "CHANGE TV CHANNEL",
+    "taboo": [
+      "TELEVIZYON",
+      "DÜĞME",
+      "PROGRAMα",
+      "İZLEοίί",
+      "BASMA"
+    ],
+    "english_taboo": [
+      "TV",
+      "BUTTON",
+      "PROGRAM",
+      "WATCH",
+      "PRESS"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HESAP MAKİNESİ KULLANMAK",
+    "english_word": "PROGRAM CALCULATOR",
+    "taboo": [
+      "MATEMATIK",
+      "SAYI",
+      "TOPLAMA",
+      "İŞLEM",
+      "HESAP"
+    ],
+    "english_taboo": [
+      "MATH",
+      "NUMBER",
+      "ADD",
+      "OPERATION",
+      "CALCULATE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ŞARJ ÇIKARMAK",
+    "english_word": "UNPLUG CHARGER",
+    "taboo": [
+      "ELEKTRYάК",
+      "PRİZ",
+      "TELEFON",
+      "BATAR΅Γ",
+      "ÇEK"
+    ],
+    "english_taboo": [
+      "ELECTRIC",
+      "SOCKET",
+      "PHONE",
+      "BATTERY",
+      "PULL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "DEODORANT SIKMAK",
+    "english_word": "SPRAY DEODORANT",
+    "taboo": [
+      "KOLTUKALT",
+      "KOKς",
+      "SISB",
+      "BAS΄Κ",
+      "TSTINDa"
+    ],
+    "english_taboo": [
+      "ARMPIT",
+      "SMELL",
+      "SPRAY",
+      "PRESS",
+      "FRESH"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "TEST SONUCU BEKLEMEK",
+    "english_word": "WAIT TEST STICK",
+    "taboo": [
+      "SAĞLIK",
+      "SONUÇ",
+      "BEKLEM",
+      "PLASTιΤК",
+      "ÇIA"
+    ],
+    "english_taboo": [
+      "HEALTH",
+      "RESULT",
+      "WAIT",
+      "PLASTIC",
+      "LINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GERİ VİTES TAKMAK",
+    "english_word": "SHIFT TO REVERSE",
+    "taboo": [
+      "GERύ",
+      "ARΘAβ",
+      "VhTES",
+      "PARK",
+      "ÇUBU|"
+    ],
+    "english_taboo": [
+      "BACK",
+      "CAR",
+      "GEAR",
+      "PARK",
+      "STICK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KART OKUTMAK",
+    "english_word": "INSERT CARD READER",
+    "taboo": [
+      "KAĞIT",
+      "PLASTαΚ",
+      "OKUMAL",
+      "MAGNETβΚ",
+      "ΣAΚ"
+    ],
+    "english_taboo": [
+      "PAPER",
+      "PLASTIC",
+      "READ",
+      "MAGNETIC",
+      "INSERT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "DELİKLİ KAĞIT YIRTMAK",
+    "english_word": "TEAR PERFORATED PAPER",
+    "taboo": [
+      "NOKTA",
+      "YRTMAK",
+      "ДAVα",
+      "YARIM",
+      "KESE"
+    ],
+    "english_taboo": [
+      "DOT",
+      "TEAR",
+      "LINE",
+      "HALF",
+      "CUT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "VİDA SIKMAK",
+    "english_word": "SCREW SCREWDRIVER",
+    "taboo": [
+      "METAL",
+      "DÖNDÜRME",
+      "VİD",
+      "TUTМА",
+      "SIKMA"
+    ],
+    "english_taboo": [
+      "METAL",
+      "TURN",
+      "SCREW",
+      "HOLD",
+      "TIGHT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PİL BÖLMESI AÇMAK",
+    "english_word": "OPEN BATTERY COMPARTMENT",
+    "taboo": [
+      "ELEKTψΚ",
+      "ENERΖί",
+      "BÖLME",
+      "KAPAK",
+      "ÇIKLAR"
+    ],
+    "english_taboo": [
+      "ELECTRIC",
+      "ENERGY",
+      "SECTION",
+      "COVER",
+      "REMOVE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SAKAL TRAŞI YAPMAK",
+    "english_word": "SHAVE BEARD STUBBLE",
+    "taboo": [
+      "BANYO",
+      "TxRAŞ",
+      "KESMEβ",
+      "GÜZELα",
+      "DÜZ"
+    ],
+    "english_taboo": [
+      "BATHROOM",
+      "SHAVE",
+      "CUT",
+      "SMOOTH",
+      "CLEAN"
+    ],
+    "mode": "charades"
+  }
 ]
-

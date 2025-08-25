@@ -1,23 +1,950 @@
 [
-  { "word": "TELEFONU TERS TUTUP SELFIE", "english_word": "UPSIDE-DOWN SELFIE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KÖR UÇUŞ ALETLEME", "english_word": "BLIND INSTRUMENT FLYING", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "GÖLGE OYUNU YAPMAK", "english_word": "MAKE SHADOW PUPPETS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "METRONOMLA RİTİM TUTMAK", "english_word": "KEEP TIME WITH METRONOME", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "VR GÖZLÜKLE OYUN", "english_word": "PLAY WITH VR HEADSET", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "DRONE KALDIRMAK", "english_word": "LAUNCH DRONE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BOMBAYI İMHA ETMEK", "english_word": "DEFUSE BOMB", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TÜNEL KAZMAK", "english_word": "DIG TUNNEL", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "RUBİK KÜP ÇÖZMEK", "english_word": "SOLVE RUBIK'S CUBE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PARAŞÜTLE ATLAMAK", "english_word": "PARACHUTE JUMP", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "YILDIRIM ÇEKMEK", "english_word": "CAPTURE LIGHTNING PHOTO", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "DÜĞÜNDE HALAY ÇEKMEK", "english_word": "DANCE HALAY AT WEDDING", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SERENAT YAPMAK", "english_word": "SING SERENADE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "DONMUŞ KAPIYI ÇÖZMEK", "english_word": "THAW FROZEN LOCK", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PİLOT KABİNİNE GİRMEK", "english_word": "ENTER COCKPIT", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "YÜZ BOYAMA SANATI", "english_word": "FACE PAINT ART", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ATEŞLE JONGLÖRLÜK", "english_word": "FIRE JUGGLING", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "İPLAİNE ÜZERİNDE YÜRÜMEK", "english_word": "WALK TIGHTROPE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SERBEST DALIŞ", "english_word": "FREE DIVING", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BUZ TIRMANIŞI", "english_word": "ICE CLIMBING", "taboo": [], "english_taboo": [], "mode": "charades" }
+  {
+    "word": "FLEBOTOMİ YAPMA",
+    "english_word": "PERFORM PHLEBOTOMY",
+    "taboo": [
+      "KAN",
+      "DAMAR",
+      "İĞNE",
+      "TUBE",
+      "DOKTOR"
+    ],
+    "english_taboo": [
+      "BLOOD",
+      "VEIN",
+      "NEEDLE",
+      "TUBE",
+      "DOCTOR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "OTOSKOP KULLANMA",
+    "english_word": "USE OTOSCOPE",
+    "taboo": [
+      "KULAK",
+      "DOKTOR",
+      "IŞIK",
+      "BAKMAKHEKİM"
+    ],
+    "english_taboo": [
+      "EAR",
+      "DOCTOR",
+      "LIGHT",
+      "EXAMINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "İVME ÖLÇER KALİBRASYONU",
+    "english_word": "CALIBRATE ACCELEROMETER",
+    "taboo": [
+      "HAREKETME",
+      "ÖLÇEM",
+      "HASSAS",
+      "AYARLA",
+      "GRAVİTE"
+    ],
+    "english_taboo": [
+      "MOTION",
+      "MEASURE",
+      "PRECISE",
+      "ADJUST",
+      "GRAVITY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SPEKTROMETRE READİNG",
+    "english_word": "READ SPECTROMETER",
+    "taboo": [
+      "IŞIK",
+      "DALGA",
+      "RENK",
+      "ÖLÇÜMŞ",
+      "BİLİM"
+    ],
+    "english_taboo": [
+      "LIGHT",
+      "WAVE",
+      "COLOR",
+      "MEASURE",
+      "SCIENCE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MİKROPİPET KULLANMA",
+    "english_word": "USE MICROPIPETTE",
+    "taboo": [
+      "DAMLA",
+      "KÜÇÜK",
+      "HASSAS",
+      "LABORATUVARβ",
+      "ÖLÇME"
+    ],
+    "english_taboo": [
+      "DROP",
+      "SMALL",
+      "PRECISE",
+      "LAB",
+      "MEASURE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "OSİLOSKOP AYARLAMA",
+    "english_word": "ADJUST OSCILLOSCOPE",
+    "taboo": [
+      "ELEKTRİK",
+      "DALGA",
+      "EKRAN",
+      "MÜHENDİS",
+      "SİNYAL"
+    ],
+    "english_taboo": [
+      "ELECTRIC",
+      "WAVE",
+      "SCREEN",
+      "ENGINEER",
+      "SIGNAL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ENDOSKOP MANİPÜLASYON",
+    "english_word": "MANIPULATE ENDOSCOPE",
+    "taboo": [
+      "DOKTOR",
+      "İÇ",
+      "KAMERA",
+      "FLEX",
+      "VÜCUT"
+    ],
+    "english_taboo": [
+      "DOCTOR",
+      "INSIDE",
+      "CAMERA",
+      "FLEXIBLE",
+      "BODY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "TORSİYON METRE OKUMA",
+    "english_word": "READ TORQUE METER",
+    "taboo": [
+      "DÖNME",
+      "KUVVET",
+      "MOMENT",
+      "MEKANİK",
+      "ÖLÇME"
+    ],
+    "english_taboo": [
+      "ROTATION",
+      "FORCE",
+      "MOMENT",
+      "MECHANIC",
+      "MEASURE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SPHYGMOMANOMETRE KULLANMA",
+    "english_word": "USE SPHYGMOMANOMETER",
+    "taboo": [
+      "TANSİYON",
+      "BASINÇ",
+      "KUFF",
+      "DOKTORa",
+      "KOL"
+    ],
+    "english_taboo": [
+      "PRESSURE",
+      "BLOOD",
+      "CUFF",
+      "DOCTOR",
+      "ARM"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "LAB PIPET YIKAMA",
+    "english_word": "WASH LAB PIPETTE",
+    "taboo": [
+      "TEMİZLEME",
+      "CAM",
+      "HASSAS",
+      "DAMLA",
+      "BİLİM"
+    ],
+    "english_taboo": [
+      "CLEAN",
+      "GLASS",
+      "PRECISE",
+      "DROP",
+      "SCIENCE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "VOLTMETRE PROBE TAKMAK",
+    "english_word": "ATTACH VOLTMETER PROBE",
+    "taboo": [
+      "ELEKTRİK",
+      "ÖLÇME",
+      "METAL",
+      "KIRMIZI",
+      "SİYAH"
+    ],
+    "english_taboo": [
+      "ELECTRIC",
+      "MEASURE",
+      "METAL",
+      "RED",
+      "BLACK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "RADYOLOJİ KOLLİMATOR AYAR",
+    "english_word": "ADJUST RADIOLOGY COLLIMATOR",
+    "taboo": [
+      "XRAY",
+      "IŞIN",
+      "HASTANE",
+      "METALα",
+      "ODAKLA"
+    ],
+    "english_taboo": [
+      "XRAY",
+      "BEAM",
+      "HOSPITAL",
+      "METAL",
+      "FOCUS"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "İNKÜBATÖR SICAKLIK KONTROL",
+    "english_word": "CONTROL INCUBATOR TEMPERATURE",
+    "taboo": [
+      "BEBEK",
+      "SICAK",
+      "HASTANE",
+      "DERECE",
+      "KORUMA"
+    ],
+    "english_taboo": [
+      "BABY",
+      "HOT",
+      "HOSPITAL",
+      "DEGREE",
+      "PROTECT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ULTRASONOGRAFİ PROB HAREKET",
+    "english_word": "MOVE ULTRASOUND PROBE",
+    "taboo": [
+      "DOKTOR",
+      "KARIN",
+      "BEBEK",
+      "GEBE",
+      "JELL"
+    ],
+    "english_taboo": [
+      "DOCTOR",
+      "BELLY",
+      "BABY",
+      "PREGNANT",
+      "GEL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "pH METRE KALİBRASYON",
+    "english_word": "CALIBRATE pH METER",
+    "taboo": [
+      "ASİT",
+      "BAZ",
+      "ÖLÇME",
+      "KIMYAς",
+      "SOLÜSYON"
+    ],
+    "english_taboo": [
+      "ACID",
+      "BASE",
+      "MEASURE",
+      "CHEMISTRY",
+      "SOLUTION"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GONYOMETRE AÇI ÖLÇME",
+    "english_word": "MEASURE ANGLE GONIOMETER",
+    "taboo": [
+      "AÇI",
+      "DERECE",
+      "FLEX",
+      "FİZİK",
+      "EKLEMα"
+    ],
+    "english_taboo": [
+      "ANGLE",
+      "DEGREE",
+      "BEND",
+      "PHYSICS",
+      "JOINT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MANOMETRE BASINÇ OKUMA",
+    "english_word": "READ PRESSURE MANOMETER",
+    "taboo": [
+      "BASINÇ",
+      "GAZ",
+      "SIVı",
+      "ÖLÇME",
+      "İBRE"
+    ],
+    "english_taboo": [
+      "PRESSURE",
+      "GAS",
+      "LIQUID",
+      "MEASURE",
+      "NEEDLE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "REFRAKTOMETRE İNDEKS OKUMA",
+    "english_word": "READ REFRACTOMETER INDEX",
+    "taboo": [
+      "IŞIK",
+      "KIRILMAK",
+      "ŞEKER",
+      "ÖLÇME",
+      "CAM"
+    ],
+    "english_taboo": [
+      "LIGHT",
+      "BEND",
+      "SUGAR",
+      "MEASURE",
+      "GLASS"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KONDUKTİVİTE PROBE TEMİZLEME",
+    "english_word": "CLEAN CONDUCTIVITY PROBE",
+    "taboo": [
+      "ELEKTRİK",
+      "METAL",
+      "SU",
+      "AKIME",
+      "TEMİZ"
+    ],
+    "english_taboo": [
+      "ELECTRIC",
+      "METAL",
+      "WATER",
+      "FLOW",
+      "CLEAN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SPEKTROFOTOMETRE CUVETTE",
+    "english_word": "INSERT SPECTROPHOTOMETER CUVETTE",
+    "taboo": [
+      "IŞIK",
+      "CAM",
+      "KÜÇÜK",
+      "TAKMA",
+      "HASSAS"
+    ],
+    "english_taboo": [
+      "LIGHT",
+      "GLASS",
+      "SMALL",
+      "INSERT",
+      "PRECISE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "CENTRİFÜJ TÜP DENGELEM",
+    "english_word": "BALANCE CENTRIFUGE TUBES",
+    "taboo": [
+      "DÖME",
+      "HIZLI",
+      "TÜPE",
+      "DENGE",
+      "KARŞI"
+    ],
+    "english_taboo": [
+      "SPIN",
+      "FAST",
+      "TUBE",
+      "BALANCE",
+      "OPPOSITE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MİKROSKOP LEM HAZIRLAMA",
+    "english_word": "PREPARE MICROSCOPE SLIDE",
+    "taboo": [
+      "CAM",
+      "İNCE",
+      "KOYME",
+      "GÖRMEK",
+      "BÜYÜTME"
+    ],
+    "english_taboo": [
+      "GLASS",
+      "THIN",
+      "PLACE",
+      "SEE",
+      "MAGNIFY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "AUTO CLA VE STERİLİZE DÖNGÜ",
+    "english_word": "RUN AUTOCLAVE STERILIZE CYCLE",
+    "taboo": [
+      "TEMİZα",
+      "BASINÇ",
+      "SICAK",
+      "BUHARδ",
+      "MAKINE"
+    ],
+    "english_taboo": [
+      "CLEAN",
+      "PRESSURE",
+      "HOT",
+      "STEAM",
+      "MACHINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PCR MAKINESİ PROGRAM",
+    "english_word": "PROGRAM PCR MACHINE",
+    "taboo": [
+      "DNA",
+      "KOPYALA",
+      "BİLİMε",
+      "LABoκ",
+      "SICAK"
+    ],
+    "english_taboo": [
+      "DNA",
+      "COPY",
+      "SCIENCE",
+      "LAB",
+      "HOT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ELEKTROFOREZ GEL HAZIRLAMA",
+    "english_word": "PREPARE ELECTROPHORESIS GEL",
+    "taboo": [
+      "DNA",
+      "JELιμ",
+      "ELEKTRİK",
+      "AYIRMA",
+      "LABοβ"
+    ],
+    "english_taboo": [
+      "DNA",
+      "GEL",
+      "ELECTRIC",
+      "SEPARATE",
+      "LAB"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FLAME FOTOMETRE KALİBRASYON",
+    "english_word": "CALIBRATE FLAME PHOTOMETER",
+    "taboo": [
+      "ALEV",
+      "IŞIK",
+      "METALτ",
+      "RENK",
+      "ÖLÇME"
+    ],
+    "english_taboo": [
+      "FLAME",
+      "LIGHT",
+      "METAL",
+      "COLOR",
+      "MEASURE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "VENTİLATÖR MODOU AYAR",
+    "english_word": "ADJUST VENTILATOR MODE",
+    "taboo": [
+      "NEFES",
+      "MAKINEo",
+      "HASTANE",
+      "HAVA",
+      "YOĞUNŞ"
+    ],
+    "english_taboo": [
+      "BREATH",
+      "MACHINE",
+      "HOSPITAL",
+      "AIR",
+      "INTENSIVE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "DEFIBRILATOR ŞARJ",
+    "english_word": "CHARGE DEFIBRILLATOR",
+    "taboo": [
+      "KALP",
+      "ELEKTRİKγ",
+      "ACILδ",
+      "ŞOKA",
+      "HASTANEψ"
+    ],
+    "english_taboo": [
+      "HEART",
+      "ELECTRIC",
+      "EMERGENCY",
+      "SHOCK",
+      "HOSPITAL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ANESTEZI MAKINESİ KONTROL",
+    "english_word": "CONTROL ANESTHESIA MACHINE",
+    "taboo": [
+      "UYUTMAK",
+      "GAZη",
+      "HASTANE",
+      "DOKTOR",
+      "AMELIYATοε"
+    ],
+    "english_taboo": [
+      "SLEEP",
+      "GAS",
+      "HOSPITAL",
+      "DOCTOR",
+      "SURGERY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "LAZER KORUMAK GÖZLÜK",
+    "english_word": "PUT ON LASER SAFETY GLASSES",
+    "taboo": [
+      "IŞIN",
+      "GÖZοα",
+      "KORUMA",
+      "GÜVENLIKφ",
+      "TEHLIKEα"
+    ],
+    "english_taboo": [
+      "BEAM",
+      "EYE",
+      "PROTECT",
+      "SAFETY",
+      "DANGER"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KRIOJENIK AZOT KULLANMA",
+    "english_word": "HANDLE CRYOGENIC NITROGEN",
+    "taboo": [
+      "SOĞUK",
+      "AZOT",
+      "ELDIVENι",
+      "BUZ",
+      "LAB"
+    ],
+    "english_taboo": [
+      "COLD",
+      "NITROGEN",
+      "GLOVES",
+      "ICE",
+      "LAB"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "RAD YOAKT Ŷ İVİTE DETEKTÖR",
+    "english_word": "USE RADIOACTIVITY DETECTOR",
+    "taboo": [
+      "ISIONχ",
+      "TEHLIKEοε",
+      "Üİ_ÖLÇME",
+      "SAYMAΚ",
+      "BİLİMιε"
+    ],
+    "english_taboo": [
+      "RADIATION",
+      "DANGER",
+      "MEASURE",
+      "COUNT",
+      "SCIENCE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ELEKTRON MIKROSKOP ALIGN",
+    "english_word": "ALIGN ELECTRON MICROSCOPE",
+    "taboo": [
+      "BÜYÜTME",
+      "ELEKTRON",
+      "HİZALAMAα",
+      "HASSAS",
+      "TEK"
+    ],
+    "english_taboo": [
+      "MAGNIFY",
+      "ELECTRON",
+      "ALIGN",
+      "PRECISE",
+      "DETAIL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KÜTLE SPEKTROMETRE ÖRNEK",
+    "english_word": "LOAD MASS SPECTROMETER SAMPLE",
+    "taboo": [
+      "KÜTLE",
+      "ATOM",
+      "ANALIZοε",
+      "CHEMICAL",
+      "HASSAS"
+    ],
+    "english_taboo": [
+      "MASS",
+      "ATOM",
+      "ANALYZE",
+      "CHEMICAL",
+      "PRECISE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "X-IŞIN KRISTALOGRAFI",
+    "english_word": "PERFORM X-RAY CRYSTALLOGRAPHY",
+    "taboo": [
+      "IŞIN",
+      "KRISTALοε",
+      "STRUKTÜRικε",
+      "DOKTÓR",
+      "ATOMο"
+    ],
+    "english_taboo": [
+      "XRAY",
+      "CRYSTAL",
+      "STRUCTURE",
+      "DOCTOR",
+      "ATOM"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "NMR SPEKTROSKOPIİ KURMA",
+    "english_word": "SETUP NMR SPECTROSCOPY",
+    "taboo": [
+      "MAGNETIK",
+      "REZONANSψε",
+      "ATOM",
+      "BİLİMαε",
+      "HASSASα"
+    ],
+    "english_taboo": [
+      "MAGNETIC",
+      "RESONANCE",
+      "ATOM",
+      "SCIENCE",
+      "PRECISE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "AKIŞ SITOMETRISI ANALİZ",
+    "english_word": "ANALYZE FLOW CYTOMETRY",
+    "taboo": [
+      "HÜCRE",
+      "AKIŞ",
+      "ANALIZε",
+      "LABoβ",
+      "SAYMA"
+    ],
+    "english_taboo": [
+      "CELL",
+      "FLOW",
+      "ANALYZE",
+      "LAB",
+      "COUNT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KROMATOGRAFI KOLON DOLDURMA",
+    "english_word": "PACK CHROMATOGRAPHY COLUMN",
+    "taboo": [
+      "AYIRMA",
+      "KOLONα",
+      "TÜPN",
+      "KIMYAα",
+      "PACK"
+    ],
+    "english_taboo": [
+      "SEPARATE",
+      "COLUMN",
+      "TUBE",
+      "CHEMISTRY",
+      "PACK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "TERMAL DÖNGÜ PROTOKOL",
+    "english_word": "SET THERMAL CYCLER PROTOCOL",
+    "taboo": [
+      "SICAKLIK",
+      "DÖNGÜ",
+      "PCR",
+      "PROGRAM",
+      "AYAR"
+    ],
+    "english_taboo": [
+      "TEMPERATURE",
+      "CYCLE",
+      "PCR",
+      "PROGRAM",
+      "SET"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "SIVI OTOMATIK IŞLEME",
+    "english_word": "USE AUTOMATED LIQUID HANDLER",
+    "taboo": [
+      "SIVı",
+      "ROBOTιχ",
+      "HASSAS",
+      "DAMLA",
+      "PROGRAM"
+    ],
+    "english_taboo": [
+      "LIQUID",
+      "ROBOT",
+      "PRECISE",
+      "DROP",
+      "PROGRAM"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BIYOGÜVENLIK KABINI LAMINER",
+    "english_word": "WORK IN BIOSAFETY CABINET",
+    "taboo": [
+      "GÜVENLIKνη",
+      "TEMIZη",
+      "HAVA",
+      "KORUMA",
+      "LABη"
+    ],
+    "english_taboo": [
+      "SAFETY",
+      "CLEAN",
+      "AIR",
+      "PROTECT",
+      "LAB"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FERMENTÖR KONTROL SİSTEM",
+    "english_word": "CONTROL FERMENTOR SYSTEM",
+    "taboo": [
+      "MAYA",
+      "BİYOLOJIκε",
+      "BÜYÜME",
+      "TANKε",
+      "KONTROL"
+    ],
+    "english_taboo": [
+      "YEAST",
+      "BIOLOGY",
+      "GROW",
+      "TANK",
+      "CONTROL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HÜCRE KÜLTÜRÜ İNCUBATOR",
+    "english_word": "MAINTAIN CELL CULTURE INCUBATOR",
+    "taboo": [
+      "HÜCRE",
+      "BÜYÜME",
+      "SICAK",
+      "CO2",
+      "BAKTERI"
+    ],
+    "english_taboo": [
+      "CELL",
+      "GROW",
+      "HOT",
+      "CO2",
+      "BACTERIA"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GEN SEKANSLAMA MAKİNE",
+    "english_word": "OPERATE GENE SEQUENCING MACHINE",
+    "taboo": [
+      "DNAψ",
+      "SIRA",
+      "OKUMA",
+      "GENETIKε",
+      "MACHINE"
+    ],
+    "english_taboo": [
+      "DNA",
+      "ORDER",
+      "READ",
+      "GENETIC",
+      "MACHINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PROTEİN SAFLAŞTIRIMal",
+    "english_word": "PERFORM PROTEIN PURIFICATION",
+    "taboo": [
+      "PROTEINα",
+      "TEMIZLEMEε",
+      "AYIRMA",
+      "BIOCHEM",
+      "COLUMN"
+    ],
+    "english_taboo": [
+      "PROTEIN",
+      "CLEAN",
+      "SEPARATE",
+      "BIOCHEM",
+      "COLUMN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ENZİM TAHLILI PLAKA",
+    "english_word": "READ ENZYME ASSAY PLATE",
+    "taboo": [
+      "ENZIMκ",
+      "PLAKA",
+      "OKUMA",
+      "RENK",
+      "ANALIZε"
+    ],
+    "english_taboo": [
+      "ENZYME",
+      "PLATE",
+      "READ",
+      "COLOR",
+      "ANALYZE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "WESTERN BLOT AKTARIMI",
+    "english_word": "PERFORM WESTERN BLOT TRANSFER",
+    "taboo": [
+      "PROTEINγ",
+      "TRANSFER",
+      "ELEKTRIKλ",
+      "MEMBRANε",
+      "LAB"
+    ],
+    "english_taboo": [
+      "PROTEIN",
+      "TRANSFER",
+      "ELECTRIC",
+      "MEMBRANE",
+      "LAB"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FACS AYIRIMI HÜCRE",
+    "english_word": "PERFORM FACS CELL SORTING",
+    "taboo": [
+      "HÜCRE",
+      "AYIRMA",
+      "FLOW",
+      "LASER",
+      "SORTINGα"
+    ],
+    "english_taboo": [
+      "CELL",
+      "SEPARATE",
+      "FLOW",
+      "LASER",
+      "SORTING"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KONFOKAL MİKROSKOPI",
+    "english_word": "USE CONFOCAL MICROSCOPY",
+    "taboo": [
+      "LASER",
+      "BÜYÜTME",
+      "ODAKLAMA",
+      "REMε",
+      "HÜCREκ"
+    ],
+    "english_taboo": [
+      "LASER",
+      "MAGNIFY",
+      "FOCUS",
+      "IMAGE",
+      "CELL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PATCH CLAMP TEKNIĞİ",
+    "english_word": "PERFORM PATCH CLAMP ELECTROPHYSIOLOGY",
+    "taboo": [
+      "HÜCRE",
+      "ELEKTRικ",
+      "İYON",
+      "MEMBRANε",
+      "HASSAS"
+    ],
+    "english_taboo": [
+      "CELL",
+      "ELECTRIC",
+      "ION",
+      "MEMBRANE",
+      "PRECISE"
+    ],
+    "mode": "charades"
+  }
 ]
-

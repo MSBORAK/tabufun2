@@ -1,53 +1,952 @@
 [
-  { "word": "DİYAFONLA KONUŞMAK", "english_word": "USE INTERCOM", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BAYRAK DİKMEK", "english_word": "PLANT FLAG", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KARTOPU OYNAMAK", "english_word": "SNOWBALL FIGHT", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KİLİM SİLKELEMEK", "english_word": "SHAKE RUG", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BALIĞA YEM TAKMAK", "english_word": "BAIT HOOK", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "DÜĞME DİKMEK", "english_word": "SEW BUTTON", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SATRANÇ OYNAMAK", "english_word": "PLAY CHESS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PİYANO ÇALMAK", "english_word": "PLAY PIANO", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "NOTA ÇEVİRMEK", "english_word": "TURN SHEET MUSIC", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KİTAP AYRACI KOYMAK", "english_word": "PLACE BOOKMARK", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "FIRIN TEPSİSİ SÜRMEK", "english_word": "SLIDE BAKING TRAY", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPÜŞONU ÇEKMEK", "english_word": "PULL HOOD", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPAK AÇACAĞI KULLANMAK", "english_word": "USE BOTTLE OPENER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KART OKUTMAK", "english_word": "TAP CARD READER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BİTKİ BUDAMAK", "english_word": "PRUNE PLANT", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "HAMUR YOĞURMAK", "english_word": "KNEAD DOUGH", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "UÇURTMA UÇURMAK", "english_word": "FLY KITE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BOZUK PARA SAYMAK", "english_word": "COUNT COINS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SİLGİYLE SİLMEK", "english_word": "ERASE WITH ERASER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ÇİVİ ÇAKMAK", "english_word": "HAMMER NAIL", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ÇEKİÇLE VURMAK", "english_word": "HIT WITH HAMMER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ZAR ATMAK", "english_word": "ROLL DICE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BALIK TUTMAK", "english_word": "CATCH FISH", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KOVA İLE SU TAŞIMAK", "english_word": "CARRY WATER BUCKET", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ÜTÜ YAPMAK", "english_word": "IRON CLOTHES", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "DONDURUCUYA KOYMAK", "english_word": "PUT IN FREEZER", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "FIRINI AÇMAK", "english_word": "OPEN OVEN", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "MUM ÜFLEMEK", "english_word": "BLOW OUT CANDLE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BALON PATLATMAK", "english_word": "POP BALLOON", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ÇALAR SAAT KURMAK", "english_word": "SET ALARM CLOCK", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ANAHTAR ÇEVİRMEK", "english_word": "TURN KEY", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KASA AÇMAK", "english_word": "OPEN SAFE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TELEFONU SESSİZE ALMAK", "english_word": "SILENCE PHONE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPIYA ZİNCİR TAKMAK", "english_word": "ATTACH DOOR CHAIN", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "BİLET KONTROL ETMEK", "english_word": "CHECK TICKET", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KULAK TIKACI TAKMAK", "english_word": "PUT EARPLUGS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "MASKE ÇIKARMAK", "english_word": "REMOVE MASK", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TESPİH ÇEKMEK", "english_word": "PRAY BEADS", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "KAPI ZİLİNE BASMAK", "english_word": "PRESS DOORBELL", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PENCERE AÇMAK", "english_word": "OPEN WINDOW", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PERDE ÇEKMEK", "english_word": "DRAW CURTAIN", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "HALI SÜPÜRMEK", "english_word": "VACUUM RUG", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TOZ ALMAK", "english_word": "DUST SHELF", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "LAMBA DEĞİŞTİRMEK", "english_word": "CHANGE BULB", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ÇAY KAŞIĞI KARIŞTIRMAK", "english_word": "STIR TEA", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "TABAK YIKAMAK", "english_word": "WASH DISH", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "SÜRAHİDEN SU DÖKMEK", "english_word": "POUR WATER FROM JUG", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "MEKTUP ZARFA KOYMAK", "english_word": "PUT LETTER IN ENVELOPE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "ZARFI YALAMAK", "english_word": "LICK ENVELOPE", "taboo": [], "english_taboo": [], "mode": "charades" },
-  { "word": "PUL YAPIŞTIRMAK", "english_word": "STICK STAMP", "taboo": [], "english_taboo": [], "mode": "charades" }
+  {
+    "word": "MAKARNA HAŞLAMAK",
+    "english_word": "BOIL PASTA",
+    "taboo": [
+      "TENCERE",
+      "SU",
+      "SICAK",
+      "İTALYAN",
+      "UZU"
+    ],
+    "english_taboo": [
+      "POT",
+      "WATER",
+      "HOT",
+      "ITALIAN",
+      "LONG"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇAMAŞIR MAKİNESİ ÇALIŞTIRMAK",
+    "english_word": "RUN WASHING MACHINE",
+    "taboo": [
+      "KİRLİ",
+      "SABUN",
+      "SU",
+      "TEMİZ",
+      "DÖNER"
+    ],
+    "english_taboo": [
+      "DIRTY",
+      "SOAP",
+      "WATER",
+      "CLEAN",
+      "SPIN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PENCERE TEMİZLEMEK",
+    "english_word": "CLEAN WINDOW",
+    "taboo": [
+      "CAM",
+      "ŞEFFAF",
+      "BAKMA",
+      "BEZ",
+      "PARLAK"
+    ],
+    "english_taboo": [
+      "GLASS",
+      "TRANSPARENT",
+      "LOOK",
+      "CLOTH",
+      "SHINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BİLGİSAYAR AÇMAK",
+    "english_word": "TURN ON COMPUTER",
+    "taboo": [
+      "EKRAN",
+      "KLAVYE",
+      "MOUSE",
+      "AÇILIŞ",
+      "DÜĞME"
+    ],
+    "english_taboo": [
+      "SCREEN",
+      "KEYBOARD",
+      "MOUSE",
+      "STARTUP",
+      "BUTTON"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GÖZLÜK TEMİZLEMEK",
+    "english_word": "CLEAN GLASSES",
+    "taboo": [
+      "GÖRMEK",
+      "BEZ",
+      "BUĞU",
+      "LENS",
+      "ŞEFFAF"
+    ],
+    "english_taboo": [
+      "SEE",
+      "CLOTH",
+      "FOG",
+      "LENS",
+      "CLEAR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KEDI TÜYLERİNİ TARAMAK",
+    "english_word": "BRUSH CAT FUR",
+    "taboo": [
+      "YUMUŞAK",
+      "TARAK",
+      "HAYVAN",
+      "MİYAV",
+      "UZUN"
+    ],
+    "english_taboo": [
+      "SOFT",
+      "BRUSH",
+      "ANIMAL",
+      "MEOW",
+      "LONG"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "DİŞ İPİ KULLANMAK",
+    "english_word": "USE DENTAL FLOSS",
+    "taboo": [
+      "AĞIZ",
+      "TEMİZ",
+      "ARASINDA",
+      "İNCE",
+      "SAĞLIK"
+    ],
+    "english_taboo": [
+      "MOUTH",
+      "CLEAN",
+      "BETWEEN",
+      "THIN",
+      "HEALTH"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇİÇEK TOPRAKLA",
+    "english_word": "PLANT FLOWERS",
+    "taboo": [
+      "BAHÇE",
+      "TOHUM",
+      "SAKSI",
+      "BÜYÜMEK",
+      "YEŞİL"
+    ],
+    "english_taboo": [
+      "GARDEN",
+      "SEED",
+      "POT",
+      "GROW",
+      "GREEN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "AYAKKABI BOYAMAK",
+    "english_word": "POLISH SHOES",
+    "taboo": [
+      "PARLAK",
+      "SIYAH",
+      "FIRÇA",
+      "AYAK",
+      "GİYMEK"
+    ],
+    "english_taboo": [
+      "SHINE",
+      "BLACK",
+      "BRUSH",
+      "FOOT",
+      "WEAR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "EL KREMi SÜRMEK",
+    "english_word": "APPLY HAND CREAM",
+    "taboo": [
+      "YUMUŞAK",
+      "KURU",
+      "BEYAZ",
+      "AVUÇ",
+      "MASAJIş"
+    ],
+    "english_taboo": [
+      "SOFT",
+      "DRY",
+      "WHITE",
+      "PALM",
+      "MASSAGE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "FIRIN AÇMAK",
+    "english_word": "TURN ON OVEN",
+    "taboo": [
+      "SICAK",
+      "PİŞİRMEK",
+      "KAPI",
+      "DERECE",
+      "EKMEKİ"
+    ],
+    "english_taboo": [
+      "HOT",
+      "COOK",
+      "DOOR",
+      "DEGREE",
+      "BREAD"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PERDE ÇEKMEK",
+    "english_word": "DRAW CURTAINS",
+    "taboo": [
+      "PENCERE",
+      "KAPALΙ",
+      "KUMAŞ",
+      "İP",
+      "GIZLEMEK"
+    ],
+    "english_taboo": [
+      "WINDOW",
+      "CLOSED",
+      "FABRIC",
+      "STRING",
+      "HIDE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ANAHTAR KOPYALAMAK",
+    "english_word": "COPY KEY",
+    "taboo": [
+      "METAL",
+      "MAKİNE",
+      "KILIT",
+      "AYNΙ",
+      "ÇEVİRMEK"
+    ],
+    "english_taboo": [
+      "METAL",
+      "MACHINE",
+      "LOCK",
+      "SAME",
+      "TURN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MUM İLE MÜHÜRLEMEK",
+    "english_word": "SEAL WITH WAX",
+    "taboo": [
+      "ERİMEK",
+      "KIRMIZI",
+      "MEKTUP",
+      "SİGNET",
+      "ESKİ"
+    ],
+    "english_taboo": [
+      "MELT",
+      "RED",
+      "LETTER",
+      "STAMP",
+      "OLD"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GAZETE KATLAMA",
+    "english_word": "FOLD NEWSPAPER",
+    "taboo": [
+      "KAĞIT",
+      "HABER",
+      "İKİYE",
+      "BÜYÜK",
+      "SİYAH"
+    ],
+    "english_taboo": [
+      "PAPER",
+      "NEWS",
+      "HALF",
+      "BIG",
+      "BLACK"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇAYDANLIK KAYNATMAK",
+    "english_word": "BOIL KETTLE",
+    "taboo": [
+      "SU",
+      "SICAK",
+      "ÇAY",
+      "BUHARMι",
+      "METALLİK"
+    ],
+    "english_taboo": [
+      "WATER",
+      "HOT",
+      "TEA",
+      "STEAM",
+      "METAL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "DOLAP DÜZENLEMEK",
+    "english_word": "ORGANIZE CLOSET",
+    "taboo": [
+      "ELBİSE",
+      "ASK",
+      "DÜZEN",
+      "KATLAMA",
+      "RAFιά"
+    ],
+    "english_taboo": [
+      "CLOTHES",
+      "HANG",
+      "ORDER",
+      "FOLD",
+      "SHELF"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KAŞLARINI YOLMAK",
+    "english_word": "PLUCK HAIR",
+    "taboo": [
+      "KAŞΛΕΡ",
+      "CIMBIZ",
+      "AĞRILAR",
+      "TEK",
+      "YOLMAK"
+    ],
+    "english_taboo": [
+      "EYEBROW",
+      "TWEEZERS",
+      "PAIN",
+      "SINGLE",
+      "PULL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BUZ KALIBI DOLDURMAK",
+    "english_word": "FILL ICE TRAY",
+    "taboo": [
+      "SU",
+      "SOĞUK",
+      "DONDURUCU",
+      "KÜÇÜK",
+      "BİRDAK"
+    ],
+    "english_taboo": [
+      "WATER",
+      "COLD",
+      "FREEZER",
+      "SMALL",
+      "SQUARE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HOPARLÖR BAĞLAMAK",
+    "english_word": "CONNECT SPEAKER",
+    "taboo": [
+      "SES",
+      "YÜKSEK",
+      "MÜZİK",
+      "KABLO",
+      "ÇALMAK"
+    ],
+    "english_taboo": [
+      "SOUND",
+      "LOUD",
+      "MUSIC",
+      "CABLE",
+      "PLAY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇANTA TOPLAMAK",
+    "english_word": "PACK BAG",
+    "taboo": [
+      "SEYAHAT",
+      "ELBİSE",
+      "VALİZ",
+      "YOLCULUK",
+      "KATLAMA"
+    ],
+    "english_taboo": [
+      "TRAVEL",
+      "CLOTHES",
+      "SUITCASE",
+      "TRIP",
+      "FOLD"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ŞARJ CIHAZI TAKMA",
+    "english_word": "PLUG IN CHARGER",
+    "taboo": [
+      "TELEFON",
+      "BATARYAXARAş",
+      "PRİZ",
+      "ELEKTRİK",
+      "KABLO"
+    ],
+    "english_taboo": [
+      "PHONE",
+      "BATTERY",
+      "SOCKET",
+      "ELECTRIC",
+      "CABLE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BULAŞIK MAKİNESİNE DİZMEK",
+    "english_word": "LOAD DISHWASHER",
+    "taboo": [
+      "TABAK",
+      "KİRLİ",
+      "MAKINE",
+      "YIKAMA",
+      "SU"
+    ],
+    "english_taboo": [
+      "PLATE",
+      "DIRTY",
+      "MACHINE",
+      "WASH",
+      "WATER"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PARAŞÜT AÇMAK",
+    "english_word": "OPEN PARACHUTE",
+    "taboo": [
+      "HAVA",
+      "UÇMAK",
+      "GÜVENLİK",
+      "YAVAŞ",
+      "DÜŞMEK"
+    ],
+    "english_taboo": [
+      "AIR",
+      "FLY",
+      "SAFETY",
+      "SLOW",
+      "FALL"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "GİTAR AKORU YAPMAK",
+    "english_word": "TUNE GUITAR",
+    "taboo": [
+      "MÜZİK",
+      "TEL",
+      "SES",
+      "ÇALMAK",
+      "ENSTRÜMAN"
+    ],
+    "english_taboo": [
+      "MUSIC",
+      "STRING",
+      "SOUND",
+      "PLAY",
+      "INSTRUMENT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MEYVE SUYU SIKMAK",
+    "english_word": "SQUEEZE FRUIT JUICE",
+    "taboo": [
+      "PORTAKAL",
+      "LİMON",
+      "İÇMEK",
+      "TATLη",
+      "BARDAK"
+    ],
+    "english_taboo": [
+      "ORANGE",
+      "LEMON",
+      "DRINK",
+      "SWEET",
+      "GLASS"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HAVUZ TEMİZLİĞİ YAPMAK",
+    "english_word": "CLEAN POOL",
+    "taboo": [
+      "SU",
+      "MAVΈ",
+      "KİMYASALήσ",
+      "YÜZMEK",
+      "BÜYÜK"
+    ],
+    "english_taboo": [
+      "WATER",
+      "BLUE",
+      "CHEMICAL",
+      "SWIM",
+      "BIG"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "EV BOYAMAK",
+    "english_word": "PAINT HOUSE",
+    "taboo": [
+      "RENKΛЕ",
+      "FIRÇA",
+      "DUVAR",
+      "BOYA",
+      "YENİLEMEK"
+    ],
+    "english_taboo": [
+      "COLOR",
+      "BRUSH",
+      "WALL",
+      "PAINT",
+      "RENEW"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BAHÇE HORTUMU KULLANMAK",
+    "english_word": "USE GARDEN HOSE",
+    "taboo": [
+      "SU",
+      "UZUN",
+      "PLASTİK",
+      "AKMA",
+      "YEŞİL"
+    ],
+    "english_taboo": [
+      "WATER",
+      "LONG",
+      "PLASTIC",
+      "FLOW",
+      "GREEN"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KOLTUK ÖRTÜSÜ YIKAMAK",
+    "english_word": "WASH COUCH COVER",
+    "taboo": [
+      "KUMAŞ",
+      "OTURMA",
+      "ÇIKARMAK",
+      "TEMİZ",
+      "MAKİNE"
+    ],
+    "english_taboo": [
+      "FABRIC",
+      "SIT",
+      "REMOVE",
+      "CLEAN",
+      "MACHINE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ISKAMBIL YAPMAK",
+    "english_word": "DO CARD TRICKS",
+    "taboo": [
+      "KAĞIT",
+      "SIHIR",
+      "KARIŞIK",
+      "GÖSΘ",
+      "OYNU"
+    ],
+    "english_taboo": [
+      "PAPER",
+      "MAGIC",
+      "SHUFFLE",
+      "SHOW",
+      "GAME"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "METAL KESMEK",
+    "english_word": "CUT METAL PIECE",
+    "taboo": [
+      "TESTERE",
+      "SERTEMECHδ",
+      "ALET",
+      "KISᾶA",
+      "PARÇAς"
+    ],
+    "english_taboo": [
+      "SAW",
+      "HARD",
+      "TOOL",
+      "SHORT",
+      "PIECE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇELİK KAPI AÇMAK",
+    "english_word": "OPEN STEEL DOOR",
+    "taboo": [
+      "AĞIR",
+      "METALINEμ",
+      "ANAHTAR",
+      "GÜVENLχζ",
+      "KIRMIZI"
+    ],
+    "english_taboo": [
+      "HEAVY",
+      "METAL",
+      "KEY",
+      "SECURITY",
+      "RED"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ALARM SAATI KURMAK",
+    "english_word": "SET ALARM CLOCK",
+    "taboo": [
+      "UYAND",
+      "SABΆΧΣΗ",
+      "SAAT",
+      "YÜKSEK",
+      "SESἍ"
+    ],
+    "english_taboo": [
+      "WAKE",
+      "MORNING",
+      "TIME",
+      "LOUD",
+      "SOUND"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "LAVABO TIKANIĞI AÇMAK",
+    "english_word": "UNCLOG SINK",
+    "taboo": [
+      "SU",
+      "AKMA",
+      "BORU",
+      "İLAÇ",
+      "BANYO"
+    ],
+    "english_taboo": [
+      "WATER",
+      "FLOW",
+      "PIPE",
+      "DRAIN",
+      "BATHROOM"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "PLASTİK TORBA KATLAMAK",
+    "english_word": "FOLD PLASTIC BAG",
+    "taboo": [
+      "ALIŞVERİŞGINA",
+      "MARKET",
+      "KÜÇÜK",
+      "KATLA",
+      "SAKLA"
+    ],
+    "english_taboo": [
+      "SHOPPING",
+      "STORE",
+      "SMALL",
+      "FOLD",
+      "SAVE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HAVA YASTIK ŞİŞİRMEK",
+    "english_word": "INFLATE AIR MATTRESS",
+    "taboo": [
+      "NEFES",
+      "BÜYÜMEK",
+      "PLASTγ",
+      "YATMAE",
+      "KAMP"
+    ],
+    "english_taboo": [
+      "BREATH",
+      "GROW",
+      "PLASTIC",
+      "SLEEP",
+      "CAMP"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KUPA KAHVE YAPMAK",
+    "english_word": "MAKE CUP COFFEE",
+    "taboo": [
+      "SICAK",
+      "İÇMEK",
+      "KAHVE",
+      "SÜT",
+      "ŞEKER"
+    ],
+    "english_taboo": [
+      "HOT",
+      "DRINK",
+      "BROWN",
+      "MILK",
+      "SUGAR"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "MASA ÖRTÜSλ SERMENé",
+    "english_word": "SET TABLE CLOTH",
+    "taboo": [
+      "KUMAŞ",
+      "SOFRA",
+      "YEMEK",
+      "ÖRTMEK",
+      "GÜZEL"
+    ],
+    "english_taboo": [
+      "FABRIC",
+      "TABLE",
+      "MEAL",
+      "COVER",
+      "NICE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KÖPEK MAMASI VERMIKª",
+    "english_word": "FEED DOG",
+    "taboo": [
+      "HAYVAN",
+      "YEMEK",
+      "KASE",
+      "AŞÇILIGA",
+      "GÜNLÜK"
+    ],
+    "english_taboo": [
+      "ANIMAL",
+      "FOOD",
+      "BOWL",
+      "HUNGRY",
+      "DAILY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "HAVA DURUMU KONTROLE",
+    "english_word": "CHECK WEATHER",
+    "taboo": [
+      "YAĞMUR",
+      "GÜNEŞ",
+      "BULUT",
+      "SICAK",
+      "SOΰ"
+    ],
+    "english_taboo": [
+      "RAIN",
+      "SUN",
+      "CLOUD",
+      "HOT",
+      "COLD"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "POSTA KUTUSU BOŞALT",
+    "english_word": "EMPTY MAILBOX",
+    "taboo": [
+      "MEKTUP",
+      "GÜNLÜK",
+      "ANAHTAR",
+      "AÇMAKI",
+      "OKUMA"
+    ],
+    "english_taboo": [
+      "LETTER",
+      "DAILY",
+      "KEY",
+      "OPEN",
+      "READ"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ARABA KİLİDİ AÇMAK",
+    "english_word": "UNLOCK CAR",
+    "taboo": [
+      "ANAHTAF",
+      "KAPI",
+      "UZAKLAE",
+      "SES",
+      "GÜVENLİK"
+    ],
+    "english_taboo": [
+      "KEY",
+      "DOOR",
+      "REMOTE",
+      "SOUND",
+      "SECURITY"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ATEŞ YAKMAK",
+    "english_word": "LIGHT FIREPLACE",
+    "taboo": [
+      "SICAKAP",
+      "KURU",
+      "KIB",
+      "ALEVμ",
+      "KIŞ"
+    ],
+    "english_taboo": [
+      "HOT",
+      "DRY",
+      "SPARK",
+      "FLAME",
+      "WINTER"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "ÇANTA FERMUARI KAPATMAK",
+    "english_word": "ZIP BAG CLOSE",
+    "taboo": [
+      "METALνι",
+      "KAPAT",
+      "TAŞUMAK",
+      "ÇEK",
+      "GÜVENLιν"
+    ],
+    "english_taboo": [
+      "METAL",
+      "CLOSE",
+      "CARRY",
+      "PULL",
+      "SECURE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "EL KREMİ AÇMAK",
+    "english_word": "OPEN HAND CREAM",
+    "taboo": [
+      "KAPAK",
+      "POMPA",
+      "BEYAZε",
+      "YUMUŞ",
+      "SIKI"
+    ],
+    "english_taboo": [
+      "LID",
+      "PUMP",
+      "WHITE",
+      "SOFT",
+      "SQUEEZE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "BUZDOLABI TEMİZLEMEK",
+    "english_word": "CLEAN REFRIGERATOR",
+    "taboo": [
+      "SOĞUK",
+      "YEMEK",
+      "BÜYÜK",
+      "BEZ",
+      "İÇԄ"
+    ],
+    "english_taboo": [
+      "COLD",
+      "FOOD",
+      "BIG",
+      "CLOTH",
+      "INSIDE"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "KANAT ÇIRPMAK",
+    "english_word": "FLAP WINGS",
+    "taboo": [
+      "KUΞ",
+      "UÇMAQ",
+      "HAVADA",
+      "YUKAR",
+      "HAREKETέ"
+    ],
+    "english_taboo": [
+      "BIRD",
+      "FLY",
+      "AIR",
+      "UP",
+      "MOVEMENT"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "EL YIKAMAK",
+    "english_word": "WASH HANDS",
+    "taboo": [
+      "SABUNF",
+      "SU",
+      "TEMIZε",
+      "MİKKYROPP",
+      "PARMAXA"
+    ],
+    "english_taboo": [
+      "SOAP",
+      "WATER",
+      "CLEAN",
+      "GERMS",
+      "FINGERS"
+    ],
+    "mode": "charades"
+  },
+  {
+    "word": "OKUL ÇANTASI HAZIRLAMAK",
+    "english_word": "PREPARE SCHOOL BAG",
+    "taboo": [
+      "KİTAPΥ",
+      "DEFTER",
+      "KALEM",
+      "OKUL",
+      "ÇOCUKί"
+    ],
+    "english_taboo": [
+      "BOOK",
+      "NOTEBOOK",
+      "PEN",
+      "SCHOOL",
+      "CHILD"
+    ],
+    "mode": "charades"
+  }
 ]
-

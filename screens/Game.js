@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Image, Modal, SafeAreaView, Platform } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions, Vibration, StatusBar, Image, Modal, SafeAreaView, Platform, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { responsiveStyles, isTablet, isLargeTablet, getResponsiveFontSize, getResponsivePadding, getResponsiveIconSize } from '../utils/responsive';
 import wordsEasy from '../data/words_easy.json';
 import wordsMedium from '../data/words_medium.json';
 import wordsHard from '../data/words_hard.json';
@@ -742,40 +743,46 @@ const Game = ({ route, navigation }) => {
                 </View>
               </View>
               
-              {(roundCorrectWords.length > 0 || roundPassWords.length > 0 || tabooWordsUsed.length > 0) && (
-                <View style={styles.tabooList}>
-                  {roundCorrectWords.length > 0 && (
-                    <>
-                      <Text style={[styles.tabooListTitle, { color: '#66BB6A' }]}>{translations[language].correct}</Text>
-                      <View style={styles.wordsPanel}>
-                        {roundCorrectWords.map((word, index) => (
-                          <Text key={`c-${index}`} style={[styles.wordItem, { color: '#66BB6A' }]}>• {word}</Text>
-                        ))}
-                      </View>
-                    </>
-                  )}
-                  {roundPassWords.length > 0 && (
-                    <>
-                      <Text style={[styles.tabooListTitle, { color: '#FFB74D' }]}>{translations[language].pass}</Text>
-                      <View style={styles.wordsPanel}>
-                        {roundPassWords.map((word, index) => (
-                          <Text key={`p-${index}`} style={[styles.wordItem, { color: '#FFB74D' }]}>• {word}</Text>
-                        ))}
-                      </View>
-                    </>
-                  )}
-                  {tabooWordsUsed.length > 0 && (
-                    <>
-                      <Text style={[styles.tabooListTitle, { color: '#EF5350' }]}>{translations[language].taboo}</Text>
-                      <View style={styles.wordsPanel}>
-                        {tabooWordsUsed.map((word, index) => (
-                          <Text key={`t-${index}`} style={[styles.wordItem, styles.tabooWordSummary]}>• {word}</Text>
-                        ))}
-                      </View>
-                    </>
-                  )}
-                </View>
-              )}
+              <ScrollView 
+                style={styles.wordListScrollView}
+                contentContainerStyle={styles.wordListContainer}
+                showsVerticalScrollIndicator={true}
+              >
+                {(roundCorrectWords.length > 0 || roundPassWords.length > 0 || tabooWordsUsed.length > 0) && (
+                  <View style={styles.tabooList}>
+                    {roundCorrectWords.length > 0 && (
+                      <>
+                        <Text style={[styles.tabooListTitle, { color: '#66BB6A' }]}>{translations[language].correct}</Text>
+                        <View style={styles.wordsPanel}>
+                          {roundCorrectWords.map((word, index) => (
+                            <Text key={`c-${index}`} style={[styles.wordItem, { color: '#66BB6A' }]}>• {word}</Text>
+                          ))}
+                        </View>
+                      </>
+                    )}
+                    {roundPassWords.length > 0 && (
+                      <>
+                        <Text style={[styles.tabooListTitle, { color: '#FFB74D' }]}>{translations[language].pass}</Text>
+                        <View style={styles.wordsPanel}>
+                          {roundPassWords.map((word, index) => (
+                            <Text key={`p-${index}`} style={[styles.wordItem, { color: '#FFB74D' }]}>• {word}</Text>
+                          ))}
+                        </View>
+                      </>
+                    )}
+                    {tabooWordsUsed.length > 0 && (
+                      <>
+                        <Text style={[styles.tabooListTitle, { color: '#EF5350' }]}>{translations[language].taboo}</Text>
+                        <View style={styles.wordsPanel}>
+                          {tabooWordsUsed.map((word, index) => (
+                            <Text key={`t-${index}`} style={[styles.wordItem, styles.tabooWordSummary]}>• {word}</Text>
+                          ))}
+                        </View>
+                      </>
+                    )}
+                  </View>
+                )}
+              </ScrollView>
               
             <View style={styles.summaryButtons}>
               <TouchableOpacity style={[styles.nextButton, { width: '80%' }]} onPress={startNextRound} activeOpacity={0.85}>
@@ -803,7 +810,7 @@ const Game = ({ route, navigation }) => {
               
               <View style={styles.passTabooContainer}>
                 <View style={styles.passContainer}>
-                  <Ionicons name="arrow-forward" size={20} color="#8B4513" />
+                  <Ionicons name="arrow-forward" size={20} color="#FFD700" />
                   <Text style={styles.passLabel}>{translations[language].pass}</Text>
                   <Text style={styles.passCount}>{passCount}</Text>
                 </View>
@@ -1091,8 +1098,11 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16,
-    paddingTop: 48,
+    paddingHorizontal: getResponsivePadding(16),
+    paddingTop: getResponsivePadding(48),
+    maxWidth: isLargeTablet() ? 900 : '100%',
+    alignSelf: 'center',
+    width: '100%',
     // paddingBottom removed as flex will handle it
   },
   scrollContent: {
@@ -1103,18 +1113,19 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   header: {
-    flexDirection: 'row',
+    flexDirection: isLargeTablet() ? 'row' : 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: getResponsivePadding(16),
+    flexWrap: isTablet() ? 'wrap' : 'nowrap',
   },
   timerContainer: {
     position: 'relative',
     backgroundColor: '#fff',
     borderRadius: 24,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    minWidth: 110,
+    paddingVertical: getResponsivePadding(8),
+    paddingHorizontal: getResponsivePadding(12),
+    minWidth: getResponsivePadding(110),
     alignItems: 'center',
     flexDirection: 'row',
     borderWidth: 2,
@@ -1126,7 +1137,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   timer: {
-    fontSize: 22,
+    fontSize: getResponsiveFontSize(22),
     color: '#8B4513',
     fontFamily: 'IndieFlower',
   },
@@ -1153,7 +1164,7 @@ const styles = StyleSheet.create({
   roundInfo: {
     marginTop: 6,
     marginBottom: 8,
-    fontSize: Platform.OS === 'android' ? 15 : 16,
+    fontSize: 16,
     color: '#8B4513',
     textAlign: 'center',
     fontFamily: 'IndieFlower',
@@ -1207,7 +1218,7 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   currentWord: {
-    fontSize: 40,
+    fontSize: getResponsiveFontSize(40),
     color: '#4A6FA5',
     textAlign: 'center',
     fontFamily: 'IndieFlower',
@@ -1248,27 +1259,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tabooWord: {
-    fontSize: 21,
-    color: '#F44336',
-    marginBottom: 6,
-    fontFamily: 'IndieFlower',
+    fontSize: 65,
+    color: '#FF0000',
+    marginBottom: 10,
+    fontFamily: Platform.OS === 'ios' ? 'Helvetica-Bold' : 'sans-serif-black',
     textDecorationLine: 'line-through',
     textTransform: 'uppercase',
-    fontWeight: Platform.OS === 'ios' ? 'bold' : 'normal',
-    textShadowColor: '#F44336',
-    textShadowOffset: { width: 0.6, height: 0.6 },
-    textShadowRadius: 0.8,
+    fontWeight: '900',
+    textShadowColor: '#000000',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 0,
+    letterSpacing: 3,
+    textAlign: 'center',
   },
   tabooWordSummary: {
     color: '#EF5350',
     textDecorationLine: 'line-through',
     fontFamily: 'IndieFlower',
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 18,
   },
   teamsContainer: {
-    flexDirection: 'row',
+    flexDirection: isLargeTablet() ? 'row' : 'row',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: getResponsivePadding(14),
+    maxWidth: isLargeTablet() ? 600 : '100%',
+    alignSelf: 'center',
+    width: '100%',
   },
   team: {
     width: '48%',
@@ -1304,8 +1320,11 @@ const styles = StyleSheet.create({
     color: '#4A6FA5', // Blue for active team text
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: isLargeTablet() ? 'row' : 'row',
     justifyContent: 'space-between',
+    maxWidth: isLargeTablet() ? 700 : '100%',
+    alignSelf: 'center',
+    width: '100%',
   },
   actionButton: {
     width: '31%', // Adjusted width for better spacing
@@ -1360,7 +1379,7 @@ const styles = StyleSheet.create({
     borderColor: '#8B4513',
   },
   summaryTitle: {
-    fontSize: Platform.OS === 'android' ? 29 : 32, // Adjusted font size
+    fontSize: 32,
     marginBottom: 25,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
@@ -1376,9 +1395,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   badgesRow: { flexDirection: 'row', justifyContent: 'space-around', width: '100%', marginBottom: 10 },
-  badge: { flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingVertical: Platform.OS === 'android' ? 8 : 10, paddingHorizontal: 12, marginHorizontal: 6 },
+  badge: { flexDirection: 'row', alignItems: 'center', borderRadius: 14, paddingVertical: 10, paddingHorizontal: 12, marginHorizontal: 6 },
   badgeIcon: { width: 20, height: 20, marginRight: 8, resizeMode: 'contain' },
-  badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: Platform.OS === 'android' ? 19 : 20 },
+  badgeCount: { color: '#fff', fontFamily: 'IndieFlower', fontSize: 20 },
   statText: {
     fontSize: 18, // Unify platform sizes
     color: '#8B4513',
@@ -1388,6 +1407,13 @@ const styles = StyleSheet.create({
   tabooList: {
     width: '100%',
     marginBottom: 25,
+  },
+  wordListScrollView: {
+    maxHeight: 300,
+    width: '100%',
+  },
+  wordListContainer: {
+    paddingBottom: 20,
   },
   tabooListTitle: {
     fontSize: 18, // Unify platform sizes
@@ -1401,7 +1427,7 @@ const styles = StyleSheet.create({
   
   tabooWord: { color: '#EF5350' },
   tabooItem: {
-    fontSize: Platform.OS === 'android' ? 15 : 16, // Adjusted font size
+    fontSize: 16, // Adjusted font size
     color: '#F44336',
     marginBottom: 5,
     fontFamily: 'IndieFlower',
@@ -1479,7 +1505,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   finalScoreTitle: {
-    fontSize: Platform.OS === 'android' ? 27 : 28,
+    fontSize: 28,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginBottom: 16,
@@ -1492,12 +1518,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   finalScoreText: {
-    fontSize: Platform.OS === 'android' ? 19 : 20,
+    fontSize: 20,
     color: '#333',
     fontFamily: 'IndieFlower',
   },
   winnerText: {
-    fontSize: Platform.OS === 'android' ? 21 : 22,
+    fontSize: 22,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginBottom: 20,
@@ -1532,7 +1558,7 @@ const styles = StyleSheet.create({
   },
   pauseText: {
     fontFamily: 'IndieFlower',
-    fontSize: Platform.OS === 'android' ? 19 : 20,
+    fontSize: 20,
     color: '#8B4513',
     marginVertical: 8,
   },
@@ -1551,7 +1577,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginLeft: 8,
     fontFamily: 'IndieFlower',
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 18,
   },
   pauseEndBtn: {
     flexDirection: 'row',
@@ -1603,13 +1629,13 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalTitle: {
-    fontSize: Platform.OS === 'android' ? 19 : 20,
+    fontSize: 20,
     color: '#8B4513',
     fontFamily: 'IndieFlower',
     marginBottom: 6,
   },
   modalMessage: {
-    fontSize: Platform.OS === 'android' ? 16 : 16,
+    fontSize: 16,
     color: '#333',
     textAlign: 'center',
     marginBottom: 12,
@@ -1627,7 +1653,7 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: '#8B4513',
-    fontSize: Platform.OS === 'android' ? 17 : 18,
+    fontSize: 18,
     textAlign: 'center',
     fontFamily: 'IndieFlower',
   },
